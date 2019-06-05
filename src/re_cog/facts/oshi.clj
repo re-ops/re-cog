@@ -1,26 +1,31 @@
 (ns re-cog.facts.oshi
   (:require
    [serializable.fn :as s]
+   [re-cog.resources.common :refer (defn)]
    [re-share.oshi :refer (read-metrics os get-processes)]))
 
-(def ^{:doc "Get all processes"} all-processes
-  (s/fn []
-    (get-processes)))
+(defn all-processes
+  "Get all processes"
+  []
+  (get-processes))
 
 (def ^{:doc "Filter process by name"} named
   (fn [target]
     (s/fn [proc] (= (proc :name) target))))
 
-(def ^{:doc "Get processes by fn"} processes-by
-  (s/fn [f]
-    (let [f' (eval f)]
-      (filter f' (get-processes)))))
+(defn processes-by
+  "Get processes by fn"
+  [f]
+  (let [f' (eval f)]
+    (filter f' (get-processes))))
 
-(def ^{:doc "Getting all OS information using oshi"} operating-system
-  (s/fn []
-    (get-in (read-metrics) [:operatingSystem])))
+(defn operating-system
+  "Getting all OS information using oshi"
+  []
+  (get-in (read-metrics) [:operatingSystem]))
 
-(def ^{:doc "Getting all Hardware information using oshi"} hardware
-  (s/fn []
-    (get-in (read-metrics) [:hardware])))
+(defn hardware
+  "Getting all Hardware information using oshi"
+  []
+  (get-in (read-metrics) [:hardware]))
 
