@@ -9,6 +9,7 @@
      ; serialization
      [serializable-fn "1.1.4"]
      [com.taoensso/nippy "2.14.0"]
+     [cheshire "5.8.1"]
 
      ; fs utilities
      [me.raynes/fs "1.4.6"]
