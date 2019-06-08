@@ -1,7 +1,7 @@
 (ns re-cog.resources.package
   (:require [clojure.java.shell :refer [sh]]
             [re-share.oshi :refer (read-metrics os get-processes)]
-            [re-cog.resources.common :refer (defn)]))
+            [re-cog.common :refer (defn)]))
 
 (defn pkg-update
   "update package manager"

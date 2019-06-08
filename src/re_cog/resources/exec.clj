@@ -2,7 +2,7 @@
   (:require
    [clojure.java.shell :refer [sh]]
    [me.raynes.fs :refer (list-dir tmpdir exists? file)]
-   [re-cog.resources.common :refer (defn)]))
+   [re-cog.common :refer (defn)]))
 
 ; shell
 (defn shell

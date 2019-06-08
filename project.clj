@@ -13,6 +13,8 @@
 
      ; fs utilities
      [me.raynes/fs "1.4.6"]
+     ; checksumming
+     [digest "1.4.9"]
 
      ; logging
      [com.taoensso/timbre "4.10.0"]

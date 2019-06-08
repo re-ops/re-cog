@@ -1,7 +1,7 @@
 (ns re-cog.resources.file
   "File resources"
   (:require
-   [re-cog.resources.common :refer (defn)]))
+   [re-cog.common :refer (defn)]))
 
 (defn directory
   "Directory resource:

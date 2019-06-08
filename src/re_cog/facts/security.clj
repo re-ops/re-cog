@@ -2,7 +2,7 @@
   "security related functions"
   (:require
    [re-scan.core :refer [into-ports into-hosts nmap]]
-   [re-cog.resources.common :refer (defn)]))
+   [re-cog.common :refer (defn)]))
 
 (defn scan-ports
   "Open ports nmap scan"

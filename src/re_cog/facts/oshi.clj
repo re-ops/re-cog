@@ -1,7 +1,7 @@
 (ns re-cog.facts.oshi
   (:require
    [serializable.fn :as s]
-   [re-cog.resources.common :refer (defn)]
+   [re-cog.common :refer (defn)]
    [re-share.oshi :refer (read-metrics os get-processes)]))
 
 (defn all-processes

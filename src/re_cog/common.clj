@@ -1,7 +1,6 @@
-(ns re-cog.resources.common
-  "Common resource functions"
-  (:require
-   [serializable.fn :as s]))
+(ns re-cog.common "Common resource functions"
+    (:require
+     [serializable.fn :as s]))
 
 (defn into-spec [m args]
   (if (empty? args)
