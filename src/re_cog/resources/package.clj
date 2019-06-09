@@ -1,43 +1,89 @@
 (ns re-cog.resources.package
-  (:require [clojure.java.shell :refer [sh]]
-            [re-share.oshi :refer (read-metrics os get-processes)]
-            [re-cog.common :refer (defn)]))
+  (:require
+   [re-cog.resources.download :refer (download)]
+   [re-cog.common :refer (require-functions def-serial def-inline require-constants)]))
 
-(defn pkg-update
-  "update package manager"
-  []
-  (case (os)
-    :Ubuntu (sh "sudo" "apt" "update")
-    :FreeBSD (sh "sudo" "pkg" "update")
-    (throw (ex-info "not supported" {:os (os)}))))
+(require-functions)
+(require-constants)
 
-(defn pkg-upgrade
-  "upgrade all packages"
-  []
-  (case (os)
-    :Ubuntu (sh "sudo" "apt" "upgrade" "-y")
-    :FreeBSD (sh "sudo" "pkg" "upgrade" "-y")
-    (throw (ex-info "not supported" {:os (os)}))))
-
-(defn pkg-install
-  "install a package"
+(def-serial installed?
+  "Check is package is installed"
   [pkg]
   (case (os)
-    :Ubuntu (sh "sudo" "apt" "install" pkg "-y")
-    :FreeBSD (sh "sudo" "pkg" "install" pkg "-y")
-    (throw (ex-info "not supported" {:os (os)}))))
+    :Ubuntu (sh! "/usr/bin/dpkg" "-s" pkg)
+    :default (throw (ex-info (<< "No matching package provider found for ~(os)") {}))))
 
-(defn pkg-fix
-  "Fix package provider"
+; consumers
+
+(def-serial package
+  "Package resource with optional provider and state parameters:
+    (package \"ghc\" :present)
+    (package \"ghc\" \"gnome-terminal\" :present) ; multiple packages
+    (package \"/tmp/foo.deb\" deb :present) ; using deb provider
+    (package \"ghc\" :absent) ; remove package
+  "
+  [pkg state]
+  (letfn [(install [pkg]
+            (if (.endsWith pkg "deb")
+              (sh! "sudo" dpkg-bin "-i" pkg)
+              (sh! "sudo" apt-bin "install" pkg "-y")))
+          (uninstall [pkg]
+                     (if (.endsWith pkg "deb")
+                       (sh! "sudo" dpkg-bin "-r" pkg)
+                       (sh! "sudo" apt-bin "remove" pkg "-y")))]
+    (let [fns {:present install :absent uninstall}]
+      (debug "installing")
+      ((fns state) pkg))))
+
+(def-serial update
+  "Update package repository index resource:
+    (update)"
   []
-  (case (os)
-    :Ubuntu (sh "sudo" "rm" "/var/lib/dpkg/lock" "/var/cache/apt/archives/lock")
-    (throw (ex-info "not supported" {:os (os)}))))
+  (sh! apt-bin "update"))
 
-(defn pkg-kill
-  "kill package provider"
+(defn upgrade
+  "Upgrade installed packages:
+    (upgrade)
+  "
   []
-  (case (os)
-    :Ubuntu (sh "sudo" "killall" "apt")
-    (throw (ex-info "not supported" {:os (os)}))))
+  (sh! apt-bin "upgrade" "-y"))
 
+(def-serial repository
+  "Package repository resource:
+    (repository \"deb https://raw.githubusercontent.com/narkisr/fpm-barbecue/repo/packages/ubuntu/ xenial main\" :present)
+    (repository \"deb https://raw.githubusercontent.com/narkisr/fpm-barbecue/repo/packages/ubuntu/ xenial main\" :absent)
+    (repository \"ppa:neovim-ppa/stable\" :present)
+    (repository \"ppa:neovim-ppa/stable\" :absent)
+   "
+  [repo state]
+  (letfn [(add-repo [repo] (sh! "/usr/bin/add-apt-repository" repo "-y"))
+          (rm-repo [repo] (sh! "/usr/bin/add-apt-repository" "--remove" repo "-y"))]
+    (let [fns {:present add-repo :absent rm-repo}]
+      ((fns state) repo))))
+
+(def-serial key-file
+  "Import a gpg apt key from a file resource:
+     (key-file \"key.gpg\")
+   "
+  [file]
+  (case (os)
+    :Ubuntu (sh! "/usr/bin/apt-key" "add" file)
+    :default (throw (ex-info (<< "cant import apt key under os ~(os)") {}))))
+
+(def-serial key-server
+  "Import a gpg apt key from a gpg server resource:
+     (key-server \"keyserver.ubuntu.com\" \"42ED3C30B8C9F76BC85AC1EC8B095396E29035F0\")
+   "
+  [server id]
+  (case (os)
+    :Ubuntu (sh! "/usr/bin/apt-key" "adv" "--keyserver" server "--recv" id)
+    :default (throw (ex-info (<< "cant import apt key under ~(os)") {}))))
+
+(def-inline add-repo
+  "Add repo, gpg key and fingerprint in one go."
+  [repo url id]
+  (download url (<< "/tmp/~{id}.key"))
+  (key-file (<< "/tmp/~{id}.key"))
+  ;; (fingerprint id)
+  (repository repo :present)
+  (update))

@@ -3,9 +3,9 @@
   (:require
    [clojure.java.shell :refer [sh]]
    [cheshire.core :refer (parse-string)]
-   [re-cog.common :refer (defn)]))
+   [re-cog.common :refer (def-serial)]))
 
-(defn osquery
+(def-serial osquery
   "Run a osquery query"
   [query]
   (parse-string (:out (sh "/usr/bin/osqueryi" "--json" query)) true))

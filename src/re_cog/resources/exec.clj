@@ -1,8 +1,8 @@
 (ns re-cog.resources.exec
   (:require
-   [clojure.java.shell :refer [sh]]
-   [me.raynes.fs :refer (list-dir tmpdir exists? file)]
-   [re-cog.common :refer (defn)]))
+   [re-cog.common :refer (require-functions def-serial)]))
+
+(require-functions)
 
 ; shell
 (defn shell
