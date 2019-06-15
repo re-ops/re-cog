@@ -22,6 +22,6 @@
      [com.fzakaria/slf4j-timbre "0.3.8"]
 
      ; common utilities and shared functions
-     [re-share "0.11.0"]
+     [re-share "0.11.2"]
   ]
 )
