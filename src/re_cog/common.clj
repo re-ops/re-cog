@@ -48,7 +48,7 @@
    '[re-share.oshi :refer (read-metrics os get-processes)]
    '[clojure.core.strint :refer (<<)]
    '[digest :as digest]
-   '[me.raynes.fs :refer (list-dir tmpdir exists? file)]
+   '[me.raynes.fs :as fs :refer (list-dir tmpdir exists?)]
    '[taoensso.timbre :refer (info error debug trace)]
    '[clojure.java.io :as io]))
 
