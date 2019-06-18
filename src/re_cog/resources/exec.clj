@@ -5,7 +5,7 @@
 (require-functions)
 
 ; shell
-(defn shell
+(def-serial shell
   "Excute a script using bash"
   [sum script]
   (let [f (fs/file (tmpdir) sum)]
