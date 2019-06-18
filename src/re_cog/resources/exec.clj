@@ -8,8 +8,8 @@
 (defn shell
   "Excute a script using bash"
   [sum script]
-  (let [f (file (tmpdir) sum)]
-    (when-not (exists? f)
+  (let [f (fs/file (tmpdir) sum)]
+    (when-not (fs/exists? f)
       (spit f script))
     (sh "bash" (.getPath f))))
 
