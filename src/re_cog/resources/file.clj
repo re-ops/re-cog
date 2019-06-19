@@ -1,7 +1,9 @@
 (ns re-cog.resources.file
   "File resources"
   (:require
-   [re-cog.common :refer (def-serial)]))
+   [re-cog.common :refer (require-functions def-serial require-constants)]))
+
+(require-functions)
 
 (def-serial directory
   "Directory resource:
@@ -27,11 +29,11 @@
   (println 1))
 
 (def-serial copy
-  "Copy a local file remotly:
+  "Copy a local file:
     (copy src dest)
   "
-  [tmpl dest args]
-  1)
+  [src dest]
+  (fs/copy src dest))
 
 (def-serial chown
   "Change file/directory ownership
