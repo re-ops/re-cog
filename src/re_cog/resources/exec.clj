@@ -1,5 +1,6 @@
 (ns re-cog.resources.exec
   (:require
+   [re-cog.scripts.common :refer (shell-args)]
    [re-cog.common :refer (require-functions def-serial)]))
 
 (require-functions)
@@ -13,3 +14,7 @@
       (spit f script))
     (sh "bash" (.getPath f))))
 
+(defn run
+  "A local version of shell function"
+  [script]
+  (apply))

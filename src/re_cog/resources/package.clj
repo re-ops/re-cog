@@ -35,18 +35,18 @@
       (debug "installing")
       ((fns state) pkg))))
 
-(def-serial update
+(def-serial update-
   "Update package repository index resource:
     (update)"
   []
-  (sh! apt-bin "update"))
+  (sh! "sudo" apt-bin "update"))
 
-(defn upgrade
+(def-serial upgrade
   "Upgrade installed packages:
     (upgrade)
   "
   []
-  (sh! apt-bin "upgrade" "-y"))
+  (sh! "sudo" apt-bin "upgrade" "-y"))
 
 (def-serial repository
   "Package repository resource:
@@ -86,4 +86,4 @@
   (key-file (<< "/tmp/~{id}.key"))
   ;; (fingerprint id)
   (repository repo :present)
-  (update))
+  (update-))

@@ -53,7 +53,7 @@
    '[clojure.java.io :as io]))
 
 ; Constants
-(def apt-bin "/usr/bin/apt-get")
+(def apt-bin "/usr/bin/apt")
 
 (def dpkg-bin "/usr/bin/dpkg")
 
