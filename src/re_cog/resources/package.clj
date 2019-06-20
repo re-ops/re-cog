@@ -1,7 +1,9 @@
 (ns re-cog.resources.package
   (:require
+   [pallet.stevedore :refer (script)]
+   [re-cog.resources.exec :refer (run)]
    [re-cog.resources.download :refer (download)]
-   [re-cog.common :refer (require-functions def-serial def-inline require-constants)]))
+   [re-cog.common :refer (require-functions def-serial def-inline require-constants bind-bash)]))
 
 (require-functions)
 (require-constants)
@@ -39,14 +41,18 @@
   "Update package repository index resource:
     (update)"
   []
-  (sh! "sudo" apt-bin "update"))
+  (letfn [(update-script []
+            (script ("sudo" ~apt-bin "update")))]
+    (run update-script)))
 
 (def-serial upgrade
   "Upgrade installed packages:
     (upgrade)
   "
   []
-  (sh! "sudo" apt-bin "upgrade" "-y"))
+  (letfn [(upgrade-script []
+            (script ("sudo" ~apt-bin "upgrade" "-y")))]
+    (run upgrade-script)))
 
 (def-serial repository
   "Package repository resource:
