@@ -1,9 +1,9 @@
 (ns re-cog.resources.exec
   (:require
    [re-cog.scripts.common :refer (shell-args)]
-   [re-cog.common :refer (require-functions def-serial)]))
-
-(require-functions)
+   [me.raynes.fs :as fs :refer (list-dir tmpdir exists?)]
+   [clojure.java.shell :refer [sh]]
+   [re-cog.common :refer (def-serial)]))
 
 ; shell
 (def-serial shell
@@ -17,4 +17,4 @@
 (defn run
   "A local version of shell function"
   [script]
-  (apply))
+  (apply shell (shell-args script)))
