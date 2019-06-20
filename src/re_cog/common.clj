@@ -1,5 +1,6 @@
 (ns re-cog.common "Common resource functions"
     (:require
+     [pallet.stevedore]
      [clojure.repl]
      [serializable.fn :as s]))
 
@@ -44,7 +45,11 @@
   []
   (require
    '[clojure.java.shell :refer [sh]]
+   '[pallet.stevedore :refer (script)]
+   '[pallet.stevedore.bash]
    '[re-cog.common :refer [sh!]]
+   '[re-cog.scripts.common :refer [shell-args]]
+   '[re-cog.resources.exec :refer [run]]
    '[re-share.oshi :refer (read-metrics os get-processes)]
    '[clojure.core.strint :refer (<<)]
    '[digest :as digest]
@@ -52,7 +57,11 @@
    '[taoensso.timbre :refer (info error debug trace)]
    '[clojure.java.io :as io]))
 
+(defn bind-bash []
+  (.bindRoot (var pallet.stevedore/*script-language*) :pallet.stevedore.bash/bash))
+
 ; Constants
+
 (def apt-bin "/usr/bin/apt")
 
 (def dpkg-bin "/usr/bin/dpkg")
