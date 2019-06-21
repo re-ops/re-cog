@@ -22,7 +22,7 @@
      [com.fzakaria/slf4j-timbre "0.3.8"]
 
      ; common utilities and shared functions
-     [re-share "0.11.3"]
+     [re-share "0.11.4"]
 
      ; clojure to bash
      [com.palletops/stevedore "0.8.0-beta.7"]

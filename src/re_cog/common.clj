@@ -1,5 +1,6 @@
 (ns re-cog.common "Common resource functions"
     (:require
+     [re-share.core :refer [measure]]
      [pallet.stevedore]
      [clojure.repl]
      [serializable.fn :as s]))
@@ -19,18 +20,36 @@
   ([name doc args pre-post body]
    `(def ^{:doc ~doc :prepost pre-post} ~name (s/fn ~args ~body))))
 
+(defn source-of [f]
+  (read-string (clojure.repl/source-fn (first f))))
+
 (defn source-list [f]
-  (let [[_ name _ args body] (read-string (clojure.repl/source-fn (first f)))]
+  (let [[_ name _ args body] (source-of f)]
     (list name args body)))
 
 (defn letfn- [body]
   (into [] (map source-list body)))
 
+(defn name-of [f]
+  (second (source-of f)))
+
+(defn nested-body [body result]
+  (reduce
+   (fn [acc [b name]]
+     (list 'let [(symbol (str name "-p")) (list 're-share.core/measure (list 'fn [] b))] acc)) result
+   (map (juxt identity name-of) (reverse body))))
+
 (defmacro def-inline
   "Serialized function with inlined body functions"
   [name doc args & body]
-  (let [letform (letfn- body)]
-    `(def-serial ~name ~doc ~args (letfn ~letform ~@body))))
+  (let [letform (letfn- body)
+        names (map name-of body)
+        profiles (map (fn [name] (symbol (str name "-p"))) names)
+        result (zipmap (map keyword names) profiles)
+        nested (nested-body body result)]
+    `(def-serial ~name ~doc ~args
+       (letfn ~letform
+         ~nested))))
 
 (defn sh!
   "Run sh throws exception if exit code != 0"
@@ -44,6 +63,7 @@
   "Require common resource functions"
   []
   (require
+   '[re-share.core :refer [measure]]
    '[clojure.java.shell :refer [sh]]
    '[pallet.stevedore :refer (script)]
    '[pallet.stevedore.bash]
