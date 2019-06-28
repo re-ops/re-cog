@@ -3,7 +3,7 @@
    [pallet.stevedore :refer (script)]
    [re-cog.resources.exec :refer (run)]
    [re-cog.resources.download :refer (download)]
-   [re-cog.common :refer (require-functions def-serial def-inline require-constants bind-bash)]))
+   [re-cog.common :refer (require-functions def-serial def-inline require-constants)]))
 
 (require-functions)
 (require-constants)
@@ -12,7 +12,7 @@
   "Check is package is installed"
   [pkg]
   (case (os)
-    :Ubuntu (sh! "/usr/bin/dpkg" "-s" pkg)
+    :Ubuntu (sh! "sudo" "/usr/bin/dpkg" "-s" pkg)
     :default (throw (ex-info (<< "No matching package provider found for ~(os)") {}))))
 
 ; consumers
