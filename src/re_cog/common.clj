@@ -1,5 +1,6 @@
 (ns re-cog.common "Common resource functions"
     (:require
+     clojure.java.shell
      [re-share.core :refer [measure]]
      [pallet.stevedore]
      [clojure.repl]

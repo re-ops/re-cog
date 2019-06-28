@@ -23,8 +23,18 @@
 
      ; common utilities and shared functions
      [re-share "0.11.4"]
+     [re-scan "0.2.1"]
 
      ; clojure to bash
      [com.palletops/stevedore "0.8.0-beta.7"]
+
+     ; repl
+     [org.clojure/tools.namespace "0.3.0"]
   ]
+
+  :repl-options {
+    :init-ns user
+    :prompt (fn [ns] (str "\u001B[35m[\u001B[34m" "re-cog" "\u001B[35m]\u001B[33mλ:\u001B[m " ))
+    :welcome (println "Welcome to re-cog!" )
+  }
 )
