@@ -1,10 +1,10 @@
-(ns re-cog.common "Common resource functions"
-    (:require
-     clojure.java.shell
-     [re-share.core :refer [measure]]
-     [pallet.stevedore]
-     [clojure.repl]
-     [serializable.fn :as s]))
+(ns re-cog.common
+  "Common resource functions"
+  (:require
+   [re-share.core :refer [measure]]
+   [pallet.stevedore]
+   [clojure.repl]
+   [serializable.fn :as s]))
 
 (defn into-spec [m args]
   (if (empty? args)
@@ -21,17 +21,25 @@
   ([name doc args pre-post body]
    `(def ^{:doc ~doc :prepost pre-post} ~name (s/fn ~args ~body))))
 
-(defn source-of [f]
+(defn source-of
+  "Get the source of a function (works only from the repl)"
+  [f]
   (read-string (clojure.repl/source-fn (first f))))
 
-(defn source-list [f]
+(defn source-list
+  "Deconstruct function source into its componenets"
+  [f]
   (let [[_ name _ args body] (source-of f)]
     (list name args body)))
 
-(defn letfn- [body]
+(defn letfn-
+  "Letfn for for inlined functions"
+  [body]
   (into [] (map source-list body)))
 
-(defn name-of [f]
+(defn name-of
+  "Get the name of f"
+  [f]
   (second (source-of f)))
 
 (defn nested-body [body result]
@@ -40,45 +48,31 @@
      (list 'let [(symbol (str name "-p")) (list 're-share.core/measure (list 'fn [] b))] acc)) result
    (map (juxt identity name-of) (reverse body))))
 
+(defn deconstruct-let [[first-form & _ :as body]]
+  (if (= 'let (first first-form))
+    {:let-vec (first (rest first-form)) :body (rest (rest first-form))}
+    {:let-vec [] :body body}))
+
 (defmacro def-inline
-  "Serialized function with inlined body functions"
-  [name doc args & body]
-  (let [letform (letfn- body)
+  "Construct a serialized function (composed from a sequence of serialized functions) where:
+    * Each function within its body is inlined using a letfn form.
+    * The result of the function is the output of each nested call and its measured runtime.
+  "
+  [name doc args & outer-form]
+  (let [{:keys [body let-vec]} (deconstruct-let outer-form)
+        letfn-vec (letfn- body)
         names (map name-of body)
         profiles (map (fn [name] (symbol (str name "-p"))) names)
         result (zipmap (map keyword names) profiles)
-        nested (nested-body body result)]
+        nested (nested-body body result)
+        new-body (list 'let let-vec nested)]
     `(def-serial ~name ~doc ~args
-       (letfn ~letform
-         ~nested))))
+       (letfn ~letfn-vec
+         ~new-body))))
 
-(defn sh!
-  "Run sh throws exception if exit code != 0"
-  [& args]
-  (let [{:keys [err exit] :as m} (apply clojure.java.shell/sh args)]
-    (if (not (= exit 0))
-      (throw (ex-info err m))
-      m)))
-
-(defn require-functions
-  "Require common resource functions"
+(defn bind-bash
+  "Bind stevedore language to bash"
   []
-  (require
-   '[re-share.core :refer [measure]]
-   '[clojure.java.shell :refer [sh]]
-   '[pallet.stevedore :refer (script)]
-   '[pallet.stevedore.bash]
-   '[re-cog.common :refer [sh!]]
-   '[re-cog.scripts.common :refer [shell-args]]
-   '[re-cog.resources.exec :refer [run]]
-   '[re-share.oshi :refer (read-metrics os get-processes)]
-   '[clojure.core.strint :refer (<<)]
-   '[digest :as digest]
-   '[me.raynes.fs :as fs :refer (list-dir tmpdir exists?)]
-   '[taoensso.timbre :refer (info error debug trace)]
-   '[clojure.java.io :as io]))
-
-(defn bind-bash []
   (.bindRoot (var pallet.stevedore/*script-language*) :pallet.stevedore.bash/bash))
 
 ; Constants
@@ -88,7 +82,7 @@
 (def dpkg-bin "/usr/bin/dpkg")
 
 (defn require-constants
-  "Require common resource functions"
+  "Require common constant values"
   []
   (require
    '[re-cog.common :refer [apt-bin dpkg-bin]]))
