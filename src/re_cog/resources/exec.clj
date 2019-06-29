@@ -1,15 +1,15 @@
 (ns re-cog.resources.exec
   (:require
-   [re-cog.scripts.common :refer (shell-args)]
-   [me.raynes.fs :as fs :refer (list-dir tmpdir exists?)]
+   [me.raynes.fs :as fs]
    [clojure.java.shell :refer [sh]]
+   [re-cog.scripts.common :refer (shell-args)]
    [re-cog.common :refer (def-serial)]))
 
 ; shell
 (def-serial shell
   "Excute a script using bash"
   [sum script]
-  (let [f (fs/file (tmpdir) sum)]
+  (let [f (fs/file (fs/tmpdir) sum)]
     (when-not (fs/exists? f)
       (spit f script))
     (sh "bash" (.getPath f))))
