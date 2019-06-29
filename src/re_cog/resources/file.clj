@@ -1,7 +1,8 @@
 (ns re-cog.resources.file
   "File resources"
   (:require
-   [re-cog.common :refer (require-functions def-serial require-constants)]))
+   [re-cog.common.functions :refer (require-functions)]
+   [re-cog.common :refer (def-serial require-constants)]))
 
 (require-functions)
 
@@ -20,8 +21,17 @@
 
 (def-serial symlink
   "Symlink resource"
-  [& args]
-  (println 1))
+  [path target]
+  (letfn [(symlink-target [t]
+            (let [f (java.nio.file.Paths/get (java.net.URI. (<< "file://~{t}")))]
+              (str (java.nio.file.Files/readSymbolicLink f))))]
+    (if (fs/exists? path)
+      (let [existing (symlink-target path)]
+        (when-not (= target existing)
+          (throw
+           (ex-info "Symlink path exist but does not point to target"
+                    {:existing existing :expected path :target target}))))
+      (fs/sym-link path target))))
 
 (def-serial template
   "Template resource"
