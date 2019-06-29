@@ -1,6 +1,7 @@
 (ns re-cog.resources.permissions
   (:require
-   [re-cog.common :refer (require-functions def-serial def-inline require-constants bind-bash)]))
+   [re-cog.common.functions :refer (require-functions)]
+   [re-cog.common :refer (def-serial def-inline require-constants bind-bash)]))
 
 (require-functions)
 
