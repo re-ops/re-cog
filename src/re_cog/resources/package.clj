@@ -1,9 +1,9 @@
 (ns re-cog.resources.package
   (:require
-   [pallet.stevedore :refer (script)]
-   [re-cog.resources.exec :refer (run)]
    [re-cog.resources.download :refer (download)]
-   [re-cog.common :refer (require-functions def-serial def-inline require-constants)]))
+   [re-cog.resources.exec :refer (run)]
+   [re-cog.common.functions :refer (require-functions)]
+   [re-cog.common :refer (def-serial def-inline require-constants)]))
 
 (require-functions)
 (require-constants)
