@@ -1,18 +1,20 @@
 (ns re-cog.resources.file
   "File resources"
   (:require
+   [re-cog.resources.exec :refer (run)]
    [re-cog.common.functions :refer (require-functions)]
    [re-cog.common :refer (def-serial require-constants)]))
 
 (require-functions)
 
-(def-serial directory
+(defn directory
   "Directory resource:
-    (directory \"/tmp/bla\") ; create directory
-    (directory \"/tmp/bla\" :present) ; explicit create
-    (directory \"/tmp/bla\" :absent) ; remove directory"
-  [path state]
-  (println 1))
+    (directory \"/tmp/bla\" :present) ; create
+    (directory \"/tmp/bla\" :absent) ; remove 
+  "
+  [dest state]
+  (let [states {:present fs/mkdir :absent fs/delete-dir}]
+    ((states state) dest)))
 
 (def-serial file
   "A file resource"
@@ -45,9 +47,15 @@
   [src dest]
   (fs/copy src dest))
 
-(def-serial chown
-  "Change file/directory ownership
-    (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\"); using user/group
-    (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\" {:recursive true}); chown -R"
-  [dest user group & args]
-  (println 1))
+(defn chmod
+  "Change file/directory mode resource:
+    (chmod \"/home\"/re-ops/.ssh\" \"0777\")
+    (chmod \"/home\"/re-ops/.ssh\" \"0777\" :recursive true)
+  "
+  [dest mode & options]
+  (letfn [(chmod-script []
+            (if (contains? options :recursive)
+              (script ("/bin/chmod" ~mode ~dest))
+              (script ("/bin/chmod" ~mode ~dest "-R"))))]
+    (run chmod-script)))
+
