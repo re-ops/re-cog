@@ -1,6 +1,7 @@
 (ns re-cog.common
   "Common resource functions"
   (:require
+   [clojure.spec.alpha :as sp]
    [re-share.core :refer [measure]]
    [pallet.stevedore]
    [clojure.repl]
@@ -14,12 +15,24 @@
         (or (fn? a) (string? a)) (into-spec (clojure.core/update m :args (fn [v] (conj v a))) (rest args))
         (keyword? a) (into-spec (assoc m :state a) (rest args))))))
 
+(sp/def ::basic-def
+  (sp/cat :name symbol? :doc string? :args vector? :body seq?))
+
+(sp/def ::meta-def
+  (sp/cat :meta map? :name symbol? :doc string? :args vector? :body seq?))
+
+(sp/def ::post-def
+  (sp/cat :name symbol? :doc string? :args vector? :post map? :body seq?))
+
 (defmacro def-serial
   "Define a serializable function"
-  ([name doc args body]
-   `(def ^{:doc ~doc} ~name (s/fn ~args ~body)))
-  ([name doc args pre-post body]
-   `(def ^{:doc ~doc :prepost pre-post} ~name (s/fn ~args ~body))))
+  ([& in-args]
+   (if-let [verified (first (filter (fn [spec] (sp/valid? spec in-args)) [::basic-def ::meta-def ::post-def]))]
+     (let [{:keys [name args doc post meta body]} (sp/conform verified in-args)
+           m (merge (or meta {}) {:doc (or doc "") :prepost (or post {})})
+           body' (seq body)]
+       `(def ~name (with-meta (s/fn ~args ~body') ~m)))
+     (throw (ex-info "failed to parse in args" {:in-args in-args})))))
 
 (defn source-of
   "Get the source of a function (works only from the repl)"

@@ -23,8 +23,9 @@
     (bzip2 \"foo.bz2\")
   "
   [target]
-  (assert (fs/exists? "/usr/bin/unzip"))
-  (sh! "/bin/bzip2" "-kf" "-d" target))
+  (do
+    (assert (fs/exists? "/usr/bin/unzip"))
+    (sh! "/bin/bzip2" "-kf" "-d" target)))
 
 (def-serial untar
   "Untar resource:
