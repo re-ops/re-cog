@@ -16,23 +16,27 @@
         (keyword? a) (into-spec (assoc m :state a) (rest args))))))
 
 (sp/def ::basic-def
-  (sp/cat :name symbol? :doc string? :args vector? :body seq?))
+  (sp/cat :name symbol? :doc string? :args vector? :body (sp/* seq?)))
 
 (sp/def ::meta-def
-  (sp/cat :meta map? :name symbol? :doc string? :args vector? :body seq?))
+  (sp/cat :meta map? :name symbol? :doc string? :args vector? :body (sp/* seq?)))
 
 (sp/def ::post-def
-  (sp/cat :name symbol? :doc string? :args vector? :post map? :body seq?))
+  (sp/cat :name symbol? :doc string? :args vector? :post map? :body (sp/* seq?)))
+
+(defn parse-args [args]
+  (if-let [verified (first (filter (fn [spec] (sp/valid? spec args)) [::basic-def ::meta-def ::post-def]))]
+    (let [{:keys [doc post meta body] :as m} (sp/conform verified args)]
+      (merge (select-keys m [:name :args :body])
+             {:meta (merge (or meta {}) {:doc (or doc "") :prepost (or post {})})}))
+    (throw (ex-info "failed to parse in args" {:args args}))))
 
 (defmacro def-serial
   "Define a serializable function"
   ([& in-args]
-   (if-let [verified (first (filter (fn [spec] (sp/valid? spec in-args)) [::basic-def ::meta-def ::post-def]))]
-     (let [{:keys [name args doc post meta body]} (sp/conform verified in-args)
-           m (merge (or meta {}) {:doc (or doc "") :prepost (or post {})})
-           body' (seq body)]
-       `(def ~name (with-meta (s/fn ~args ~body') ~m)))
-     (throw (ex-info "failed to parse in args" {:in-args in-args})))))
+   (let [{:keys [name args meta body]} (parse-args in-args)
+         single-body (if-not (= 1 (count body)) (cons 'do (apply list body)) (first body))]
+     `(def ~name (with-meta (s/fn ~args ~single-body) ~meta)))))
 
 (defn source-of
   "Get the source of a function (works only from the repl)"
@@ -61,7 +65,9 @@
      (list 'let [(symbol (str name "-p")) (list 're-share.core/measure (list 'fn [] b))] acc)) result
    (map (juxt identity name-of) (reverse body))))
 
-(defn deconstruct-let [[first-form & _ :as body]]
+(defn deconstruct-let
+  "Grab let expression if it exists"
+  [[first-form & _ :as body]]
   (if (= 'let (first first-form))
     {:let-vec (first (rest first-form)) :body (rest (rest first-form))}
     {:let-vec [] :body body}))
@@ -71,17 +77,19 @@
     * Each function within its body is inlined using a letfn form.
     * The result of the function is the output of each nested call and its measured runtime.
   "
-  [name doc args & outer-form]
-  (let [{:keys [body let-vec]} (deconstruct-let outer-form)
-        letfn-vec (letfn- body)
-        names (map name-of body)
+  [& args]
+  (let [{:keys [name args meta body]} (parse-args args)
+        {:keys [body-next let-vec]} (deconstruct-let body)
+        letfn-vec (letfn- body-next)
+        names (map name-of body-next)
         profiles (map (fn [name] (symbol (str name "-p"))) names)
         result (zipmap (map keyword names) profiles)
-        nested (nested-body body result)
-        new-body (list 'let let-vec nested)]
-    `(def-serial ~name ~doc ~args
-       (letfn ~letfn-vec
-         ~new-body))))
+        nested (nested-body body-next result)
+        final-body (list 'let let-vec nested)]
+    (clojure.pprint/pprint final-body)
+    `(def ~name
+       (with-meta
+         (s/fn ~args (letfn ~letfn-vec ~final-body)) ~meta))))
 
 (defn bind-bash
   "Bind stevedore language to bash"
