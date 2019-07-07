@@ -32,4 +32,3 @@
     (directory (<< "~{home}/bin") :present)
     (download url dest sum)
     (chmod dest "+x")))
-

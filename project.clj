@@ -13,6 +13,7 @@
 
      ; fs utilities
      [me.raynes/fs "1.4.6"]
+
      ; checksumming
      [digest "1.4.9"]
 
@@ -30,6 +31,9 @@
 
      ; repl
      [org.clojure/tools.namespace "0.3.0"]
+
+     ; planning
+     [aysylu/loom "1.0.2"]
   ]
 
   :repl-options {
