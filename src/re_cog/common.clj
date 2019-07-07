@@ -86,7 +86,6 @@
         result (zipmap (map keyword names) profiles)
         nested (nested-body body-next result)
         final-body (list 'let let-vec nested)]
-    (clojure.pprint/pprint final-body)
     `(def ~name
        (with-meta
          (s/fn ~args (letfn ~letfn-vec ~final-body)) ~meta))))
