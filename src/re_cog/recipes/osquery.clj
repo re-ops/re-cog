@@ -18,4 +18,5 @@
     (download (<< "https://pkg.osquery.io/deb/~{archive}") (<< "/tmp/~{archive}") sum)
     (package (<< "/tmp/~{archive}") :present)
     (set-file-acl "re-ops" "rwX" "/etc/osquery")
-    (copy "/tmp/resources/osquery.conf" "/etc/osquery/osquery.conf")))
+    (copy "/tmp/resources/osquery.conf" "/etc/osquery/osquery.conf")
+    (copy "/tmp/resources/fim.conf" "/usr/share/osquery/packs/fim.conf")))
