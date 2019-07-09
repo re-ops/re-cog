@@ -1,6 +1,9 @@
 (ns re-cog.common
   "Common resource functions"
   (:require
+   [clojure.walk :refer (postwalk)]
+   [re-cog.meta :refer (functions)]
+   [clojure.repl :refer (source-fn)]
    [clojure.spec.alpha :as sp]
    [re-share.core :refer [measure]]
    [pallet.stevedore]
@@ -31,46 +34,44 @@
              {:meta (merge (or meta {}) {:doc (or doc "") :prepost (or post {})})}))
     (throw (ex-info "failed to parse in args" {:args args}))))
 
+(defn do-body
+  "Surround multi body s-exp with do"
+  [body]
+  (if-not (= 1 (count body))
+    (cons 'do (apply list body))
+    (first body)))
+
 (defmacro def-serial
   "Define a serializable function"
   ([& in-args]
    (let [{:keys [name args meta body]} (parse-args in-args)
-         single-body (if-not (= 1 (count body)) (cons 'do (apply list body)) (first body))]
-     `(def ~name (with-meta (s/fn ~args ~single-body) ~meta)))))
+         body' (do-body body)]
+     `(def ^{:serializable true} ~name (s/fn ~args ~body')))))
 
 (defn source-of
   "Get the source of a function (works only from the repl)"
   [f]
-  (read-string (clojure.repl/source-fn (first f))))
+  (read-string (clojure.repl/source-fn f)))
 
-(defn source-list
-  "Deconstruct function source into its componenets"
-  [f]
-  (let [[_ name _ args body] (source-of f)]
-    (list name args body)))
+(defn inlined
+  "Capture function source for inlining"
+  [f profile]
+  (let [[_ name _ args body] (source-of f)
+        r (gensym 'r)
+        t (gensym 't)]
+    (list name args
+          (list 'let [[r t] (list 're-share.core/measure (list 'fn [] body))]
+                (list 'swap! profile 'assoc (keyword name) [r t])
+                r))))
 
-(defn letfn-
-  "Letfn for for inlined functions"
-  [body]
-  (into [] (map source-list body)))
-
-(defn name-of
-  "Get the name of f"
-  [f]
-  (second (source-of f)))
-
-(defn nested-body [body result]
-  (reduce
-   (fn [acc [b name]]
-     (list 'let [(symbol (str name "-p")) (list 're-share.core/measure (list 'fn [] b))] acc)) result
-   (map (juxt identity name-of) (reverse body))))
-
-(defn deconstruct-let
-  "Grab let expression if it exists"
-  [[first-form & _ :as body]]
-  (if (= 'let (first first-form))
-    {:let-vec (first (rest first-form)) :body (rest (rest first-form))}
-    {:let-vec [] :body body}))
+(defn inlined-functions [body profile]
+  "Doing a postwalk on the body s-exp inlining the first level of serializable functions"
+  (let [fs (atom [])]
+    (postwalk
+     (fn [exp]
+       (when (and (symbol? exp) ((functions) exp))
+         (swap! fs conj (inlined exp profile)))) body)
+    @fs))
 
 (defmacro def-inline
   "Construct a serialized function (composed from a sequence of serialized functions) where:
@@ -79,16 +80,15 @@
   "
   [& args]
   (let [{:keys [name args meta body]} (parse-args args)
-        {:keys [body-next let-vec]} (deconstruct-let body)
-        letfn-vec (letfn- body-next)
-        names (map name-of body-next)
-        profiles (map (fn [name] (symbol (str name "-p"))) names)
-        result (zipmap (map keyword names) profiles)
-        nested (nested-body body-next result)
-        final-body (list 'let let-vec nested)]
+        profile (gensym 'profile)
+        letfn-vec (inlined-functions body profile)
+        body' (do-body body)]
     `(def ~name
-       (with-meta
-         (s/fn ~args (letfn ~letfn-vec ~final-body)) ~meta))))
+       (s/fn ~args
+         (let [~profile (atom {})]
+           (letfn ~letfn-vec
+             (let [result# ~body']
+               (merge result# {:profile (deref ~profile)}))))))))
 
 (defn bind-bash
   "Bind stevedore language to bash"
