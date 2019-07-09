@@ -1,35 +1,29 @@
 (ns re-cog.meta
-  "Re-cog functions metadata used in Re-mote/gent send"
-  (:require
-   re-cog.recipes.build
-   re-cog.recipes.osquery
-   re-cog.resources.exec
-   re-cog.resources.download
-   re-cog.resources.archive
-   re-cog.resources.file
-   re-cog.resources.package
-   re-cog.facts.oshi
-   re-cog.facts.query
-   re-cog.facts.security))
+  "Re-cog functions metadata used in Re-mote/gent send")
 
-(def functions
+(defn resolve- [n]
+  (require n)
+  (into {}
+        (filter
+         (fn [[s f]] (:serializable.fn/source (meta (deref f)))) (ns-publics n))))
+
+(defn functions []
   (apply merge
-         (map ns-map
+         (map resolve-
               ['re-cog.resources.exec
                're-cog.resources.file
                're-cog.resources.package
-               're-cog.facts.oshi
-               're-cog.facts.query
-               're-cog.facts.security
+               're-cog.resources.git
                're-cog.resources.download
                're-cog.resources.archive
-               're-cog.recipes.osquery
-               're-cog.recipes.build])))
+               're-cog.facts.oshi
+               're-cog.facts.query
+               're-cog.facts.security])))
 
 (defn fn-meta [f]
   {:post [#(not (nil? %))]}
   (meta
    (second
     (first
-     (filter #(and (var? (second %)) (= f (var-get (second %)))) functions)))))
+     (filter #(and (var? (second %)) (= f (var-get (second %)))) (functions))))))
 
