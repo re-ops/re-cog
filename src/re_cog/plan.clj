@@ -1,7 +1,6 @@
 (ns re-cog.plan
   "Execution plans support"
   (:require
-   loom.io
    [loom.alg :as alg]
    [loom.graph :as g]))
 
