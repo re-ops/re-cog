@@ -10,12 +10,18 @@
 (defn functions []
   (apply merge
          (map resolve-
-              ['re-cog.resources.exec
+              [; recipes
+               're-cog.recipes.build
+               're-cog.recipes.osquery
+               ; resources
+               're-cog.resources.exec
+               're-cog.resources.permissions
                're-cog.resources.file
                're-cog.resources.package
                're-cog.resources.git
                're-cog.resources.download
                're-cog.resources.archive
+               ; facts
                're-cog.facts.oshi
                're-cog.facts.query
                're-cog.facts.security])))

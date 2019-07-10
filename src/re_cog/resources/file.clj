@@ -7,7 +7,7 @@
 
 (require-functions)
 
-(defn directory
+(def-serial directory
   "Directory resource:
     (directory \"/tmp/bla\" :present) ; create
     (directory \"/tmp/bla\" :absent) ; remove 
@@ -47,7 +47,7 @@
   [src dest]
   (fs/copy src dest))
 
-(defn chmod
+(def-serial chmod
   "Change file/directory mode resource:
     (chmod \"/home\"/re-ops/.ssh\" \"0777\")
     (chmod \"/home\"/re-ops/.ssh\" \"0777\" :recursive true)
