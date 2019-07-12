@@ -33,7 +33,7 @@
      [org.clojure/tools.namespace "0.3.0"]
 
      ; planning
-     [aysylu/loom "1.0.2"]
+     [aysylu/loom "1.0.2" :exclusions [org.clojure/clojurescript]]
   ]
 
   :repl-options {
