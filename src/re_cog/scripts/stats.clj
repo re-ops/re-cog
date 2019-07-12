@@ -36,3 +36,6 @@
    (set! R @("df" "-T" "-m"))
    (if (not (= $? 0)) ("exit" 1))
    (pipe (pipe ((println (quoted "${R}"))) ("awk" "'NR>1'")) ("tr" "-s" "' '"))))
+
+(defn entropy-script []
+  (script ("/bin/cat" "/proc/sys/kernel/random/entropy_avail")))
