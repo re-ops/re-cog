@@ -15,7 +15,7 @@
    (vm-fail)
    (script (set! R @(pipe ("cat" "/proc/cpuinfo") ("awk" "'/model name/{print $4;exit}'")))
            (case @R
-             "'Intel(R)'" (pipe (pipe ("sensors -A") ("grep" "coretemp" "-A" "1000")) ("awk" "'{$1=$1};1'"))
-             "AMD" (pipe (pipe ("sensors -A") ("grep" "temp")) ("awk" "'{$1=$1};1'"))
+             "'Intel(R)'" ("sensors -A -u")
+             "AMD" ("sensors -A -u")
              "ARMv7" (do (let t ("cat" "/sys/class/thermal/thermal_zone0/temp")) (/ t 1000))
              "*" (do (println "'no matching cpu type found'") ("exit" 1))))))
