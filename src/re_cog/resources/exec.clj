@@ -3,7 +3,7 @@
    [me.raynes.fs :as fs]
    [clojure.java.shell :refer [sh]]
    [re-cog.scripts.common :refer (shell-args)]
-   [re-cog.common :refer (def-serial)]))
+   [re-cog.common.defs :refer (def-serial)]))
 
 ; shell
 (def-serial shell

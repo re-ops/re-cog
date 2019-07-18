@@ -3,7 +3,7 @@
   (:require
    [clojure.java.shell :refer [sh]]
    [cheshire.core :refer (parse-string)]
-   [re-cog.common :refer (def-serial)]))
+   [re-cog.common.defs :refer (def-serial)]))
 
 (def-serial osquery
   "Run a osquery query"

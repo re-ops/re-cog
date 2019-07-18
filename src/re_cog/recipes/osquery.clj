@@ -1,7 +1,8 @@
 (ns re-cog.recipes.osquery
   (:require
    [re-cog.common.functions :refer (require-functions)]
-   [re-cog.common :refer (require-constants def-inline)]
+   [re-cog.common.defs :refer (def-inline)]
+   [re-cog.common :refer (require-constants)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.permissions :refer (set-file-acl)]
    [re-cog.resources.file :refer (copy)]

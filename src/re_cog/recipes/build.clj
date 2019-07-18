@@ -1,7 +1,7 @@
 (ns re-cog.recipes.build
   (:require
    [re-cog.common.functions :refer (require-functions)]
-   [re-cog.common :refer (def-inline)]
+   [re-cog.common.defs :refer (def-inline)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.exec :refer (run)]
    [re-cog.resources.file :refer (symlink directory chmod)]

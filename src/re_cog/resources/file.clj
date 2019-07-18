@@ -3,14 +3,15 @@
   (:require
    [re-cog.resources.exec :refer (run)]
    [re-cog.common.functions :refer (require-functions)]
-   [re-cog.common :refer (def-serial require-constants)]))
+   [re-cog.common.defs :refer (def-serial)]
+   [re-cog.common :refer (require-constants)]))
 
 (require-functions)
 
 (def-serial directory
   "Directory resource:
     (directory \"/tmp/bla\" :present) ; create
-    (directory \"/tmp/bla\" :absent) ; remove 
+    (directory \"/tmp/bla\" :absent) ; remove
   "
   [dest state]
   (let [states {:present fs/mkdir :absent fs/delete-dir}]
@@ -58,4 +59,17 @@
               (script ("/bin/chmod" ~mode ~dest))
               (script ("/bin/chmod" ~mode ~dest "-R"))))]
     (run chmod-script)))
+
+(def-serial chown
+  "Change file/directory owner using uid & gid resource:
+      (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\"); using user/group
+      (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\" {:recursive true}); chown -R    
+     "
+  [dest user group opts]
+  (letfn [(chown-script []
+            (let [u-g (<< "~{user}:~{group}")]
+              (if (opts :recursive)
+                (script ("/bin/chown" ~u-g ~dest))
+                (script ("/bin/chown" ~u-g ~dest "-R")))))]
+    (run chown-script)))
 

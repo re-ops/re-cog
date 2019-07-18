@@ -1,13 +1,13 @@
 (ns re-cog.resources.git
   "Git resources"
   (:require
-   [re-cog.common :refer (def-inline def-serial)]
+   [re-cog.common.defs :refer (def-inline def-serial)]
    [clojure.core.strint :refer (<<)]
    [re-cog.common.functions :refer (require-functions require-resources)]
+   [re-cog.resources.exec :refer (run)]
    [clojure.string :refer (includes?)]))
 
 (require-functions)
-(require-resources)
 
 (def-serial binary
   "Grab git binary path"
@@ -23,7 +23,7 @@
   (when (fs/exists? (<< "~{path}/.git/config"))
     (clojure.string/includes? (slurp (<< "~{path}/.git/config")) repo)))
 
-(def-inline pull
+(def-serial pull
   "Pull implementation"
   [repo dest]
   (if (repo-exists? repo dest)
@@ -32,7 +32,7 @@
       (run (fn [] (script (~git ~dir "pull")))))
     (<< "Skipping pull ~{repo} is missing under ~{dest}")))
 
-(def-inline clone
+(def-serial clone
   "Clone implementation"
   [repo dest]
   (letfn [(clone-script []

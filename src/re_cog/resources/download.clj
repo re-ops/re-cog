@@ -1,7 +1,7 @@
 (ns re-cog.resources.download
   (:require
    [re-cog.common.functions :refer (require-functions)]
-   [re-cog.common :refer (def-serial)]))
+   [re-cog.common.defs :refer (def-serial)]))
 
 (require-functions)
 

@@ -3,7 +3,8 @@
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.exec :refer (run)]
    [re-cog.common.functions :refer (require-functions)]
-   [re-cog.common :refer (def-serial def-inline require-constants)]))
+   [re-cog.common.defs :refer (def-serial def-inline)]
+   [re-cog.common :refer (require-constants)]))
 
 (require-functions)
 (require-constants)
@@ -62,8 +63,8 @@
     (repository \"ppa:neovim-ppa/stable\" :absent)
    "
   [repo state]
-  (letfn [(add-repo [repo] (sh! "/usr/bin/add-apt-repository" repo "-y"))
-          (rm-repo [repo] (sh! "/usr/bin/add-apt-repository" "--remove" repo "-y"))]
+  (letfn [(add-repo [repo] (sh! "sudo" "/usr/bin/add-apt-repository" repo "-y"))
+          (rm-repo [repo] (sh! "sudo" "/usr/bin/add-apt-repository" "--remove" repo "-y"))]
     (let [fns {:present add-repo :absent rm-repo}]
       ((fns state) repo))))
 
@@ -85,11 +86,11 @@
     :Ubuntu (sh! "/usr/bin/apt-key" "adv" "--keyserver" server "--recv" id)
     :default (throw (ex-info (<< "cant import apt key under ~(os)") {}))))
 
-(def-inline add-repo
-  "Add repo, gpg key and fingerprint in one go."
-  [repo url id]
-  (download url (<< "/tmp/~{id}.key"))
-  (key-file (<< "/tmp/~{id}.key"))
+#_(def-inline add-repo
+    "Add repo, gpg key and fingerprint in one go."
+    [repo url id]
+    (download url (<< "/tmp/~{id}.key"))
+    (key-file (<< "/tmp/~{id}.key"))
   ;; (fingerprint id)
-  (repository repo :present)
-  (update-))
+    (repository repo :present)
+    (update-))

@@ -2,7 +2,7 @@
   "Archive resource support"
   (:require
    [re-cog.resources.package :refer (package)]
-   [re-cog.common :refer (def-serial)]
+   [re-cog.common.defs :refer (def-serial)]
    [me.raynes.fs :as fs]
    [re-cog.common.functions :refer (sh!)]))
 
