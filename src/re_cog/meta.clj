@@ -5,15 +5,13 @@
   (require n)
   (into {}
         (filter
-         (fn [[s f]] (:serializable.fn/source (meta (deref f)))) (ns-publics n))))
+         (fn [[s f]]
+           (:serializable.fn/source (meta (deref f)))) (ns-publics n))))
 
 (defn functions []
   (apply merge
          (map resolve-
-              [; recipes
-               're-cog.recipes.build
-               're-cog.recipes.osquery
-               ; resources
+              [; resources
                're-cog.resources.exec
                're-cog.resources.permissions
                're-cog.resources.file
@@ -21,6 +19,10 @@
                're-cog.resources.git
                're-cog.resources.download
                're-cog.resources.archive
+                ; recipes
+               're-cog.recipes.nvim
+               're-cog.recipes.build
+               're-cog.recipes.osquery
                ; facts
                're-cog.facts.oshi
                're-cog.facts.query
