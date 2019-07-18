@@ -21,7 +21,6 @@
 (def-serial package
   "Package resource with optional provider and state parameters:
     (package \"ghc\" :present)
-    (package \"ghc\" \"gnome-terminal\" :present) ; multiple packages
     (package \"/tmp/foo.deb\" deb :present) ; using deb provider
     (package \"ghc\" :absent) ; remove package
   "
