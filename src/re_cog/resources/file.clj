@@ -11,8 +11,7 @@
 (def-serial directory
   "Directory resource:
     (directory \"/tmp/bla\" :present) ; create
-    (directory \"/tmp/bla\" :absent) ; remove
-  "
+    (directory \"/tmp/bla\" :absent) ; remove"
   [dest state]
   (let [states {:present fs/mkdir :absent fs/delete-dir}]
     ((states state) dest)))
@@ -20,7 +19,8 @@
 (def-serial file
   "A file resource"
   [path state]
-  (println 1))
+  (let [states {:present fs/touch :absent fs/delete}]
+    ((states state) path)))
 
 (def-serial symlink
   "Symlink resource"
