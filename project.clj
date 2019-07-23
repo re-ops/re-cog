@@ -36,6 +36,25 @@
      [aysylu/loom "1.0.2" :exclusions [org.clojure/clojurescript]]
   ]
 
+  :plugins [
+      [lein-tag "0.1.0"]
+      [lein-codox "0.10.7"]
+      [lein-ancient "0.6.15" :exclusions [org.clojure/clojure]]
+      [lein-set-version "0.3.0"]
+      [lein-cljfmt "0.5.6"]]
+
+   :aliases {
+     "travis" [
+      "with-profile" "test"  "do" "clean," "compile," "cljfmt" "check"
+     ]
+     "docs" [
+         "with-profile" "codox" "do" "codox"
+     ]
+   }
+
+
+
+
   :repl-options {
     :init-ns user
     :prompt (fn [ns] (str "\u001B[35m[\u001B[34m" "re-cog" "\u001B[35m]\u001B[33mλ:\u001B[m " ))
