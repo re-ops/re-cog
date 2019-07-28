@@ -36,7 +36,7 @@
   ([& in-args]
    (let [{:keys [name args meta body]} (parse-args in-args)
          body' (do-body body)]
-     `(def ^{:serializable true} ~name (s/fn ~args ~body')))))
+     `(def ~name (s/fn ~args ~body')))))
 
 (defn source-of
   "Get the source of a function (works only from the repl)"
@@ -54,8 +54,6 @@
                 (list 'swap! profile 'assoc (keyword name) [r t])
                 r))))
 
-(def core-functions (ns-publics 'clojure.core))
-
 (defn inlined-functions [body profile]
   "Doing a postwalk on the body s-exp inlining the first level of serializable functions"
   (let [fs (atom [])]
@@ -66,9 +64,10 @@
     @fs))
 
 (defmacro def-inline
-  "Construct a serialized function (composed from a sequence of serialized functions) where:
-    * Each function within its body is inlined using a letfn form.
-    * The result of the function is the output of each nested call and its measured runtime.
+  "Construct a serialized function where:
+    * Each serialized function within its body is inlined using a letfn form.
+    * The result of the function is a map containing the output of each nested call and its measured runtime.
+    * Using meta data :depends we can specify dependencies between recipe functions that will be accounted for in re-cog.plan/execution-plan. 
   "
   [& args]
   (let [{:keys [name args meta body]} (parse-args args)
@@ -76,9 +75,11 @@
         letfn-vec (inlined-functions body profile)
         body' (do-body body)]
     `(def ~name
-       (s/fn ~args
-         (let [~profile (atom {})]
-           (letfn ~letfn-vec
-             (let [result# ~body']
-               (merge result# {:profile (deref ~profile)}))))))))
+       (with-meta
+         (s/fn ~args
+           (let [~profile (atom {})]
+             (letfn ~letfn-vec
+               (let [result# ~body']
+                 (merge result# {:profile (deref ~profile)})))))
+         ~meta))))
 
