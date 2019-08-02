@@ -28,7 +28,7 @@
   (alg/topsort (execution-graph namespaces)))
 
 (comment
-  (loom.io/view (execution-plan base-machine))
-  (dep-nodes (all-functions base-machine))
-  (def base-machine (g/graph [1 2]))
-  (g/view base-machine))
+  (require
+   're-cog.recipes.osquery
+   're-cog.recipes.build)
+  (loom.io/view (execution-plan base-machine)))

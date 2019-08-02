@@ -2,7 +2,7 @@
   "Def macros"
   (:require
    [serializable.fn :as s]
-   [re-share.core :refer [measure]]
+   [re-share.core :refer [measure gen-uuid]]
    [clojure.spec.alpha :as sp]
    [clojure.repl :refer (source-fn)]
    [re-cog.meta :refer (functions)]
@@ -47,12 +47,12 @@
   "Capture function source for inlining"
   [f profile]
   (let [[_ name _ args body] (source-of f)
-        r (gensym 'r)
-        t (gensym 't)]
+        m (gensym 'm)]
     (list name args
-          (list 'let [[r t] (list 're-share.core/measure (list 'fn [] body))]
-                (list 'swap! profile 'assoc (keyword name) [r t])
-                r))))
+          (list 'let [m (list 're-share.core/measure (list 'fn [] body))]
+                (list 'swap! profile 'conj
+                      (list 'merge m  {:type (keyword name) :uuid (list 're-share.core/gen-uuid)}))
+                (m :result)))))
 
 (defn inlined-functions [body profile]
   "Doing a postwalk on the body s-exp inlining the first level of serializable functions"
@@ -67,19 +67,16 @@
   "Construct a serialized function where:
     * Each serialized function within its body is inlined using a letfn form.
     * The result of the function is a map containing the output of each nested call and its measured runtime.
-    * Using meta data :depends we can specify dependencies between recipe functions that will be accounted for in re-cog.plan/execution-plan. 
-  "
+    * Using meta data :depends we can specify dependencies between recipe functions that will be accounted for in re-cog.plan/execution-plan."
   [& args]
   (let [{:keys [name args meta body]} (parse-args args)
         profile (gensym 'profile)
         letfn-vec (inlined-functions body profile)
         body' (do-body body)]
     `(def ~name
-       (with-meta
-         (s/fn ~args
-           (let [~profile (atom {})]
-             (letfn ~letfn-vec
-               (let [result# ~body']
-                 (merge result# {:profile (deref ~profile)})))))
-         ~meta))))
+       (s/fn ~args
+         (let [~profile (atom #{})]
+           (letfn ~letfn-vec
+             (let [result# ~body']
+               (merge result# {:profile (deref ~profile)}))))))))
 

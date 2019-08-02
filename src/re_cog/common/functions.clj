@@ -39,7 +39,7 @@
    '[re-cog.scripts.common :refer [shell-args]]
    ; os info
    '[re-share.oshi :refer (read-metrics os get-processes)]
-   '[re-share.core :refer [measure]]
+   '[re-share.core :refer [measure gen-uuid]]
    ; io
    '[digest :as digest]
    '[clojure.java.io :as io]
