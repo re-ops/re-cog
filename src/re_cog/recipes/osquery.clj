@@ -20,4 +20,5 @@
     (package (<< "/tmp/~{archive}") :present)
     (set-file-acl "re-ops" "rwX" "/etc/osquery")
     (copy "/tmp/resources/osquery.conf" "/etc/osquery/osquery.conf")
+    (set-file-acl "re-ops" "rwX" "/usr/share/osquery/packs")
     (copy "/tmp/resources/fim.conf" "/usr/share/osquery/packs/fim.conf")))
