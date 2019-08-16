@@ -8,13 +8,25 @@
 
 (require-functions)
 
+(defn coherce
+  ([b]
+   (coherce b "" ""))
+  ([b out]
+   (coherce b err ""))
+  ([b err out]
+   {:code (if b 0 -1) :out out :err err}))
+
 (def-serial directory
   "Directory resource:
     (directory \"/tmp/bla\" :present) ; create
     (directory \"/tmp/bla\" :absent) ; remove"
   [dest state]
-  (let [states {:present fs/mkdir :absent fs/delete-dir}]
-    ((states state) dest)))
+  (letfn [(lazy-mkdir []
+            (if (fs/exists? dest) true (fs/mkdir dest)))
+          (lazy-rm []
+                   (if (fs/exists? dest) (fs/delete-dir dest) true))]
+    (let [states {:present lazy-mkdir :absent lazy-rm}]
+      (coherce ((states state) dest)))))
 
 (def-serial file
   "A file resource"
@@ -31,9 +43,7 @@
     (if (fs/exists? path)
       (let [existing (symlink-target path)]
         (when-not (= target existing)
-          (throw
-           (ex-info "Symlink path exist but does not point to target"
-                    {:existing existing :expected path :target target}))))
+          (coherce false (<< "Symlink path ~{existing} points to ~{target} not to expected ~{expected}"))))
       (fs/sym-link path target))))
 
 (def-serial template
@@ -63,8 +73,7 @@
 (def-serial chown
   "Change file/directory owner using uid & gid resource:
       (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\"); using user/group
-      (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\" {:recursive true}); chown -R    
-     "
+      (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\" {:recursive true}); chown -R"
   [dest user group opts]
   (letfn [(chown-script []
             (let [u-g (<< "~{user}:~{group}")]
