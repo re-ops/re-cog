@@ -24,8 +24,12 @@
 (def-serial file
   "A file resource"
   [path state]
-  (let [states {:present fs/touch :absent fs/delete}]
-    ((states state) path)))
+  (letfn [(touch [f]
+            (if (fs/exists? f) true (fs/touch f)))
+          (delete [f]
+                  (if (fs/exists? f) (fs/delete f) true))]
+    (let [states {:present touch :absent delete}]
+      (coherce ((states state) path)))))
 
 (def-serial symlink
   "Symlink resource"
