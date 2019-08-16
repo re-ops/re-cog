@@ -18,6 +18,14 @@
   (let [digest-fns {:sha256 digest/sha-256 :md5 digest/md5}]
     ((digest-fns hash-type) (io/as-file f))))
 
+(defn coherce
+  ([b]
+   (coherce b "" ""))
+  ([b err]
+   (coherce b err ""))
+  ([b err out]
+   {:exit (if b 0 1) :out out :err err}))
+
 (defn require-resources
   "Requiring common resources"
   []
@@ -35,7 +43,7 @@
    '[clojure.java.shell :refer [sh]]
    '[pallet.stevedore :refer (script)]
    '[pallet.stevedore.bash]
-   '[re-cog.common.functions :refer [sh! file-checksum]]
+   '[re-cog.common.functions :refer [sh! file-checksum coherce]]
    '[re-cog.scripts.common :refer [shell-args]]
    ; os info
    '[re-share.oshi :refer (read-metrics os get-processes)]

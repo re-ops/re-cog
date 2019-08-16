@@ -1,20 +1,13 @@
 (ns re-cog.resources.file
   "File resources"
   (:require
+   [clojure.core.strint :refer (<<)]
    [re-cog.resources.exec :refer (run)]
    [re-cog.common.functions :refer (require-functions)]
    [re-cog.common.defs :refer (def-serial)]
    [re-cog.common :refer (require-constants)]))
 
 (require-functions)
-
-(defn coherce
-  ([b]
-   (coherce b "" ""))
-  ([b out]
-   (coherce b err ""))
-  ([b err out]
-   {:code (if b 0 -1) :out out :err err}))
 
 (def-serial directory
   "Directory resource:
@@ -26,7 +19,7 @@
           (lazy-rm []
                    (if (fs/exists? dest) (fs/delete-dir dest) true))]
     (let [states {:present lazy-mkdir :absent lazy-rm}]
-      (coherce ((states state) dest)))))
+      (coherce ((states state))))))
 
 (def-serial file
   "A file resource"
@@ -43,8 +36,8 @@
     (if (fs/exists? path)
       (let [existing (symlink-target path)]
         (when-not (= target existing)
-          (coherce false (<< "Symlink path ~{existing} points to ~{target} not to expected ~{expected}"))))
-      (fs/sym-link path target))))
+          (coherce false (<< "Symlink ~{path} alreay points to ~{existing} and not to ~{target}"))))
+      (coherce (fs/sym-link path target)))))
 
 (def-serial template
   "Template resource"
@@ -56,7 +49,10 @@
     (copy src dest)
   "
   [src dest]
-  (fs/copy src dest))
+  (try
+    (coherce (= (fs/copy src dest) dest))
+    (catch Exception e
+      (coherce false (.getMessage e)))))
 
 (def-serial chmod
   "Change file/directory mode resource:
