@@ -8,7 +8,7 @@
 (def-serial checksum
   "File checksum with optional hash-type (:sha256 by default)"
   [f sum & opts]
-  (assert (= sum (file-checksum f opts))))
+  (coherce (= sum (file-checksum f opts))))
 
 (def-serial download
   "Download file resource, if checksum is provided download will be lazy:
@@ -18,4 +18,4 @@
   (when (or (not (exists? dest)) (not (= sum (file-checksum dest opts))))
     (with-open [in (io/input-stream url) out (io/output-stream dest)]
       (io/copy in out))
-    (assert (= sum (file-checksum dest opts)))))
+    (coherce (= sum (file-checksum dest opts)))))
