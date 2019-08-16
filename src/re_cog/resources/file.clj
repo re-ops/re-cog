@@ -39,9 +39,10 @@
               (str (java.nio.file.Files/readSymbolicLink f))))]
     (if (fs/exists? path)
       (let [existing (symlink-target path)]
-        (when-not (= target existing)
-          (coherce false (<< "Symlink ~{path} alreay points to ~{existing} and not to ~{target}"))))
-      (coherce (fs/sym-link path target)))))
+        (if-not (= target existing)
+          (coherce false (<< "symlink ~{path} alreay points to ~{existing} and not to ~{target}"))
+          (coherce true "" "symlink exists")))
+      (coherce (= path (.getName (fs/sym-link path target)))))))
 
 (def-serial template
   "Template resource"
