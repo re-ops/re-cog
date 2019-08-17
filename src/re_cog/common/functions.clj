@@ -26,13 +26,19 @@
   ([b err out]
    {:exit (if b 0 1) :out out :err err}))
 
+(defmacro success [out]
+  (coherce true "" out))
+
+(defn failure [err]
+  (coherce false err ""))
+
 (defn require-resources
   "Requiring common resources"
   []
   (require
    '[re-cog.resources.package :refer [package repository]]
    '[re-cog.resources.git :refer [clone pull repo-exists? binary]]
-   '[re-cog.resources.file :refer [chown file directory symlink]]
+   '[re-cog.resources.file :refer [chown file directory symlink line]]
    '[re-cog.resources.exec :refer [run]]))
 
 (defn require-functions
@@ -43,7 +49,7 @@
    '[clojure.java.shell :refer [sh]]
    '[pallet.stevedore :refer (script)]
    '[pallet.stevedore.bash]
-   '[re-cog.common.functions :refer [sh! file-checksum coherce]]
+   '[re-cog.common.functions :refer [sh! file-checksum coherce success failure]]
    '[re-cog.scripts.common :refer [shell-args]]
    ; os info
    '[re-share.oshi :refer (read-metrics os get-processes)]

@@ -40,8 +40,8 @@
     (if (fs/exists? path)
       (let [existing (symlink-target path)]
         (if-not (= target existing)
-          (coherce false (<< "symlink ~{path} alreay points to ~{existing} and not to ~{target}"))
-          (coherce true "" "symlink exists")))
+          (failure (<< "symlink ~{path} alreay points to ~{existing} and not to ~{target}"))
+          (success "symlink exists")))
       (coherce (= path (.getName (fs/sym-link path target)))))))
 
 (def-serial template
@@ -57,7 +57,7 @@
   (try
     (coherce (= (fs/copy src dest) dest))
     (catch Exception e
-      (coherce false (.getMessage e)))))
+      (failure (.getMessage e)))))
 
 (def-serial chmod
   "Change file/directory mode resource:
@@ -82,4 +82,35 @@
                 (script ("/bin/chown" ~u-g ~dest))
                 (script ("/bin/chown" ~u-g ~dest "-R")))))]
     (run chown-script)))
+
+(def-serial line
+  "File line resource either append or remove lines:
+
+    (line \"/tmp/foo\" \"bar\" :present); append line
+    (line \"/tmp/foo\" (line-eq \"bar\") :absent); remove lines equal to bar from the file
+    (line \"/tmp/foo\" (fn [curr] (> 5 (.length curr))) :absent); remove lines using a function
+  "
+  [file v state]
+  (letfn [(line-eq [line] (fn [curr] (not (= curr line))))
+          (add-line [line]
+                    (let [contents (slurp file)]
+                      (if (clojure.string/includes? contents line)
+                        (success "file already contains line")
+                        (do
+                          (spit file (str line "\n") :append true)
+                          (success "line added to file")))))
+          (rm-line [pred]
+                   (let [f (if (string? pred) (line-eq pred) pred)
+                         contents (slurp file)
+                         filtered (filter f (clojure.string/split-lines contents))
+                         output (clojure.string/join "\n" filtered)]
+                     (if-not (= contents output)
+                       (do
+                         (spit file output)
+                         (success "line removed from file"))
+                       (success "line not present in file"))))]
+
+    (let [fns {:present add-line :absent rm-line}]
+      ((fns state) v))))
+
 

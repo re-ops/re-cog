@@ -21,16 +21,16 @@
   "check if repo exists"
   [repo path]
   (when (fs/exists? (<< "~{path}/.git/config"))
-    (clojure.string/includes? (slurp (<< "~{path}/.git/config")) repo)))
+    (coherce (clojure.string/includes? (slurp (<< "~{path}/.git/config")) repo))))
 
 (def-serial pull
   "Pull implementation"
   [repo dest]
-  (if (repo-exists? repo dest)
+  (if (= 0 (:exit (repo-exists? repo dest)))
     (let [git (binary)
           dir (<< "--git-dir=~{dest}.git")]
       (run (fn [] (script (~git ~dir "pull")))))
-    (<< "Skipping pull ~{repo} is missing under ~{dest}")))
+    (failure (<< "Skipping pull remote ~{repo} is no found under ~{dest}"))))
 
 (def-serial clone
   "Clone implementation"
@@ -38,6 +38,6 @@
   (letfn [(clone-script []
             (let [git (binary)]
               (script (~git "clone" ~repo ~dest))))]
-    (if-not (repo-exists? repo dest)
+    (if-not (= 0 (:exit (repo-exists? repo dest)))
       (run clone-script)
-      {:out (<< "Skipping clone ~{repo} exists under ~{dest}")})))
+      (success (<< "Skipping clone ~{repo} exists under ~{dest}")))))
