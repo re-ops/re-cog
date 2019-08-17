@@ -22,14 +22,14 @@
         npmrc (<< "~{home}/.npmrc")]
     (letfn [(npm-install [pkg]
               (fn []
-                (script ("/usr/bin/npm" "install" "--prefix" prefix pkg))))]
+                (script ("/usr/bin/npm" "install" "--prefix" ~prefix ~pkg))))]
       (package "npm" :present)
       (run (npm-install "neovim"))
       (run (npm-install "node-cljfmt"))
       (file npmrc :present)
-      ;; (line npmrc (<< "prefix = ~{prefix}"))
+      (line npmrc (<< "prefix = ~{prefix}") :present)
       (directory (<< "~{home}/bin") :present)
-      (symlink (<< "~{prefix}/node_modules/node-cljfmt/bin/cljfmt") (<< "~{home}/bin/cljfmt")))))
+      (symlink (<< "~{home}/bin/cljfmt") (<< "~{prefix}/node_modules/node-cljfmt/bin/cljfmt")))))
 
 (def-inline python-support
   "Neovim python support"
@@ -59,7 +59,7 @@
     (clone "git://github.com/narkisr/nvim.git" config)
     (chown config name name {:recursive true})))
 
-(defn powerline
+(def-inline powerline
   "Install powerline"
   [{:keys [home name]}]
   (let [fonts (<< "~{home}/.fonts")
