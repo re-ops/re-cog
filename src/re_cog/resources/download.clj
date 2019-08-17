@@ -15,7 +15,9 @@
       (download url dest expected :sha256) ; download only if file missing or checksum mismatch
       (download url dest); always download "
   [url dest sum & opts]
-  (when (or (not (exists? dest)) (not (= sum (file-checksum dest opts))))
-    (with-open [in (io/input-stream url) out (io/output-stream dest)]
-      (io/copy in out))
-    (coherce (= sum (file-checksum dest opts)))))
+  (if (or (not (exists? dest)) (not (= sum (file-checksum dest opts))))
+    (do
+      (with-open [in (io/input-stream url) out (io/output-stream dest)]
+        (io/copy in out))
+      (coherce (= sum (file-checksum dest opts))))
+    (coherce true "" "File already download and checksum matches")))
