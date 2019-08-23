@@ -51,7 +51,10 @@
     (list name args
           (list 'let [m (list 're-share.core/measure (list 'fn [] body))]
                 (list 'swap! profile 'conj
-                      (list 'merge m  {:type (keyword name) :uuid (list 're-share.core/gen-uuid)}))
+                      (list 'merge
+                            (list 'dissoc m :result)
+                            (list m :result)
+                            {:type (keyword name) :uuid (list 're-share.core/gen-uuid)}))
                 (m :result)))))
 
 (defn inlined-functions [body profile]
@@ -78,5 +81,5 @@
          (let [~profile (atom #{})]
            (letfn ~letfn-vec
              (let [result# ~body']
-               (merge result# {:profile (deref ~profile)}))))))))
+               (merge result# {:resources (deref ~profile)}))))))))
 
