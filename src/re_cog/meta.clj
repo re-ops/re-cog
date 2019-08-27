@@ -23,6 +23,7 @@
                're-cog.recipes.nvim
                're-cog.recipes.build
                're-cog.recipes.osquery
+               're-cog.recipes.shell
                ; facts
                're-cog.facts.oshi
                're-cog.facts.query
