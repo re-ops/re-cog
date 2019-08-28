@@ -5,7 +5,7 @@
    [loom.graph :as g]))
 
 (def base-machine
-  ['re-cog.recipes.osquery 're-cog.recipes.build 're-cog.recipes.nvim])
+  ['re-cog.recipes.osquery 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.shell])
 
 (defn all-functions [namespaces]
   (mapcat

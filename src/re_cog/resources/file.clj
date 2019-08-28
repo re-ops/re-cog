@@ -42,7 +42,10 @@
         (if-not (= target existing)
           (failure (<< "symlink ~{path} alreay points to ~{existing} and not to ~{target}"))
           (success "symlink exists")))
-      (coherce (= path (.getName (fs/sym-link path target)))))))
+      (let [actual (.getName (fs/sym-link path target))]
+        (if (= path actual)
+          (success (<< "symlink from ~{path} to ~{target} created"))
+          (failure (<< "failed to create symlink ~{actual} is not ~{path}")))))))
 
 (def-serial template
   "Template resource"

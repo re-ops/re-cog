@@ -26,39 +26,40 @@
     (download url dest sum)
     (set-file-acl "re-ops" "rwX" "/opt")
     (untar dest "/opt/")
+    (set-file-acl "re-ops" "rwX" "/usr/local/bin/")
     (symlink "/usr/local/bin/nvim" "/opt/nvim-linux64/bin/nvim")))
 
 (def-inline nodejs-support
   "nodejs neovim support"
   []
-  (let [{:keys [home name]} (configuration)
-        prefix (<< "/home/~{name}/.npm")
+  (let [{:keys [home user]} (configuration)
+        prefix (<< "/home/~{user}/.npm")
         npmrc (<< "~{home}/.npmrc")]
-    (letfn [(npm-install [pkg]
+    (letfn [(npm-install [prefix pkg]
               (fn []
                 (script ("/usr/bin/npm" "install" "--prefix" ~prefix ~pkg))))]
       (package "npm" :present)
       (file npmrc :present)
       (line npmrc (<< "prefix = ~{prefix}") :present)
-      (run (npm-install "neovim"))
-      (run (npm-install "node-cljfmt"))
+      (run (npm-install prefix "neovim"))
+      (run (npm-install prefix "node-cljfmt"))
       (directory (<< "~{home}/bin") :present)
       (symlink (<< "~{home}/bin/cljfmt") (<< "~{prefix}/node_modules/node-cljfmt/bin/cljfmt")))))
 
 (def-inline config
   "Configure nvim"
   []
-  (let [{:keys [home name]} (configuration)
+  (let [{:keys [home user]} (configuration)
         config (<< "~{home}/.config/nvim")]
     (clone "git://github.com/narkisr/nvim.git" config)
-    (chown config name name {:recursive true})))
+    (chown config user user {:recursive true})))
 
 (def-inline powerline
   "Install powerline"
   []
-  (let [{:keys [home name]} (configuration)
+  (let [{:keys [home user]} (configuration)
         fonts (<< "~{home}/.fonts")
         repo "git://github.com/scotu/ubuntu-mono-powerline.git"]
     (directory fonts :present)
     (clone repo (<< "~{fonts}/ubuntu-mono-powerline"))
-    (chown fonts name name {:recursive true})))
+    (chown fonts user user {:recursive true})))
