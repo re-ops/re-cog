@@ -19,11 +19,13 @@
                're-cog.resources.git
                're-cog.resources.download
                're-cog.resources.archive
+               're-cog.resources.user
                 ; recipes
                're-cog.recipes.nvim
                're-cog.recipes.build
                're-cog.recipes.osquery
                're-cog.recipes.shell
+               're-cog.recipes.virtualization
                ; facts
                're-cog.facts.oshi
                're-cog.facts.query
