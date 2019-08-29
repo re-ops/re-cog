@@ -4,9 +4,7 @@
    [re-cog.facts.config :refer (configuration)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.file :refer (symlink directory chmod)]
-   [re-cog.resources.archive :refer (untar)]
    [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.resources.permissions :refer (set-file-acl)]
    [re-cog.common :refer (require-constants)]
    [re-cog.common.defs :refer (def-inline)]))
 
