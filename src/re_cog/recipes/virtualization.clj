@@ -17,9 +17,17 @@
   []
   (letfn [(init []
             (fn []
-              (script ("/usr/bin/lxd" "init" "--auto"))))]
+              (script ("sudo" "/usr/bin/lxd" "init" "--auto"))))]
     (let [{:keys [user]} (configuration)]
       (package "lxd" :present)
       (package "zfsutils-linux" :present)
-      (group-add "libvirtd" user)
       (run (init)))))
+
+(def-inline kvm
+  "Installing KVM"
+  []
+  (let [{:keys [user]} (configuration)]
+    (package "qemu-kvm" :present)
+    (package  "libvirt-bin" :present)
+    (package "bridge-utils" :present)
+    (package "virt-manager" :present)))
