@@ -5,7 +5,11 @@
    [loom.graph :as g]))
 
 (def base-machine
-  ['re-cog.recipes.osquery 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.shell])
+  ['re-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.shell])
+
+(def osquery-machine (into ['re-cog.recipes.osquery] base-machine))
+
+(def virtual-machine ['re-cog.recipes.virtualization])
 
 (defn all-functions [namespaces]
   (mapcat
