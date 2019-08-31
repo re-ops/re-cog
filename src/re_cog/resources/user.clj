@@ -10,4 +10,4 @@
     (group-add \"libvirt\" \"re-ops\")
   "
   [group user]
-  (sh! "/usr/sbin/usermod" "-G" group "-a" user))
+  (sh! "sudo" "/usr/sbin/usermod" "-G" group "-a" user))
