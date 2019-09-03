@@ -19,7 +19,8 @@
     (do
       (with-open [in (io/input-stream url) out (io/output-stream dest)]
         (io/copy in out))
-      (if (= sum (file-checksum dest opts))
-        (success "Downloaded file successfuly")
-        (failure "Checksum of downloaded file does not match!")))
+      (let [found (file-checksum dest opts)]
+        (if (= sum found)
+          (success "Downloaded file successfuly")
+          (failure (<< "Found checksum ~{found} of downloaded file does not match provided ~{sum}")))))
     (success "File already download and checksum matches")))
