@@ -76,10 +76,10 @@
         profile (gensym 'profile)
         letfn-vec (inlined-functions body profile)
         body' (do-body body)]
+
     `(def ~name
-       (s/fn ~args
-         (let [~profile (atom #{})]
-           (letfn ~letfn-vec
-             (let [result# ~body']
-               (merge result# {:resources (deref ~profile)}))))))))
+       (s/fn ~args (let [~profile (atom #{})]
+                     (letfn ~letfn-vec
+                       (let [result# ~body']
+                         (merge result# {:resources (deref ~profile)}))))))))
 
