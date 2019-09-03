@@ -24,7 +24,8 @@
   "
   [target]
   (do
-    (assert (fs/exists? "/usr/bin/unzip"))
+    (when-not (fs/exists? "/bin/bzip2")
+      (re-cog.resources.package/package "bzip2" :present))
     (sh! "/bin/bzip2" "-kf" "-d" target)))
 
 (def-serial untar
