@@ -4,12 +4,14 @@
    [loom.alg :as alg]
    [loom.graph :as g]))
 
-(def base-machine
+(def base-setup
   ['re-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.shell])
 
-(def osquery-machine (into ['re-cog.recipes.osquery] base-machine))
+(def osquery (into ['re-cog.recipes.osquery] base-setup))
 
-(def virtual-machine ['re-cog.recipes.virtualization])
+(def virtual (into ['re-cog.recipes.virtualization] base-setup))
+
+(def backup (into ['re-cog.recipes.backup] base-setup))
 
 (defn all-functions [namespaces]
   (mapcat
