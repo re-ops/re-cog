@@ -26,6 +26,7 @@
                're-cog.recipes.osquery
                're-cog.recipes.shell
                're-cog.recipes.virtualization
+               're-cog.recipes.backup
                ; facts
                're-cog.facts.oshi
                're-cog.facts.query
