@@ -40,9 +40,9 @@
     (if (fs/exists? path)
       (let [existing (symlink-target path)]
         (if-not (= target existing)
-          (failure (<< "symlink ~{path} alreay points to ~{existing} and not to ~{target}"))
+          (failure (<< "~{path} alreay points to ~{existing} and not to ~{target}"))
           (success "symlink exists")))
-      (let [actual (.getName (fs/sym-link path target))]
+      (let [actual (.getPath (fs/sym-link path target))]
         (if (= path actual)
           (success (<< "symlink from ~{path} to ~{target} created"))
           (failure (<< "failed to create symlink ~{actual} is not ~{path}")))))))
@@ -59,6 +59,16 @@
   [src dest]
   (try
     (coherce (= (fs/copy src dest) dest))
+    (catch Exception e
+      (failure (.getMessage e)))))
+
+(def-serial rename
+  "Move a local file:
+    (rename \"/tmp/foo\" \"bla\")
+  "
+  [src dest]
+  (try
+    (coherce (fs/rename src dest))
     (catch Exception e
       (failure (.getMessage e)))))
 
