@@ -22,24 +22,27 @@
     (let [{:keys [home user]} (configuration)
           ins "linux-install-1.10.1.469.sh"
           url (<< "https://download.clojure.org/install/~{ins}")
-          sum "a3c08a18ea09505916685ccfcffc09fe583ed999745a765260ae933e65fc5256"
+          sum "265e46d492b682cecc346ef018076a3181203dfe5e3dbe455b0f7feab51df70f"
           prefix (<< "~{home}/.clojure")]
 
       (download url (<< "/tmp/~{ins}") sum)
       (package "curl" :present)
+      (package "rlwrap" :present)
       (chmod (<< "/tmp/~{ins}") "+x")
       (run (install-fn (<< "/tmp/~{ins}") prefix))
       (directory (<< "~{home}/bin/") :present)
       (symlink (<< "~{home}/bin/clj") (<< "~{prefix}/bin/clj"))
+      (symlink (<< "~{home}/bin/clojure") (<< "~{prefix}/bin/clojure"))
       (chown prefix user user {:recursive true}))))
 
 (def-inline joker
   "Setting up Joker linter"
   []
   (let [{:keys [home]} (configuration)
-        version "0.12.0"
+        version "0.12.7"
         archive (<< "joker-~{version}-linux-amd64.zip")
-        url (<< "https://github.com/candid82/joker/releases/download/v~{version}/~{archive}")]
-    (download url (<< "/tmp/~{archive}"))
+        url (<< "https://github.com/candid82/joker/releases/download/v~{version}/~{archive}")
+        sum "25ba334d68044971e556e9aa0ce6c1994610a464c399adf0e0357fd2e23b6c36"]
+    (download url (<< "/tmp/~{archive}") sum)
     (directory (<< "~{home}/bin/") :present)
     (unzip (<< "/tmp/~{archive}") (<< "~{home}/bin/"))))
