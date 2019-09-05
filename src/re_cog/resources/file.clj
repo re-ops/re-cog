@@ -122,8 +122,22 @@
                          (spit file output)
                          (success "line removed from file"))
                        (success "line not present in file"))))]
-
     (let [fns {:present add-line :absent rm-line}]
       ((fns state) v))))
 
+(def-serial line-set
+  "Set existing line value"
+  [dest k v sep]
+  (letfn [(set-key [k v sep]
+            (fn [line]
+              (let [[f & _] (clojure.string/split line (re-pattern sep))]
+                (if (= f k)
+                  (str k sep v)
+                  line))))]
+    (if-not (fs/exists? dest)
+      (error (<< "~{dest} not found"))
+      (let [lines (slurp dest)
+            edited (map (set-key k v sep)  (clojure.string/split-lines lines))]
+        (spit dest (clojure.string/join "\n" edited))
+        (success "value in file line was set")))))
 
