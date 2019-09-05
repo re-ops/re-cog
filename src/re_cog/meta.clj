@@ -14,6 +14,7 @@
               [; resources
                're-cog.resources.exec
                're-cog.resources.permissions
+               're-cog.resources.service
                're-cog.resources.file
                're-cog.resources.package
                're-cog.resources.git
@@ -28,6 +29,7 @@
                're-cog.recipes.virtualization
                're-cog.recipes.backup
                're-cog.recipes.clojure
+               're-cog.recipes.ssh
                ; facts
                're-cog.facts.oshi
                're-cog.facts.query
