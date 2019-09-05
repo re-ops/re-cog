@@ -57,6 +57,10 @@
                             {:type (keyword name) :uuid (list 're-share.core/gen-uuid)}))
                 (m :result)))))
 
+(defn distinct-by [f coll]
+  (let [groups (group-by f coll)]
+    (mapv #(first (groups %)) (distinct (map f coll)))))
+
 (defn inlined-functions [body profile]
   "Doing a postwalk on the body s-exp inlining the first level of serializable functions"
   (let [fs (atom [])]
@@ -64,7 +68,7 @@
      (fn [exp]
        (when (and (symbol? exp) ((functions) exp))
          (swap! fs conj (inlined exp profile)))) body)
-    @fs))
+    (distinct-by first @fs)))
 
 (defmacro def-inline
   "Construct a serialized function where:
@@ -76,7 +80,6 @@
         profile (gensym 'profile)
         letfn-vec (inlined-functions body profile)
         body' (do-body body)]
-
     `(def ~name
        (s/fn ~args (let [~profile (atom #{})]
                      (letfn ~letfn-vec
