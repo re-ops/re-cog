@@ -1,6 +1,5 @@
 (ns re-cog.recipes.backup
   (:require
-   [re-cog.facts.config :refer (configuration)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.file :refer (rename symlink chmod)]
    [re-cog.resources.archive :refer (untar bzip2)]
