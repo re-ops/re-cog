@@ -8,25 +8,6 @@
 (require-functions)
 (require-constants)
 
-#_(defn sysctl [action service]
-    (go
-      (let [release (<! (os :release))]
-        (if-let [bin (<! (sysctl-bin release))]
-          (<! (sh bin action (<< "~{service}.service")))
-          {:error (<< "sysctl binary not found for os release ~{release}")}))))
-
-#_(defrecord Systemd []
-    Service
-    (disable [this service]
-      (debug "disabling service" ::systemd)
-      (go
-        (<! (sysctl "disable" service))))
-
-    (enable [this service]
-      (debug "enabling service" ::systemd)
-      (go
-        (<! (sysctl "enable" service)))))
-
 (def-serial service
   "Service start/stop/restart"
   [srv state]
