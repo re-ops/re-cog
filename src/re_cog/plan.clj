@@ -5,7 +5,7 @@
    [loom.graph :as g]))
 
 (def base-setup
-  ['re-cog.recipes.shell])
+  ['re-cog.recipes.shell 're-cog.recipes.ssh])
 
 (def osquery (into ['re-cog.recipes.osquery] base-setup))
 
