@@ -29,7 +29,7 @@
                're-cog.recipes.virtualization
                're-cog.recipes.backup
                're-cog.recipes.clojure
-               're-cog.recipes.ssh
+               're-cog.recipes.hardening
                ; facts
                're-cog.facts.oshi
                're-cog.facts.query
