@@ -34,8 +34,9 @@
       (copy "/tmp/resources/networking/harden.conf" target)
       (run (sysctl-reload target)))))
 
-#_(def-inline disable-bluetooth
-    "Disabling bluetooth on desktop machines"
-    []
-    (when (desktop?)
-      (on-boot "bluetooth" :disable)))
+(def-inline disable-bluetooth
+  "Disabling bluetooth on desktop machines"
+  []
+  (if (desktop?)
+    (on-boot "bluetooth" :disable)
+    {}))

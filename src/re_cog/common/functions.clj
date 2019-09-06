@@ -60,6 +60,7 @@
    '[me.raynes.fs :as fs :refer (list-dir tmpdir exists?)]
    ; common
    '[re-cog.facts.config :refer (configuration)]
+   '[re-cog.facts.query :refer (desktop?)]
    '[taoensso.timbre :refer (info error debug trace)]
    '[clojure.core.strint :refer (<<)]))
 
