@@ -4,6 +4,7 @@
    [re-cog.facts.config :refer (configuration)]
    [re-cog.facts.query :refer (desktop?)]
    [re-cog.resources.file :refer (line line-set copy)]
+   [re-cog.resources.permissions :refer (set-file-acl)]
    [re-cog.resources.service :refer (service on-boot)]
    [re-cog.common.functions :refer (require-functions require-resources)]
    [re-cog.common :refer (require-constants)]
@@ -18,6 +19,7 @@
   []
   (package "openssh-server" :present)
   (package "rng-tools" :present)
+  (set-file-acl "re-ops" "rwX" "/etc/ssh")
   (line-set  "/etc/ssh/sshd_config" "PermitRootLogin" "no" " ")
   (line-set "/etc/ssh/sshd_config" "PasswordAuthentication" "no" " ")
   (line-set "/etc/ssh/sshd_config" "X11Forwarding" "no" " ")
@@ -29,8 +31,9 @@
   []
   (letfn [(sysctl-reload [target]
             (fn []
-              (script ("/sbin/sysctl" "-p" ~target))))]
+              (script ("/sbin/sysctl" "-e" "-p" ~target))))]
     (let [target "/etc/sysctl.d/10-network-hardening.conf"]
+      (set-file-acl "re-ops" "rwX" "/etc/sysctl.d")
       (copy "/tmp/resources/networking/harden.conf" target)
       (run (sysctl-reload target)))))
 
