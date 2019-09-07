@@ -5,7 +5,7 @@
    [re-share.core :refer [measure gen-uuid]]
    [clojure.spec.alpha :as sp]
    [clojure.repl :refer (source-fn)]
-   [re-cog.meta :refer (functions)]
+   [re-cog.meta :refer (resource-functions)]
    [clojure.walk :refer (postwalk)]))
 
 (sp/def ::basic-def
@@ -66,7 +66,7 @@
   (let [fs (atom [])]
     (postwalk
      (fn [exp]
-       (when (and (symbol? exp) ((functions) exp))
+       (when (and (symbol? exp) ((resource-functions) exp))
          (swap! fs conj (inlined exp profile)))) body)
     (distinct-by first @fs)))
 

@@ -3,12 +3,15 @@
 
 (defn resolve- [n]
   (require n)
-  (into {}
-        (filter
-         (fn [[s f]]
-           (:serializable.fn/source (meta (deref f)))) (ns-publics n))))
+  {n (into {}
+           (filter
+            (fn [[s f]]
+              (:serializable.fn/source (meta (deref f)))) (ns-publics n)))})
 
-(defn functions []
+(defn resources
+  "Resource function names must be unique (so we can inline them without looking up the ns)"
+  []
+  {:post [#(distinct? (flatten (map keys (vals %))))]}
   (apply merge
          (map resolve-
               [; resources
@@ -21,8 +24,17 @@
                're-cog.resources.download
                're-cog.resources.archive
                're-cog.resources.user
-                ; recipes
-               're-cog.recipes.nvim
+               ; facts
+               're-cog.facts.oshi
+               're-cog.facts.query
+               're-cog.facts.security])))
+
+(defn recipes
+  "Recipe function names (not inlined so not uniquly named)"
+  []
+  (apply merge
+         (map resolve-
+              ['re-cog.recipes.nvim
                're-cog.recipes.build
                're-cog.recipes.osquery
                're-cog.recipes.shell
@@ -30,15 +42,21 @@
                're-cog.recipes.backup
                're-cog.recipes.clojure
                're-cog.recipes.hardening
-               ; facts
-               're-cog.facts.oshi
-               're-cog.facts.query
-               're-cog.facts.security])))
+               're-cog.recipes.graal])))
 
-(defn fn-meta [f]
+(defn resource-functions
+  "Flatten list of function to var map"
+  []
+  (apply merge (vals (resources))))
+
+(defn meta-from
+  "Function metadata (for remote execution)"
+  [f m]
   {:post [#(not (nil? %))]}
   (meta
    (second
     (first
-     (filter #(and (var? (second %)) (= f (var-get (second %)))) (functions))))))
+     (filter #(and (var? (second %)) (= f (var-get (second %)))) m)))))
 
+(defn fn-meta [f]
+  (first (filter identity (map (fn [[_ v]] (meta-from f v)) (merge (recipes) (resources))))))
