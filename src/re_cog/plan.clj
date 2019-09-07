@@ -13,7 +13,7 @@
 
 (def nas (into ['re-cog.recipes.backup] base-setup))
 
-(def dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim] base-setup))
+(def dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.graal] base-setup))
 
 (defn all-functions [namespaces]
   (mapcat
