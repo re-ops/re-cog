@@ -11,10 +11,12 @@
 
 (def-inline disk-tools
   "Common disk utilities"
+  []
   (package "gt5" :present))
 
 (def-inline security-tools
   "Common security tooling"
+  []
   (package "pwgen" :present)
   (package "veracrypt" :present))
 
