@@ -20,7 +20,7 @@
     (download (<< "https://pkg.osquery.io/deb/~{archive}") (<< "/tmp/~{archive}") sum)
     (package (<< "/tmp/~{archive}") :present)))
 
-(def-inline {:depends 're-cog.recipes.osquery/install} configure
+(def-inline {:depends #'re-cog.recipes.osquery/install} configure
   "Configure osquery"
   []
   (set-file-acl "re-ops" "rwX" "/etc/osquery")

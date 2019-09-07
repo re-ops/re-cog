@@ -22,10 +22,10 @@
 (defn dep-nodes [fns]
   (mapcat
    (fn [f]
-     (when-let [deps (:depends (meta (deref f)))]
+     (when-let [deps (:depends (meta f))]
        (if-not (seq? deps)
-         (list [f deps])
-         (map (fn [d] [f d]) deps)))) fns))
+         (list [deps f])
+         (map (fn [d] [d f]) deps)))) fns))
 
 (defn execution-graph [namespaces]
   (let [fs (all-functions namespaces)

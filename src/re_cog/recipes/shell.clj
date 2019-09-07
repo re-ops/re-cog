@@ -55,7 +55,7 @@
     (clone "git://github.com/narkisr/dots.git" dest)
     (chown dest user user {})))
 
-(def-inline {:depends 're-cog.recipes.shell/dot-files} ack
+(def-inline {:depends #'re-cog.recipes.shell/dot-files} ack
   "ack grep setup"
   []
   (let [{:keys [home]} (configuration)
@@ -63,7 +63,7 @@
     (package "ack" :present)
     (symlink (<< "~{home}/.ackrc") (<< "~{dots}/.ackrc"))))
 
-(def-inline {:depends 're-cog.recipes.shell/dot-files} rlwrap
+(def-inline {:depends #'re-cog.recipes.shell/dot-files} rlwrap
   "rlwrap setup"
   []
   (let [{:keys [home]} (configuration)
