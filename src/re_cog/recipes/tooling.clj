@@ -9,6 +9,10 @@
    [re-cog.resources.permissions :refer (set-file-acl)]
    [re-cog.common.defs :refer (def-inline)]))
 
+(require-functions)
+(require-resources)
+(require-constants)
+
 (def-inline disk-tools
   "Common disk utilities"
   []
