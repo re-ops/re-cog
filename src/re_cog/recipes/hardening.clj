@@ -19,8 +19,7 @@
   []
   (package "openssh-server" :present)
   (package "rng-tools" :present)
-  (set-file-acl "re-ops" "rwX" "/etc/ssh")
-  (line-set  "/etc/ssh/sshd_config" "PermitRootLogin" "no" " ")
+  (line-set "/etc/ssh/sshd_config" "PermitRootLogin" "no" " ")
   (line-set "/etc/ssh/sshd_config" "PasswordAuthentication" "no" " ")
   (line-set "/etc/ssh/sshd_config" "X11Forwarding" "no" " ")
   (line "/etc/ssh/sshd_config" "\nUseDns no" :present)
