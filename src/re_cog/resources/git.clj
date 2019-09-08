@@ -5,6 +5,7 @@
    [clojure.core.strint :refer (<<)]
    [re-cog.common.functions :refer (require-functions require-resources)]
    [re-cog.resources.exec :refer (run)]
+   [re-cog.common :refer (require-constants)]
    [clojure.string :refer (includes?)]))
 
 (require-functions)
@@ -17,11 +18,20 @@
     :FreeBSD "/usr/local/bin/git"
     :default (throw (ex-info (<< "No matching git path found for ~(os)") {}))))
 
+(def-serial install-missing
+  "Installing git if missing"
+  [bin]
+  (when-not (fs/exists? bin)
+    (re-cog.resources.package/package "git" :present)))
+
 (def-serial repo-exists?
   "check if repo exists"
   [repo path]
-  (when (fs/exists? (<< "~{path}/.git/config"))
-    (coherce (clojure.string/includes? (slurp (<< "~{path}/.git/config")) repo))))
+  (if (fs/exists? (<< "~{path}/.git/config"))
+    (coherce
+     (clojure.string/includes?
+      (slurp (<< "~{path}/.git/config")) repo))
+    (failure "repository is missing")))
 
 (def-serial pull
   "Pull implementation"
@@ -29,15 +39,17 @@
   (if (= 0 (:exit (repo-exists? repo dest)))
     (let [git (binary)
           dir (<< "--git-dir=~{dest}.git")]
+      (install-missing git)
       (run (fn [] (script (~git ~dir "pull")))))
     (failure (<< "Skipping pull remote ~{repo} is no found under ~{dest}"))))
 
 (def-serial clone
   "Clone implementation"
   [repo dest]
-  (letfn [(clone-script []
-            (let [git (binary)]
-              (script (~git "clone" ~repo ~dest))))]
-    (if-not (= 0 (:exit (repo-exists? repo dest)))
-      (run clone-script)
-      (success (<< "Skipping clone ~{repo} exists under ~{dest}")))))
+  (let [git (binary)]
+    (install-missing git)
+    (letfn [(clone-script []
+              (script (~git "clone" ~repo ~dest)))]
+      (if-not (= 0 (:exit (repo-exists? repo dest)))
+        (run clone-script)
+        (success (<< "Skipping clone ~{repo} exists under ~{dest}"))))))
