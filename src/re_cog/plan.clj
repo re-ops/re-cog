@@ -5,7 +5,7 @@
    [loom.graph :as g]))
 
 (def base-setup
-  ['re-cog.recipes.shell 're-cog.recipes.hardening 're-cog.recipes.osquery])
+  ['re-cog.recipes.shell 're-cog.recipes.hardening 're-cog.recipes.osquery 're-cog.recipes.monitoring])
 
 (def virtual (into ['re-cog.recipes.virtualization] base-setup))
 

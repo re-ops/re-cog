@@ -42,6 +42,7 @@
                're-cog.recipes.backup
                're-cog.recipes.clojure
                're-cog.recipes.hardening
+               're-cog.recipes.monitoring
                're-cog.recipes.graal])))
 
 (defn resource-functions
