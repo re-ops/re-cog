@@ -11,7 +11,7 @@
 
 (def backup (into ['re-cog.recipes.backup] base-setup))
 
-(def nas (into ['re-cog.recipes.backup] base-setup))
+(def nas (into ['re-cog.recipes.backup 're-cog.recipes.zfs] base-setup))
 
 (def dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.graal] base-setup))
 
