@@ -54,6 +54,8 @@
    ; os info
    '[re-share.oshi :refer (read-metrics os get-processes)]
    '[re-share.core :refer [measure gen-uuid]]
+   ; templating
+   '[cljstache.core :refer [render]]
    ; io
    '[digest :as digest]
    '[clojure.java.io :as io]

@@ -50,7 +50,10 @@
 (def-serial template
   "Template resource"
   [tmpl dest args]
-  (println 1))
+  (let [source (slurp tmpl)
+        out (render source args)]
+    (spit dest out)
+    (success (<< "created file from template under ~{dest}"))))
 
 (def-serial copy
   "Copy a local file:

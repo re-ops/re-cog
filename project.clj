@@ -17,6 +17,9 @@
      ; checksumming
      [digest "1.4.9"]
 
+     ; templating
+     [cljstache "2.0.4"]
+
      ; logging
      [com.taoensso/timbre "4.10.0"]
      [timbre-ns-pattern-level "0.1.2"]
