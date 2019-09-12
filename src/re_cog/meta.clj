@@ -44,6 +44,7 @@
                're-cog.recipes.hardening
                're-cog.recipes.monitoring
                're-cog.recipes.zfs
+               're-cog.recipes.wireguard
                're-cog.recipes.graal])))
 
 (defn resource-functions
