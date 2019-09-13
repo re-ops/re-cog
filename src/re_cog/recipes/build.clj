@@ -13,9 +13,10 @@
 (def-inline packer
   "Setting up://www.packer.io/"
   []
-  (let [dest "/tmp/packer_1.3.1_linux_amd64.zip"
-        sum "254cf648a638f7ebd37dc1b334abe940da30b30ac3465b6e0a9ad59829932fa3"
-        url "https://releases.hashicorp.com/packer/1.3.1/packer_1.3.1_linux_amd64.zip"]
+  (let [version "1.4.3"
+        dest (<< "/tmp/packer_~{version}_linux_amd64.zip")
+        sum "c89367c7ccb50ca3fa10129bbbe89273fba0fa6a75b44e07692a32f92b1cbf55"
+        url (<< "https://releases.hashicorp.com/packer/~{version}/packer_~{version}_linux_amd64.zip")]
     (download url dest sum)
     (set-file-acl "re-ops" "rwX" "/opt")
     (unzip dest "/opt/")
