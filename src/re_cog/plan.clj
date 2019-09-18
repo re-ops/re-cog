@@ -4,18 +4,18 @@
    [loom.alg :as alg]
    [loom.graph :as g]))
 
-(def base-setup
+(def base
   ['re-cog.recipes.shell 're-cog.recipes.hardening 're-cog.recipes.osquery 're-cog.recipes.monitoring])
 
-(def virtual (into ['re-cog.recipes.virtualization] base-setup))
+(def virtual (into ['re-cog.recipes.virtualization] base))
 
-(def backup (into ['re-cog.recipes.backup] base-setup))
+(def backup (into ['re-cog.recipes.backup] base))
 
-(def nas (into ['re-cog.recipes.backup 're-cog.recipes.zfs] base-setup))
+(def nas (into ['re-cog.recipes.backup 're-cog.recipes.zfs] base))
 
 (def wireguard ['re-cog.recipes.hardening 're-cog.recipes.wireguard])
 
-(def dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.graal] base-setup))
+(def dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.graal] base))
 
 (defn all-functions [namespaces]
   (mapcat
