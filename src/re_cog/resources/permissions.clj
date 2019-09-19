@@ -8,4 +8,4 @@
 (def-serial set-file-acl
   "Set file ACL permissions"
   [user permissions dest]
-  (sh! "sudo" "/usr/bin/setfacl" "-R" "-m" (<< "u:~{user}:~{permissions}") dest))
+  (sh "sudo" "/usr/bin/setfacl" "-R" "-m" (<< "u:~{user}:~{permissions}") dest))

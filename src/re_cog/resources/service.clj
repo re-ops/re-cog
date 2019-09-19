@@ -13,10 +13,10 @@
   [srv state]
   (do
     (assert (#{:start :stop :restart} state))
-    (sh! "sudo" "/usr/sbin/service" srv (name state))))
+    (sh "sudo" "/usr/sbin/service" srv (name state))))
 
 (def-serial on-boot
   "Manage on boot service state enable/disable"
   [srv state]
   (do (assert (#{:enable :disable} state))
-      (sh! "sudo" systemctl-bin (name state) (<< "~{srv}.service"))))
+      (sh "sudo" systemctl-bin (name state) (<< "~{srv}.service"))))

@@ -13,7 +13,7 @@
   "Check is package is installed"
   [pkg]
   (case (os)
-    :Ubuntu (sh! "sudo" "/usr/bin/dpkg" "-s" pkg)
+    :Ubuntu (sh "sudo" "/usr/bin/dpkg" "-s" pkg)
     :default (throw (ex-info (<< "No matching package provider found for ~(os)") {}))))
 
 ; consumers
@@ -27,12 +27,12 @@
   [pkg state]
   (letfn [(install [pkg]
             (if (.endsWith pkg "deb")
-              (sh! "sudo" dpkg-bin "-i" pkg)
-              (sh! "sudo" apt-bin "install" pkg "-y")))
+              (sh "sudo" dpkg-bin "-i" pkg)
+              (sh "sudo" apt-bin "install" pkg "-y")))
           (uninstall [pkg]
                      (if (.endsWith pkg "deb")
-                       (sh! "sudo" dpkg-bin "-r" pkg)
-                       (sh! "sudo" apt-bin "remove" pkg "-y")))]
+                       (sh "sudo" dpkg-bin "-r" pkg)
+                       (sh "sudo" apt-bin "remove" pkg "-y")))]
     (let [fns {:present install :absent uninstall}]
       (debug "installing")
       ((fns state) pkg))))
@@ -62,8 +62,8 @@
     (repository \"ppa:neovim-ppa/stable\" :absent)
    "
   [repo state]
-  (letfn [(add-repo [repo] (sh! "sudo" "/usr/bin/add-apt-repository" repo "-y"))
-          (rm-repo [repo] (sh! "sudo" "/usr/bin/add-apt-repository" "--remove" repo "-y"))]
+  (letfn [(add-repo [repo] (sh "sudo" "/usr/bin/add-apt-repository" repo "-y"))
+          (rm-repo [repo] (sh "sudo" "/usr/bin/add-apt-repository" "--remove" repo "-y"))]
     (let [fns {:present add-repo :absent rm-repo}]
       ((fns state) repo))))
 
@@ -73,7 +73,7 @@
    "
   [file]
   (case (os)
-    :Ubuntu (sh! "/usr/bin/apt-key" "add" file)
+    :Ubuntu (sh "sudo" "/usr/bin/apt-key" "add" file)
     :default (throw (ex-info (<< "cant import apt key under os ~(os)") {}))))
 
 (def-serial key-server
@@ -82,14 +82,11 @@
    "
   [server id]
   (case (os)
-    :Ubuntu (sh! "/usr/bin/apt-key" "adv" "--keyserver" server "--recv" id)
+    :Ubuntu (sh "sudo" "/usr/bin/apt-key" "adv" "--keyserver" server "--recv" id)
     :default (throw (ex-info (<< "cant import apt key under ~(os)") {}))))
 
-#_(def-inline add-repo
-    "Add repo, gpg key and fingerprint in one go."
-    [repo url id]
-    (download url (<< "/tmp/~{id}.key"))
-    (key-file (<< "/tmp/~{id}.key"))
-  ;; (fingerprint id)
-    (repository repo :present)
-    (update-))
+(def-serial fingerprint
+  "Verify a apt-key gpg key signature with id"
+  [id]
+  (sh "/usr/bin/apt-key" "fingerprint" id))
+
