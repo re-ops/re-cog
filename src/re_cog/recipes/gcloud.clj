@@ -26,3 +26,8 @@
     (line listing repo :present)
     (update-)
     (package "google-cloud-sdk" :present)))
+
+(def-inline {:depends #'re-cog.recipes.gcloud/install} emulators
+  "Installing emulators (pubsub)"
+  []
+  (package "google-cloud-sdk-pubsub-emulator" :present))
