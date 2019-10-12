@@ -1,12 +1,11 @@
 (ns re-cog.resources.git
   "Git resources"
   (:require
-   [re-cog.common.defs :refer (def-inline def-serial)]
+   [re-cog.resources.package]
+   [re-cog.common.defs :refer (def-serial)]
    [clojure.core.strint :refer (<<)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.resources.exec :refer (run)]
-   [re-cog.common :refer (require-constants)]
-   [clojure.string :refer (includes?)]))
+   [re-cog.common.functions :refer (require-functions)]
+   [re-cog.resources.exec :refer (run)]))
 
 (require-functions)
 
