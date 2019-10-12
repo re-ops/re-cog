@@ -3,7 +3,8 @@
   (:require
    [re-cog.facts.config :refer (configuration)]
    [re-cog.resources.download :refer (download)]
-   [re-cog.resources.file :refer (symlink directory chmod)]
+   [re-cog.resources.file :refer (symlink directory chmod chown)]
+   [re-cog.resources.git :refer (clone)]
    [re-cog.resources.archive :refer (untar)]
    [re-cog.common.functions :refer (require-functions require-resources)]
    [re-cog.resources.permissions :refer (set-file-acl)]
@@ -29,22 +30,15 @@
     (set-file-acl "re-ops" "rwX" "/usr/local/bin/")
     (symlink "/usr/local/bin/nvim" "/opt/nvim-linux64/bin/nvim")))
 
-(def-inline nodejs-support
-  "nodejs neovim support"
+(def-inline cljfmt
+  "Single binary code format for Clojure"
   []
   (let [{:keys [home user]} (configuration)
-        prefix (<< "/home/~{user}/.npm")
-        npmrc (<< "~{home}/.npmrc")]
-    (letfn [(npm-install [prefix pkg]
-              (fn []
-                (script ("/usr/bin/npm" "install" "--prefix" ~prefix ~pkg))))]
-      (package "npm" :present)
-      (file npmrc :present)
-      (line npmrc (<< "prefix = ~{prefix}") :present)
-      (run (npm-install prefix "neovim"))
-      (run (npm-install prefix "node-cljfmt"))
-      (directory (<< "~{home}/bin") :present)
-      (symlink (<< "~{home}/bin/cljfmt") (<< "~{prefix}/node_modules/node-cljfmt/bin/cljfmt")))))
+        url "https://github.com/narkisr/cljfmt-graalvm/releases/download/0.1.0/cljfmt"
+        dest (<< "~{home}/bin/cljfmt")]
+    (directory (<< "~{home}/bin") :present)
+    (download url dest "290872ee18769995b3a2e8e5b12711586fdfcf5dca26b78b79b87d8fc8eab495")
+    (chmod dest "+x")))
 
 (def-inline config
   "Configure nvim"

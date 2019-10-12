@@ -17,6 +17,8 @@
 
 (def wireguard ['re-cog.recipes.hardening 're-cog.recipes.wireguard])
 
+(def editing ['re-cog.recipes.nvim])
+
 (def dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.graal] base))
 
 (defn all-functions [namespaces]
