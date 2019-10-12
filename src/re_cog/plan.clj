@@ -11,6 +11,8 @@
 
 (def backup (into ['re-cog.recipes.backup] base))
 
+(def cloud (into ['re-cog.recipes.cloud] base))
+
 (def nas (into ['re-cog.recipes.backup 're-cog.recipes.zfs] base))
 
 (def wireguard ['re-cog.recipes.hardening 're-cog.recipes.wireguard])
