@@ -39,6 +39,7 @@
                're-cog.recipes.cloud
                're-cog.recipes.osquery
                're-cog.recipes.shell
+               're-cog.recipes.docker
                're-cog.recipes.virtualization
                're-cog.recipes.backup
                're-cog.recipes.clojure
