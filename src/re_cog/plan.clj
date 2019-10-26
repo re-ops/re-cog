@@ -4,22 +4,30 @@
    [loom.alg :as alg]
    [loom.graph :as g]))
 
-(def base
-  ['re-cog.recipes.shell 're-cog.recipes.hardening 're-cog.recipes.osquery 're-cog.recipes.monitoring])
+(def ^{:doc "Base setup common to all plans (shell, hardening, osquery etc.)"}
+  base ['re-cog.recipes.shell 're-cog.recipes.hardening 're-cog.recipes.osquery 're-cog.recipes.monitoring])
 
-(def virtual (into ['re-cog.recipes.virtualization] base))
+(def ^{:doc "Virtualization tools (KVM, LXC)"}
+  virtual (into ['re-cog.recipes.virtualization] base))
 
-(def backup (into ['re-cog.recipes.backup] base))
+(def ^{:doc "Backup tools"}
+  backup (into ['re-cog.recipes.backup] base))
 
-(def cloud (into ['re-cog.recipes.cloud] base))
+(def ^{:doc "Cloud tools (gcloud, doctl, awscli)"}
+  cloud (into ['re-cog.recipes.cloud] base))
 
 (def nas (into ['re-cog.recipes.backup 're-cog.recipes.zfs] base))
 
 (def wireguard ['re-cog.recipes.hardening 're-cog.recipes.wireguard])
 
-(def editing ['re-cog.recipes.nvim])
+(def ^{:doc "An instance with just nvim"}
+  editing ['re-cog.recipes.nvim])
 
-(def dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.graal] base))
+(def ^{:doc "Development machine with Clojure and Graal"}
+  dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.graal] base))
+
+(def ^{:doc "re-core ready instances"}
+  core ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.shell 're-cog.recipes.hardening])
 
 (defn all-functions [namespaces]
   (mapcat
