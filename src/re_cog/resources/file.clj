@@ -140,7 +140,22 @@
     (if-not (fs/exists? dest)
       (error (<< "~{dest} not found"))
       (let [lines (slurp dest)
-            edited (map (set-key k v sep)  (clojure.string/split-lines lines))]
+            edited (map (set-key k v sep) (clojure.string/split-lines lines))]
         (spit dest (clojure.string/join "\n" edited))
         (success "value in file line was set")))))
 
+(def-serial uncomment
+  "Uncomment a line
+     (uncomment \"/etc/ssh/sshd_config\" \"PermitRootLogin\" \"#\") 
+  "
+  [dest k c]
+  (letfn [(strip [line]
+            (if (.startsWith line (str c k))
+              (.substring line 1)
+              line))]
+    (if-not (fs/exists? dest)
+      (error (<< "~{dest} not found"))
+      (let [lines (slurp dest)
+            edited (map strip (clojure.string/split-lines lines))]
+        (spit dest (clojure.string/join "\n" edited))
+        (success "Uncommented line")))))
