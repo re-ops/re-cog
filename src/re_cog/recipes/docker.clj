@@ -3,10 +3,12 @@
    [clojure.core.strint :refer (<<)]
    [re-cog.resources.file :refer (file line)]
    [re-cog.resources.package :refer (package key-file update-)]
+   [re-cog.resources.user :refer (group-add)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.permissions :refer (set-file-acl)]
    [re-cog.common.functions :refer (require-functions require-resources)]
    [re-cog.common :refer (require-constants)]
+   [re-cog.facts.config :refer (configuration)]
    [re-cog.common.defs :refer (def-inline)]))
 
 (require-functions)
@@ -33,5 +35,11 @@
     (file listing :present)
     (line listing repo :present)
     (update-)
-    (doseq [p ["docker-ce docker-ce-cli containerd.io"]]
+    (doseq [p ["docker-ce" "docker-ce-cli" "containerd.io"]]
       (package p :present))))
+
+(def-inline {:depends 're-cog.recipes.docker/install} passwordless
+  "Enable passwordless docker"
+  []
+  (let [{:keys [user]} (configuration)]
+    (group-add "docker" user)))

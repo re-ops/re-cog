@@ -3,7 +3,6 @@
   (:require
    [re-cog.facts.config :refer (configuration)]
    [re-cog.resources.file :refer (symlink directory chmod)]
-   [re-cog.resources.user :refer (group-add)]
    [re-cog.common.functions :refer (require-functions require-resources)]
    [re-cog.common :refer (require-constants)]
    [re-cog.common.defs :refer (def-inline)]))
