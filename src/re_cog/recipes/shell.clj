@@ -84,9 +84,9 @@
 (def-inline bat
   "bat a modern cat"
   []
-  (let [version "0.11.0"
+  (let [version "0.12.1"
         artifact (<< "bat_~{version}_amd64.deb")
         url (<< "https://github.com/sharkdp/bat/releases/download/v~{version}/~{artifact}")
-        sum "35469591eb030d901a915bd161aeab2859685038de797270a0fa1290ef45255b"]
+        sum "4e5502de4aeccb685bf326448afcaf99c3e4ae8e11b2756bdedcc66a095ba4e5"]
     (download url (<< "/tmp/~{artifact}") sum)
     (package (<< "/tmp/~{artifact}") :present)))
