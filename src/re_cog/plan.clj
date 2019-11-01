@@ -10,6 +10,9 @@
 (def ^{:doc "Virtualization tools (KVM, LXC)"}
   virtual (into ['re-cog.recipes.virtualization] base))
 
+(def ^{:doc "Docker server"}
+  docker (into ['re-cog.recipes.docker] base))
+
 (def ^{:doc "Backup tools"}
   backup (into ['re-cog.recipes.backup] base))
 
