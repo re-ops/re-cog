@@ -29,6 +29,9 @@
 (def ^{:doc "Development machine with Clojure and Graal"}
   dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.graal] base))
 
+(def ^{:doc "Development machine with Clojure and deep learning utils"}
+  learning (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.deep] base))
+
 (def ^{:doc "re-core ready instances"}
   core ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.shell 're-cog.recipes.hardening])
 
