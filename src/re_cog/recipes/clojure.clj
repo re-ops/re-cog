@@ -24,7 +24,6 @@
           url (<< "https://download.clojure.org/install/~{ins}")
           sum "265e46d492b682cecc346ef018076a3181203dfe5e3dbe455b0f7feab51df70f"
           prefix (<< "~{home}/.clojure")]
-
       (download url (<< "/tmp/~{ins}") sum)
       (package "curl" :present)
       (package "rlwrap" :present)
