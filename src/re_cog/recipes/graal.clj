@@ -3,7 +3,7 @@
   (:require
    [re-cog.facts.config :refer (configuration)]
    [re-cog.resources.download :refer (download)]
-   [re-cog.resources.file :refer (rename symlink chmod directory)]
+   [re-cog.resources.file :refer (symlink directory)]
    [re-cog.resources.archive :refer (untar)]
    [re-cog.common.functions :refer (require-functions require-resources)]
    [re-cog.common :refer (require-constants)]

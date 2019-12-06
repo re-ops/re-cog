@@ -4,8 +4,11 @@
    [loom.alg :as alg]
    [loom.graph :as g]))
 
+(def ^{:doc "Minimal set of machine addones"}
+  lean ['re-cog.recipes.shell 're-cog.recipes.hardening])
+
 (def ^{:doc "Base setup common to all plans (shell, hardening, osquery etc.)"}
-  base ['re-cog.recipes.shell 're-cog.recipes.hardening 're-cog.recipes.osquery 're-cog.recipes.monitoring])
+  base (into ['re-cog.recipes.osquery 're-cog.recipes.monitoring] lean))
 
 (def ^{:doc "Virtualization tools (KVM, LXC)"}
   virtual (into ['re-cog.recipes.virtualization] base))
@@ -31,6 +34,9 @@
 
 (def ^{:doc "Development machine with Clojure and deep learning utils"}
   learning (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.deep] base))
+
+(def ^{:doc "A Vuepress documentation instance"}
+  vuepress (into ['re-cog.recipes.node 're-cog.recipes.nvim] lean))
 
 (def ^{:doc "re-core ready instances"}
   core ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.shell 're-cog.recipes.hardening])
