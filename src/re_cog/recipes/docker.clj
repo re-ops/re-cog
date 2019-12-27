@@ -37,7 +37,7 @@
     (file listing :present)
     (line listing repo :present)
     (update-)
-    (doseq [p ["docker-ce" "docker-ce-cli" "containerd.io"]]
+    (doseq [p ["docker-ce" "docker-ce-cli" "containerd.io" "docker-compose"]]
       (package p :present))))
 
 (def-inline {:depends 're-cog.recipes.docker/install} passwordless
