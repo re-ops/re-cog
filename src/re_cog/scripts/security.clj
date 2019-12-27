@@ -17,5 +17,7 @@
 (defn ssh-connections []
   (script
    (pipe
-    (pipe ("sudo" "netstat" "-tnpa") ("grep" "'ESTABLISHED.*sshd'"))
+    (pipe
+     (pipe ("sudo" "netstat" "-tnpa") ("grep" "'ESTABLISHED.*sshd'"))
+     ("sed 's/:/ /g1'"))
     ("tr" "-s" "' '"))))
