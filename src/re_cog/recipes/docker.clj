@@ -24,7 +24,8 @@
 (def-inline {:depends 're-cog.recipes.docker/prequisits} install
   "install docker"
   []
-  (let [listing "/etc/apt/sources.list.d/docker-ce.list"
+  (let [sources "/etc/apt/sources.list.d"
+        listing (<< "~{sources}/docker-ce.list")
         url "https://download.docker.com/linux/ubuntu/gpg"
         keyrings "/usr/share/keyrings/"
         key "docker-gpg"
@@ -32,10 +33,11 @@
     (set-file-acl "re-ops" "rwX" keyrings)
     (download url (<< "~{keyrings}/~{key}") "1500c1f56fa9e26b9b8f42452a553675796ade0807cdce11975eb98170b3a570")
     (key-file (<< "~{keyrings}/~{key}"))
+    (set-file-acl "re-ops" "rwX" sources)
     (file listing :present)
     (line listing repo :present)
     (update-)
-    (doseq [p ["docker-ce" "docker-ce-cli" "containerd.io"]]
+    (doseq [p ["docker-ce" "docker-ce-cli" "containerd.io" "docker-compose"]]
       (package p :present))))
 
 (def-inline {:depends 're-cog.recipes.docker/install} passwordless

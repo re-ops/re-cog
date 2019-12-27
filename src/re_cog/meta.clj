@@ -36,6 +36,7 @@
          (map resolve-
               ['re-cog.recipes.nvim
                're-cog.recipes.build
+               're-cog.recipes.deep
                're-cog.recipes.cloud
                're-cog.recipes.osquery
                're-cog.recipes.shell
@@ -43,6 +44,8 @@
                're-cog.recipes.virtualization
                're-cog.recipes.backup
                're-cog.recipes.clojure
+               're-cog.recipes.python
+               're-cog.recipes.node
                're-cog.recipes.hardening
                're-cog.recipes.monitoring
                're-cog.recipes.zfs
