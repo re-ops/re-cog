@@ -36,6 +36,7 @@
          (map resolve-
               ['re-cog.recipes.nvim
                're-cog.recipes.build
+               're-cog.recipes.k8s
                're-cog.recipes.deep
                're-cog.recipes.cloud
                're-cog.recipes.osquery

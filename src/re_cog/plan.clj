@@ -41,6 +41,9 @@
 (def ^{:doc "re-core ready instances"}
   core ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.shell 're-cog.recipes.hardening])
 
+(def ^{:doc "minikube"}
+  minikube ['re-cog.recipes.k8s 're-cog.recipes.docker])
+
 (defn all-functions [namespaces]
   (mapcat
    (fn [n] (vals (ns-publics n))) namespaces))
