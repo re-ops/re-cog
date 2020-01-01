@@ -30,7 +30,10 @@
   editing ['re-cog.recipes.nvim])
 
 (def ^{:doc "Development machine with Clojure and Graal"}
-  dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.graal] base))
+  native-clj (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.graal] base))
+
+(def ^{:doc "Development machine with Clojure and Graal"}
+  dev (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.python] base))
 
 (def ^{:doc "Development machine with Clojure and deep learning utils"}
   learning (into ['re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.deep] base))
