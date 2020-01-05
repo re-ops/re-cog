@@ -47,6 +47,9 @@
 (def ^{:doc "minikube"}
   minikube ['re-cog.recipes.k8s 're-cog.recipes.docker])
 
+(def ^{:doc "security"}
+  security ['re-cog.recipes.security])
+
 (defn all-functions [namespaces]
   (mapcat
    (fn [n] (vals (ns-publics n))) namespaces))

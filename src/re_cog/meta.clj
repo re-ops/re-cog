@@ -48,6 +48,7 @@
                're-cog.recipes.python
                're-cog.recipes.node
                're-cog.recipes.hardening
+               're-cog.recipes.security
                're-cog.recipes.monitoring
                're-cog.recipes.zfs
                're-cog.recipes.wireguard
