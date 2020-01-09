@@ -11,13 +11,13 @@
 (require-resources)
 (require-constants)
 
-(def-inline node-install
+(def-inline install
   "Settimgn up nodejs"
   []
   (package "nodejs" :present)
   (package "npm" :present))
 
-(def-inline vuepress
+(def-inline {:depends #'re-cog.recipes.node/install} vuepress
   "Setting up vuepress"
   []
   (letfn [(install []
