@@ -1,8 +1,9 @@
 (ns re-cog.recipes.deep
   "Deep learning related tools and libraries"
   (:require
-   [re-cog.common.functions :refer (require-functions require-resources)]
    [re-cog.common :refer (require-constants)]
+   [re-cog.resources.package :refer (package)]
+   [re-cog.common.functions :refer (require-functions require-resources)]
    [re-cog.common.defs :refer (def-inline)]))
 
 (require-functions)

@@ -50,6 +50,9 @@
 (def ^{:doc "security"}
   security ['re-cog.recipes.security])
 
+(def ^{:doc "iot development machine"}
+  iot-dev (into ['re-cog.recipes.platformio] dev))
+
 (defn all-functions [namespaces]
   (mapcat
    (fn [n] (vals (ns-publics n))) namespaces))
