@@ -1,9 +1,11 @@
 (ns re-cog.main
+  (:gen-class)
   (:require
    [re-cog.plan]
    [re-cog.scripts.common :refer (bind-bash)]))
 
-#_(defn -main [& args]
+(defn -main [& args]
+    (println "Starting to rock!")
     (bind-bash)
     (let [namespaces (deref (resolve (symbol (first args))))]
       (doseq [n namespaces]
