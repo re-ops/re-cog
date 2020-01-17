@@ -25,7 +25,7 @@
   (let [sources "/etc/apt/sources.list.d"
         listing (<< "~{sources}/docker-ce.list")
         url "https://download.docker.com/linux/ubuntu/gpg"
-        keyrings "/usr/share/keyrings/"
+        keyrings "/usr/share/keyrings"
         key "docker-gpg"
         repo (<< "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable")]
     (set-file-acl "re-ops" "rwX" keyrings)
