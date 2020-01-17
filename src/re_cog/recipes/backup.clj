@@ -1,16 +1,13 @@
 (ns re-cog.recipes.backup
   (:require
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.file :refer (rename symlink chmod)]
    [re-cog.resources.archive :refer (untar bzip2)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]
-   [re-cog.resources.permissions :refer (set-file-acl)]
-   [re-cog.common.defs :refer (def-inline)]))
+   [re-cog.resources.permissions :refer (set-file-acl)]))
 
-(require-functions)
-(require-resources)
-(require-constants)
+(require-recipe)
 
 (def-inline restic
   "Setting up restic"

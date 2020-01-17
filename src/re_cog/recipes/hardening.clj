@@ -1,18 +1,15 @@
 (ns re-cog.recipes.hardening
   "Hardedning and security tools"
   (:require
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.facts.config :refer (configuration)]
    [re-cog.facts.query :refer (desktop?)]
    [re-cog.resources.file :refer (line line-set uncomment copy)]
    [re-cog.resources.permissions :refer (set-file-acl)]
-   [re-cog.resources.service :refer (service on-boot)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]
-   [re-cog.common.defs :refer (def-inline)]))
+   [re-cog.resources.service :refer (service on-boot)]))
 
-(require-functions)
-(require-resources)
-(require-constants)
+(require-recipe)
 
 (def-inline ssh-haredning
   "SSH server hardening"

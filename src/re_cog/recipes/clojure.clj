@@ -1,17 +1,14 @@
 (ns re-cog.recipes.clojure
   "Setting up Clojure tooling"
   (:require
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.facts.config :refer (configuration)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.archive :refer (unzip)]
-   [re-cog.resources.file :refer (symlink directory chmod chown)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]
-   [re-cog.common.defs :refer (def-inline)]))
+   [re-cog.resources.file :refer (symlink directory chmod chown)]))
 
-(require-functions)
-(require-resources)
-(require-constants)
+(require-recipe)
 
 (def-inline clj
   "Setting up clj and deps tools"

@@ -1,14 +1,11 @@
 (ns re-cog.recipes.platformio
   "Setting up https://platformio.org"
   (:require
-   [re-cog.resources.package :refer (package)]
-   [re-cog.common.defs :refer (def-inline)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]))
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
+   [re-cog.resources.package :refer (package)]))
 
-(require-constants)
-(require-functions)
-(require-resources)
+(require-recipe)
 
 (def-inline core
   "Setting up platformio core package"

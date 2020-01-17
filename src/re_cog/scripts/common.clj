@@ -21,3 +21,8 @@
   "
   [script-fn]
   [(md5 (script-fn)) (validate! script-fn)])
+
+(defn bind-bash
+  "Bind stevedore language to bash"
+  []
+  (.bindRoot (var pallet.stevedore/*script-language*) :pallet.stevedore.bash/bash))

@@ -1,19 +1,16 @@
 (ns re-cog.recipes.cloud
   "Cloud providers cli tools"
   (:require
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
    [clojure.core.strint :refer (<<)]
    [re-cog.resources.archive :refer (untar)]
    [re-cog.resources.package :refer (package key-file update-)]
    [re-cog.resources.file :refer (file line)]
    [re-cog.resources.permissions :refer (set-file-acl)]
-   [re-cog.resources.download :refer (download)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]
-   [re-cog.common.defs :refer (def-inline)]))
+   [re-cog.resources.download :refer (download)]))
 
-(require-functions)
-(require-resources)
-(require-constants)
+(require-recipe)
 
 (def-inline gcloud
   "Installing gcloud client"

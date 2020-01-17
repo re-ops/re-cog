@@ -1,15 +1,11 @@
 (ns re-cog.recipes.security
   "Common tools"
   (:require
+   [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.resources.download :refer (download)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]
-   [re-cog.resources.permissions :refer (set-file-acl)]
-   [re-cog.common.defs :refer (def-inline)]))
+   [re-cog.resources.permissions :refer (set-file-acl)]))
 
-(require-functions)
-(require-resources)
-(require-constants)
+(require-recipe)
 
 (def-inline password
   "Password generation"

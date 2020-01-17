@@ -1,19 +1,17 @@
 (ns re-cog.recipes.docker
+  "Docker setup"
   (:require
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
    [clojure.core.strint :refer (<<)]
    [re-cog.resources.file :refer (file line)]
    [re-cog.resources.package :refer (package key-file update-)]
    [re-cog.resources.user :refer (group-add)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.permissions :refer (set-file-acl)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]
-   [re-cog.facts.config :refer (configuration)]
-   [re-cog.common.defs :refer (def-inline)]))
+   [re-cog.facts.config :refer (configuration)]))
 
-(require-functions)
-(require-resources)
-(require-constants)
+(require-recipe)
 
 (def-inline prequisits
   "docker install prequisits"

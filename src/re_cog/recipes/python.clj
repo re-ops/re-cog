@@ -1,14 +1,11 @@
 (ns re-cog.recipes.python
   "Installing latest python versions"
   (:require
-   [re-cog.common.defs :refer (def-inline)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.resources.package :refer (package repository update-)]))
 
-(require-constants)
-(require-functions)
-(require-resources)
+(require-recipe)
 
 (def-inline python-3.7
   "Setting up python 3.7"

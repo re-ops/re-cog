@@ -3,7 +3,7 @@
    [re-cog.resources.exec :refer (run)]
    [re-cog.common.functions :refer (require-functions)]
    [re-cog.common.defs :refer (def-serial)]
-   [re-cog.common :refer (require-constants)]))
+   [re-cog.common.constants :refer (require-constants)]))
 
 (require-functions)
 (require-constants)

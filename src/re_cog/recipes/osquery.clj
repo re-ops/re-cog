@@ -1,16 +1,14 @@
 (ns re-cog.recipes.osquery
+  "Setting up osquery"
   (:require
-   [re-cog.common.functions :refer (require-functions)]
-   [re-cog.common :refer (require-constants)]
-   [re-cog.common.defs :refer (def-inline)]
+   [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.permissions :refer (set-file-acl)]
    [re-cog.resources.file :refer (copy)]
    [re-cog.resources.service :refer (service)]
    [re-cog.resources.package :refer (package)]))
 
-(require-functions)
-(require-constants)
+(require-recipe)
 
 (def-inline install
   "Installing osquery"

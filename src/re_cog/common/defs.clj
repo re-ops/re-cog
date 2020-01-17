@@ -88,3 +88,8 @@
                            (merge result# {:resources (deref ~profile)}))))))
        (alter-meta! (var ~name) #(merge % ~meta)))))
 
+(defn require-defs
+  "Require common constant values"
+  []
+  (require
+   '[re-cog.common.defs :refer [def-inline def-serial]]))

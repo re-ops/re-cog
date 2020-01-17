@@ -1,17 +1,14 @@
 (ns re-cog.recipes.wireguard
   "Wireguard client/server setup"
   (:require
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.facts.config :refer (configuration)]
    [re-cog.resources.file :refer (chmod template)]
    [re-cog.resources.package :refer (package repository update-)]
-   [re-cog.resources.permissions :refer (set-file-acl)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]
-   [re-cog.common.defs :refer (def-inline)]))
+   [re-cog.resources.permissions :refer (set-file-acl)]))
 
-(require-functions)
-(require-resources)
-(require-constants)
+(require-recipe)
 
 (def-inline install
   "Setting up wireguard"

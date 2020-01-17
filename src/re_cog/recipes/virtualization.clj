@@ -1,15 +1,12 @@
 (ns re-cog.recipes.virtualization
   "Setting up hypervisors"
   (:require
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.facts.config :refer (configuration)]
-   [re-cog.resources.file :refer (symlink directory chmod)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]
-   [re-cog.common.defs :refer (def-inline)]))
+   [re-cog.resources.file :refer (symlink directory chmod)]))
 
-(require-functions)
-(require-resources)
-(require-constants)
+(require-recipe)
 
 (def-inline lxd
   "Installing lxd"

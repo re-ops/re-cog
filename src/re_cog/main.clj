@@ -1,16 +1,15 @@
 (ns re-cog.main
-  (:gen-class)
   (:require
-   [re-cog.common :refer (bind-bash)]
-   [re-cog.plan :refer :all]))
+   [re-cog.plan]
+   [re-cog.scripts.common :refer (bind-bash)]))
 
-(defn -main [& args]
-  (bind-bash)
-  (let [namespaces (deref (resolve (symbol (first args))))]
-    (doseq [n namespaces]
-      (require n))
-    (doseq [f (execution-plan namespaces)]
-      (f))))
+#_(defn -main [& args]
+    (bind-bash)
+    (let [namespaces (deref (resolve (symbol (first args))))]
+      (doseq [n namespaces]
+        (require n))
+      (doseq [f (re-cog.plan/execution-plan namespaces)]
+        (f))))
 
 (comment
   ((first (-main ["re-cog.plan/lean"]))))

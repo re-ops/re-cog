@@ -1,15 +1,12 @@
 (ns re-cog.recipes.node
   "Setting up nodejs and some utlities"
   (:require
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.facts.config :refer (configuration)]
-   [re-cog.resources.file :refer (symlink)]
-   [re-cog.common.functions :refer (require-functions require-resources)]
-   [re-cog.common :refer (require-constants)]
-   [re-cog.common.defs :refer (def-inline)]))
+   [re-cog.resources.file :refer (symlink)]))
 
-(require-functions)
-(require-resources)
-(require-constants)
+(require-recipe)
 
 (def-inline install
   "Settimgn up nodejs"

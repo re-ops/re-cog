@@ -27,7 +27,3 @@
      (if (= "$?" 0)
        ("sudo" "sed" "-i" ~r1 "/etc/sysconfig/network")
        ("sudo sed -i '$ a\\HOSTNAME=~{fqdn}' /etc/sysconfig/network")))))
-
-(comment
-  (re-cog.common/bind-bash)
-  (println (override-hostname "foo" "foo.local")))

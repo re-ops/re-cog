@@ -1,9 +1,10 @@
 (ns re-cog.resources.download
   (:require
-   [re-cog.common.functions :refer (require-functions)]
+   [clojure.core.strint :refer (<<)]
+   [re-cog.common.functions :refer (file-checksum coherce success failure)]
+   [me.raynes.fs :as fs]
+   [clojure.java.io :as io]
    [re-cog.common.defs :refer (def-serial)]))
-
-(require-functions)
 
 (def-serial checksum
   "File checksum with optional hash-type (:sha256 by default)"

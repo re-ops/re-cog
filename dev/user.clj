@@ -1,8 +1,7 @@
 (ns user
   (:require
    [clojure.repl :refer :all]
-   [re-cog.common :refer :all]
-   [re-cog.scripts.sensors :refer :all]
+   [re-cog.scripts.common :refer :all]
    [clojure.tools.namespace.repl :refer (refresh refresh-all)]))
 
 (defn stop

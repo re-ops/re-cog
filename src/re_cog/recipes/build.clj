@@ -1,14 +1,14 @@
 (ns re-cog.recipes.build
+  "Build tools"
   (:require
-   [re-cog.common.functions :refer (require-functions)]
-   [re-cog.common.defs :refer (def-inline)]
+   [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.exec :refer (run)]
    [re-cog.resources.file :refer (symlink directory chmod)]
    [re-cog.resources.archive :refer (unzip)]
    [re-cog.resources.permissions :refer (set-file-acl)]))
 
-(require-functions)
+(require-recipe)
 
 (def-inline packer
   "Setting up://www.packer.io/"

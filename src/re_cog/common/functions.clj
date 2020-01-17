@@ -37,9 +37,8 @@
   []
   (require
    '[re-cog.resources.package :refer [package repository]]
-   '[re-cog.resources.git :refer [clone pull repo-exists? binary install-missing]]
-   '[re-cog.resources.file :refer [chown file directory symlink line line-set]]
-   '[re-cog.resources.exec :refer [run]]))
+   '[re-cog.resources.git :refer [repo-exists? binary install-missing]]
+   '[re-cog.resources.file :refer [chown file directory symlink line line-set]]))
 
 (defn require-functions
   "Require common resource functions"
@@ -65,4 +64,5 @@
    '[re-cog.facts.query :refer (desktop?)]
    '[taoensso.timbre :refer (info error debug trace)]
    '[clojure.core.strint :refer (<<)]))
+
 

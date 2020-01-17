@@ -33,7 +33,7 @@
      [com.palletops/stevedore "0.8.0-beta.7"]
 
      ; repl
-     [org.clojure/tools.namespace "0.3.0"]
+     [org.clojure/tools.namespace "0.3.1"]
 
      ; planning
      [aysylu/loom "1.0.2" :exclusions [org.clojure/clojurescript]]
@@ -55,12 +55,10 @@
      ]
    }
 
-
   :repl-options {
     :init-ns user
     :prompt (fn [ns] (str "\u001B[35m[\u001B[34m" "re-cog" "\u001B[35m]\u001B[33mλ:\u001B[m " ))
     :welcome (println "Welcome to re-cog!" )
   }
 
-  :main re-cog.main
 )
