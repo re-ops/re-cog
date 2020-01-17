@@ -12,12 +12,11 @@
   "Installing lxd"
   []
   (letfn [(init []
-            (fn []
-              (script ("sudo" "/usr/bin/lxd" "init" "--auto"))))]
+            (script ("sudo" "/usr/bin/lxd" "init" "--auto")))]
     (let [{:keys [user]} (configuration)]
       (package "lxd" :present)
       (package "zfsutils-linux" :present)
-      (run (init)))))
+      (run init))))
 
 (def-inline kvm
   "Installing KVM"
