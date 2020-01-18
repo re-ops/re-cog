@@ -19,7 +19,7 @@
 
 (def wireguard #{'re-cog.recipes.hardening 're-cog.recipes.wireguard})
 
-; Container/Virtualization 
+; Container/Virtualization
 
 (def ^{:doc "Virtualization tools (KVM, LXC)"}
   virtual (into #{'re-cog.recipes.virtualization} base))

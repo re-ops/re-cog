@@ -37,6 +37,11 @@
 
      ; planning
      [aysylu/loom "1.0.2" :exclusions [org.clojure/clojurescript]]
+
+     ; CLI
+     [cli-matic "0.3.11"]
+     [progrock "0.1.2"]
+
   ]
 
   :plugins [
@@ -61,7 +66,12 @@
     :welcome (println "Welcome to re-cog!" )
   }
 
+  :source-paths  ["src"]
+
   :profiles {
+     :dev  {
+       :source-paths  ["src" "main"]
+     }
      :package {
         :source-paths  ["src" "main"]
         :main re-cog.main

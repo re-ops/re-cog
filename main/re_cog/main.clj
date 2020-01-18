@@ -1,17 +1,57 @@
 (ns re-cog.main
   (:gen-class)
   (:require
-   [re-cog.plan]
+   re-cog.plan
+   re-cog.facts.config
+   [re-share.log :as log]
+   [taoensso.timbre  :as timbre :refer (set-level! refer-timbre)]
+   [cli-matic.core :refer [run-cmd]]
+   [progrock.core :as pr]
    [re-cog.scripts.common :refer (bind-bash)]))
 
-(defn -main [& args]
-    (println "Starting to rock!")
-    (bind-bash)
-    (let [namespaces (deref (resolve (symbol (first args))))]
+(refer-timbre)
+
+(defn setup-logging
+  "Sets up logging configuration:
+    - stale logs removale interval
+    - steam collect logs
+    - log level
+  "
+  [& {:keys [interval level] :or {interval 10 level :info}}]
+  (log/setup "re-cog" [] ["re-cog.plan"])
+  (set-level! level))
+
+(defn provision [{:keys [plan config level]}]
+  (setup-logging :level level)
+  (let [namespaces (deref (resolve (symbol plan))) ]
       (doseq [n namespaces]
         (require n))
-      (doseq [f (re-cog.plan/execution-plan namespaces)]
-        (f))))
+      (let [fs (re-cog.plan/execution-plan namespaces)
+            bar (pr/progress-bar (count fs))]
+        (doseq [[i f] (map-indexed vector fs)] 
+          (pr/print (pr/tick bar i))
+          (f))
+        (pr/print (pr/done bar)))))
+
+(def CONFIGURATION {
+    :app {
+      :command     "re-cog"
+      :description "Re-cog provisioning cli"
+      :version     "0.2.4"
+    }
+    :commands [
+      {:command     "provision" :short "p!"
+       :description "Run a provisioning plan"
+       :opts [{:option "config" :short "c" :env "CC" :as "configuration file" :type :ednfile :default "/tmp/resources/config.edn"}
+              {:option "plan" :short "p" :env "PP" :as "plan" :type :string :default :present}
+              {:option "level" :short "l" :env "LL" :as "log level" :type :keyword :default :info}]
+       :runs  provision}
+    ]
+  })
+
+(defn -main [& args]
+    (bind-bash)
+    (run-cmd args CONFIGURATION))
 
 (comment
   ((first (-main ["re-cog.plan/lean"]))))
