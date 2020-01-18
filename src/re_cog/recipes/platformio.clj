@@ -41,7 +41,7 @@
     (update-)
     (package "code" :present)))
 
-(def-inline {:depends 're-cog.recipes.platformio/vscode} platform-ide
+(def-inline {:depends 're-cog.recipes.platformio/vcode} platform-ide
   "Installing vscode platform-ide extensions"
   []
   (letfn [(install []
