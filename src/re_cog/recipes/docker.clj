@@ -27,7 +27,7 @@
         url "https://download.docker.com/linux/ubuntu/gpg"
         keyrings "/usr/share/keyrings"
         key "docker-gpg"
-        repo (<< "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable")]
+        repo "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"]
     (set-file-acl "re-ops" "rwX" keyrings)
     (download url (<< "~{keyrings}/~{key}") "1500c1f56fa9e26b9b8f42452a553675796ade0807cdce11975eb98170b3a570")
     (key-file (<< "~{keyrings}/~{key}"))
