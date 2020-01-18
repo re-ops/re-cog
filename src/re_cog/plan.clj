@@ -68,6 +68,11 @@
 (def ^{:doc "IoT development instance"}
   iot-dev (into #{'re-cog.recipes.platformio} base-dev))
 
+; Desktop profiles
+
+(def ^{:doc "Dev desktop"}
+  dev-desktop (into #{'re-cog.recipes.xmonad 're-cog.recipes.chrome} jvm-dev))
+
 (defn all-functions [namespaces]
   (mapcat
    (fn [n] (vals (ns-publics n))) namespaces))

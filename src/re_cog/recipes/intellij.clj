@@ -14,12 +14,11 @@
   "Setting up Intellij Idea community edition"
   []
   (let [{:keys [home]} (configuration)
-        version "ideaIU-2019.3.1"
+        version "ideaIC-2019.3.1"
         tmp (<< "/tmp/~{version}.tar.gz")
-        expected "87543537c524c6f67c88e1e2af3865bb233099bf405db2df131a66ebf4655532"
+        expected "b67cc055d7ab18b2a864d05956407ae1f910eb295e2a73e6a6aa813260930509"
         url (<< "https://download-cf.jetbrains.com/idea/~{version}.tar.gz")]
     (download url tmp expected)
     (set-file-acl "re-ops" "rwX" "/opt/")
     (untar tmp "/opt/")
     (directory (<< "~{home}/bin/") :present)))
-

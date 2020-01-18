@@ -54,7 +54,9 @@
                're-cog.recipes.monitoring
                're-cog.recipes.zfs
                're-cog.recipes.wireguard
-               're-cog.recipes.graal])))
+               're-cog.recipes.graal
+               're-cog.recipes.chrome
+               're-cog.recipes.xmonad])))
 
 (defn resource-functions
   "Flatten list of function to var map"
