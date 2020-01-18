@@ -47,6 +47,7 @@
                're-cog.recipes.clojure
                're-cog.recipes.python
                're-cog.recipes.platformio
+               're-cog.recipes.intellij
                're-cog.recipes.node
                're-cog.recipes.hardening
                're-cog.recipes.security
