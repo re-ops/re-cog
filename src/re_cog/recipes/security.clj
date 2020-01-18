@@ -2,8 +2,7 @@
   "Common tools"
   (:require
    [re-cog.common.recipe :refer (require-recipe)]
-   [re-cog.resources.download :refer (download)]
-   [re-cog.resources.permissions :refer (set-file-acl)]))
+   [re-cog.resources.download :refer (download)]))
 
 (require-recipe)
 

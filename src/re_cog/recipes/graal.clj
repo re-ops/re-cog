@@ -6,8 +6,7 @@
    [re-cog.facts.config :refer (configuration)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.file :refer (symlink directory)]
-   [re-cog.resources.archive :refer (untar)]
-   [re-cog.resources.permissions :refer (set-file-acl)]))
+   [re-cog.resources.archive :refer (untar)]))
 
 (require-recipe)
 
@@ -25,7 +24,6 @@
           expected "9d8a82788c3aaede4a05366f79f8b0b328957d0bb7479c986f6f1354b1c7c4ea"
           url (<< "https://github.com/oracle/graal/releases/download/vm-~{version}/~{release}.tar.gz")]
       (download url tmp expected)
-      (set-file-acl "re-ops" "rwX" "/opt/")
       (untar tmp "/opt/")
       (directory (<< "~{home}/bin/") :present)
       (symlink (<< "/opt/~{dest}/bin/gu") (<< "~{home}/bin/gu"))

@@ -3,6 +3,7 @@
 (defmacro require-recipe []
   `(do
      (require
+      '[re-cog.recipes.access]
       '[re-cog.common.defs]
       '[re-cog.common.functions]
       '[re-cog.common.constants])

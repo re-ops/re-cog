@@ -7,12 +7,11 @@
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.file :refer (symlink directory chmod chown)]
    [re-cog.resources.git :refer (clone)]
-   [re-cog.resources.archive :refer (untar)]
-   [re-cog.resources.permissions :refer (set-file-acl)]))
+   [re-cog.resources.archive :refer (untar)]))
 
 (require-recipe)
 
-(def-inline nvim
+(def-inline {:depends #'re-cog.recipes.access/permissions} nvim
   "Installing Neovim"
   []
   (let [version "0.3.8"
@@ -20,11 +19,8 @@
         url (<< "https://github.com/neovim/neovim/releases/download/v~{version}/~{archive}")
         sum "30440b0eb4eb0adbf09c458891e81880c9efe5245b52316e9af1c08136088e6a"
         dest (<< "/usr/src/~{archive}")]
-    (set-file-acl "re-ops" "rwX" "/usr/src")
     (download url dest sum)
-    (set-file-acl "re-ops" "rwX" "/opt")
     (untar dest "/opt/")
-    (set-file-acl "re-ops" "rwX" "/usr/local/bin/")
     (symlink "/usr/local/bin/nvim" "/opt/nvim-linux64/bin/nvim")))
 
 (def-inline cljfmt

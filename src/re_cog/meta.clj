@@ -34,7 +34,8 @@
   []
   (apply merge
          (map resolve-
-              ['re-cog.recipes.nvim
+              ['re-cog.recipes.access
+               're-cog.recipes.nvim
                're-cog.recipes.build
                're-cog.recipes.k8s
                're-cog.recipes.deep

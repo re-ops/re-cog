@@ -5,8 +5,7 @@
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.exec :refer (run)]
    [re-cog.resources.file :refer (symlink directory chmod)]
-   [re-cog.resources.archive :refer (unzip)]
-   [re-cog.resources.permissions :refer (set-file-acl)]))
+   [re-cog.resources.archive :refer (unzip)]))
 
 (require-recipe)
 
@@ -18,9 +17,7 @@
         sum "c89367c7ccb50ca3fa10129bbbe89273fba0fa6a75b44e07692a32f92b1cbf55"
         url (<< "https://releases.hashicorp.com/packer/~{version}/packer_~{version}_linux_amd64.zip")]
     (download url dest sum)
-    (set-file-acl "re-ops" "rwX" "/opt")
     (unzip dest "/opt/")
-    (set-file-acl "re-ops" "rwX" "/usr/local/bin/")
     (symlink "/usr/local/bin/packer" "/opt/packer")))
 
 (def-inline lein

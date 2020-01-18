@@ -4,8 +4,7 @@
    [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.file :refer (rename symlink chmod)]
-   [re-cog.resources.archive :refer (untar bzip2)]
-   [re-cog.resources.permissions :refer (set-file-acl)]))
+   [re-cog.resources.archive :refer (untar bzip2)]))
 
 (require-recipe)
 
@@ -19,7 +18,6 @@
         url (<< "https://github.com/restic/restic/releases/download/v~{version}/~{release}.bz2")]
     (download url tmp expected)
     (bzip2 tmp)
-    (set-file-acl "re-ops" "rwX" "/usr/bin/")
     (rename (<< "/tmp/~{release}") "/usr/bin/restic")
     (chmod "/usr/bin/restic" "0755")))
 
@@ -31,7 +29,6 @@
         expected "c53abdfd81fc5eb48ff138faf3cdcd11acd7a089a44d0d82c05a63a56ef691ee"
         url (<< "https://github.com/narkisr/octo/releases/download/~{version}/octo")]
     (download url tmp expected)
-    (set-file-acl "re-ops" "rwX" "/usr/bin/")
     (rename tmp "/usr/bin/octo")
     (chmod "/usr/bin/octo" "0755")))
 

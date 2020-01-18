@@ -6,7 +6,7 @@
 
 ; Basic profiles
 (def ^{:doc "Minimal set of machine addones"}
-  lean #{'re-cog.recipes.shell 're-cog.recipes.hardening})
+  lean #{'re-cog.recipes.access 're-cog.recipes.shell 're-cog.recipes.hardening})
 
 (def ^{:doc "Base setup common to all plans (shell, hardening, osquery etc.)"}
   base (into #{'re-cog.recipes.osquery 're-cog.recipes.monitoring} lean))
@@ -97,4 +97,4 @@
   (require
    're-cog.recipes.osquery
    're-cog.recipes.build)
-  (loom.io/view (execution-plan base-machine)))
+  (loom.io/view (execution-plan iot-dev)))

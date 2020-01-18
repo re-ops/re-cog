@@ -7,7 +7,6 @@
    [re-cog.resources.archive :refer (untar)]
    [re-cog.resources.package :refer (package key-file update-)]
    [re-cog.resources.file :refer (file line)]
-   [re-cog.resources.permissions :refer (set-file-acl)]
    [re-cog.resources.download :refer (download)]))
 
 (require-recipe)
@@ -20,7 +19,6 @@
         keyrings "/usr/share/keyrings/"
         repo (<< "deb [signed-by=~{keyrings}/~{key}] http://packages.cloud.google.com/apt cloud-sdk main")
         url "https://packages.cloud.google.com/apt/doc/apt-key.gpg"]
-    (set-file-acl "re-ops" "rwX" keyrings)
     (download url (<< "~{keyrings}/~{key}") "1fe629470162c72777c1ed5e5b0f392acf403cf6a374cb229cf76109b5c90ed5")
     (key-file (<< "~{keyrings}/~{key}"))
     (file listing :present)
@@ -33,7 +31,7 @@
   []
   (package "google-cloud-sdk-pubsub-emulator" :present))
 
-(def-inline doctl
+(def-inline {:depends #'re-cog.recipes.access/permissions} doctl
   "Digitalocean client"
   []
   (let [version "1.32.2"
@@ -41,7 +39,5 @@
         url (<< "https://github.com/digitalocean/doctl/releases/download/v~{version}/~{artifact}")
         sum "6b961d9350965655097ce429fab3ded6719b283398dcffcb624da73740cf3bf9"
         dest (<< "/usr/src/~{artifact}")]
-    (set-file-acl "re-ops" "rwX" "/usr/src")
-    (set-file-acl "re-ops" "rwX" "/usr/local/bin/")
     (download url dest sum)
     (untar dest "/usr/local/bin/")))

@@ -5,12 +5,11 @@
    [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.package :refer (package key-file update-)]
-   [re-cog.resources.file :refer (file line)]
-   [re-cog.resources.permissions :refer (set-file-acl)]))
+   [re-cog.resources.file :refer (file line)]))
 
 (require-recipe)
 
-(def-inline {:depends 're-cog.recipes.python/python-3} core
+(def-inline {:depends #'re-cog.recipes.python/python-3} core
   "Setting up platformio core package"
   []
   (letfn [(install []
@@ -23,7 +22,7 @@
   (doseq [p ["apt-transport-https" "ca-certificates" "gnupg-agent" "software-properties-common"]]
     (package p :present)))
 
-(def-inline {:depends 're-cog.recipes.platformio/prequisits} vcode
+(def-inline {:depends #'re-cog.recipes.platformio/prequisits} vcode
   "Install vscode"
   []
   (let [sources "/etc/apt/sources.list.d"
@@ -32,16 +31,14 @@
         keyrings "/usr/share/keyrings"
         key "packages.microsoft.gpg"
         repo (<< "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main")]
-    (set-file-acl "re-ops" "rwX" keyrings)
     (download url (<< "~{keyrings}/~{key}") "2cfd20a306b2fa5e25522d78f2ef50a1f429d35fd30bd983e2ebffc2b80944fa")
     (key-file (<< "~{keyrings}/~{key}"))
-    (set-file-acl "re-ops" "rwX" sources)
     (file listing :present)
     (line listing repo :present)
     (update-)
     (package "code" :present)))
 
-(def-inline {:depends 're-cog.recipes.platformio/vcode} platform-ide
+(def-inline {:depends #'re-cog.recipes.platformio/vcode} platform-ide
   "Installing vscode platform-ide extensions"
   []
   (letfn [(install []
