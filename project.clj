@@ -69,9 +69,6 @@
   :source-paths  ["src"]
 
   :profiles {
-     :dev  {
-       :source-paths  ["src" "main"]
-     }
      :package {
         :source-paths  ["src" "main"]
         :main re-cog.main
