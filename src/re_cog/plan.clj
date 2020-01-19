@@ -45,7 +45,7 @@
 ; Development profiles
 
 (def ^{:doc "Base dev support"}
-  base-dev (into #{'re-cog.recipes.build 're-cog.recipes.nvim} base))
+  base-dev (into #{'re-cog.recipes.build 're-cog.recipes.nvim} lean))
 
 (def ^{:doc "Clojure development instance"}
   clj-dev (into #{'re-cog.recipes.clojure} base-dev))
@@ -54,13 +54,13 @@
   native-clj (into #{'re-cog.recipes.graal} clj-dev))
 
 (def ^{:doc "Python development machine"}
-  python-dev (into #{'re-cog.recipes.nvim 're-cog.recipes.python} base))
+  python-dev (into #{'re-cog.recipes.nvim 're-cog.recipes.python} lean))
 
 (def ^{:doc "Support for Java/Kotlin and Clojure development"}
   jvm-dev (into #{'re-cog.recipes.intellij} clj-dev))
 
 (def ^{:doc "Development machine with Clojure and deep learning utils"}
-  learning (into #{'re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.deep} base))
+  learning (into #{'re-cog.recipes.clojure 're-cog.recipes.build 're-cog.recipes.nvim 're-cog.recipes.deep} lean))
 
 (def ^{:doc "A Vuepress documentation instance"}
   vuepress (into #{'re-cog.recipes.node 're-cog.recipes.nvim} lean))
