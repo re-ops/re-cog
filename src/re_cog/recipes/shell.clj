@@ -72,10 +72,10 @@
 (def-inline fd
   "fd a friendly alternative to find"
   []
-  (let [version "7.3.0"
+  (let [version "7.4.0"
         artifact (<< "fd_~{version}_amd64.deb")
         url (<< "https://github.com/sharkdp/fd/releases/download/v~{version}/~{artifact}")
-        sum "2adddffeef7592cd8e87bff6a73a0b155bedbf4fe2a61ee3c2430ec384d9b478"]
+        sum "e141dbd0066ca75ac2a2d220226587f7ac1731710376300ad7d329c79110f811"]
     (download url (<< "/tmp/~{artifact}") sum)
     (package (<< "/tmp/~{artifact}") :present)))
 
