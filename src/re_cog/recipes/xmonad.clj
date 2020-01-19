@@ -15,7 +15,7 @@
   (package "xmonad" :present)
   (package "gnome-terminal" :present))
 
-(def-inline configure
+(def-inline {:depends #'re-cog.recipes.xmonad/install} configure
   "configure Xmonad"
   []
   (letfn [(recompile []

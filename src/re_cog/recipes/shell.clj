@@ -85,6 +85,6 @@
   (let [version "0.12.1"
         artifact (<< "bat_~{version}_amd64.deb")
         url (<< "https://github.com/sharkdp/bat/releases/download/v~{version}/~{artifact}")
-        sum "4e5502de4aeccb685bf326448afcaf99c3e4ae8e11b2756bdedcc66a095ba4e5"]
+        sum "c02ca23add052009cde64746ff86e6da5765a89fd7494d380800250310180b23"]
     (download url (<< "/tmp/~{artifact}") sum)
     (package (<< "/tmp/~{artifact}") :present)))
