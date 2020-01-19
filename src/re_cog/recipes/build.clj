@@ -23,7 +23,7 @@
 (def-inline lein
   "Setting up https://leiningen.org/"
   []
-  (let [home "/home/re-ops"
+  (let [{:keys [home user]} (configuration)
         dest (<< "~{home}/bin/lein")
         sum "32acacc8354627724d27231bed8fa190d7df0356972e2fd44ca144c084ad4fc7"
         url "https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein"]
