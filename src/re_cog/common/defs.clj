@@ -85,7 +85,9 @@
          (s/fn ~args (let [~profile (atom #{})]
                        (letfn ~letfn-vec
                          (let [result# ~body']
-                           (merge result# {:resources (deref ~profile)}))))))
+                           (if-let [e# (first (filter (fn [m#] (not (= (m# :exit) 0))) (deref ~profile)))]
+                             e#
+                             (merge result# {:resources (deref ~profile)})))))))
        (alter-meta! (var ~name) #(merge % ~meta)))))
 
 (defn require-defs
