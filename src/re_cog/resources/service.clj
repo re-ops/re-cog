@@ -15,6 +15,7 @@
     (assert (#{:start :stop :restart} state))
     (sh "sudo" "/usr/sbin/service" srv (name state))))
 
+; TODO check is service exists using: systemctl list-units --full -all | grep ssh.service
 (def-serial on-boot
   "Manage on boot service state enable/disable"
   [srv state]
