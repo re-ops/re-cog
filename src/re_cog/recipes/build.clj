@@ -9,7 +9,7 @@
 
 (require-recipe)
 
-(def-inline packer
+(def-inline {:depends #'re-cog.recipes.access/permissions} packer
   "Setting up://www.packer.io/"
   []
   (let [version "1.4.3"
