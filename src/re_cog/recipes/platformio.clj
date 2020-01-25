@@ -1,6 +1,7 @@
 (ns re-cog.recipes.platformio
   "Setting up https://platformio.org"
   (:require
+   [re-cog.recipes.python :refer [python-3]]
    [re-cog.resources.exec :refer [run]]
    [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.resources.download :refer (download)]
