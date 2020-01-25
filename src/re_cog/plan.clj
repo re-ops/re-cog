@@ -66,7 +66,7 @@
   vuepress (into #{'re-cog.recipes.node 're-cog.recipes.nvim} lean))
 
 (def ^{:doc "IoT development instance"}
-  iot-dev (into #{'re-cog.recipes.platformio} base-dev))
+  iot-dev (into #{'re-cog.recipes.platformio 're-cog.recipes.3dprint} base-dev))
 
 ; Desktop profiles
 
