@@ -1,15 +1,18 @@
 (ns re-cog.recipes.intellij
   "Setting up Intellij"
   (:require
+   [re-cog.recipes.shell :refer [dot-files]]
+   [re-cog.resources.exec :refer [run]]
    [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.resources.download :refer (download)]
    [re-cog.resources.archive :refer (untar)]
    [re-cog.facts.config :refer (configuration)]
+   [re-cog.resources.permissions :refer (set-file-acl)]
    [re-cog.resources.file :refer (file line)]))
 
 (require-recipe)
 
-(def-inline {:depends #'re-cog.recipes.access/permissions} install
+(def-inline {:depends [#'re-cog.recipes.access/permissions #'re-cog.recipes.shell/dot-files]} install
   "Setting up Intellij Idea community edition"
   []
   (let [{:keys [home]} (configuration)
@@ -20,3 +23,15 @@
     (download url tmp expected)
     (untar tmp "/opt/")
     (directory (<< "~{home}/bin/") :present)))
+
+(def-inline inotify-max
+  "Change the number of inotify watches"
+  []
+  (letfn [(sysctl-reload [target]
+            (fn []
+              (script ("/sbin/sysctl" "-e" "-p" ~target))))]
+    (let [target "/etc/sysctl.d/10-notify-watch.conf"]
+      (set-file-acl "re-ops" "rwX" "/etc/sysctl.d")
+      (file target :present)
+      (line target "fs.inotify.max_user_watches = 524288" :present)
+      (run (sysctl-reload target)))))
