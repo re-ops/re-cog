@@ -42,3 +42,15 @@
     (download url (<< "/tmp/~{archive}") sum)
     (directory (<< "~{home}/bin/") :present)
     (unzip (<< "/tmp/~{archive}") (<< "~{home}/bin/"))))
+
+(def-inline profile
+  "lein profile"
+  []
+  (let [{:keys [home]} (configuration)
+        base "https://gist.githubusercontent.com/narkisr"
+        id "f260d4024ece207616c0bd6307a295c3"
+        version  "1f65c2c5f981b01f2ea3b6462d924a691f145253"
+        sum "8bdbec70922349b1f7f65816bf3231588de45b145b3bd792c5a6a8924760e09e"
+        dest (<< "~{home}/.lein")]
+    (directory dest :present)
+    (download (<< "~{base}/~{id}/raw/~{version}/profiles.clj") (<< "~{dest}/profiles.clj") sum)))
