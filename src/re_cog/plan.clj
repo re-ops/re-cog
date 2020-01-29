@@ -81,7 +81,7 @@
   (mapcat
    (fn [f]
      (when-let [deps (:depends (meta f))]
-       (if-not (seq? deps)
+       (if-not (seqable? deps)
          (list [deps f])
          (map (fn [d] [d f]) deps)))) fns))
 
