@@ -10,7 +10,7 @@
 
 (require-recipe)
 
-(def-inline clj
+(def-inline {:depends #'re-cog.recipes.shell/dot-files} clj
   "Setting up clj and deps tools"
   []
   (letfn [(install-fn [ins prefix]
@@ -29,7 +29,22 @@
       (directory (<< "~{home}/bin/") :present)
       (symlink (<< "~{home}/bin/clj") (<< "~{prefix}/bin/clj"))
       (symlink (<< "~{home}/bin/clojure") (<< "~{prefix}/bin/clojure"))
+      (symlink (<< "~{prefix}/deps.edn") (<< "~{home}/.dots/deps.edn"))
       (chown prefix user user {:recursive true}))))
+
+(def-inline {:depends #'re-cog.recipes.shell/dot-files} lein
+  "Setting up https://leiningen.org/"
+  []
+  (let [{:keys [home user]} (configuration)
+        dest (<< "~{home}/bin/lein")
+        sum "32acacc8354627724d27231bed8fa190d7df0356972e2fd44ca144c084ad4fc7"
+        url "https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein"
+        dot-lein (<< "~{home}/.lein")]
+    (directory (<< "~{home}/bin") :present)
+    (download url dest sum)
+    (chmod dest "+x")
+    (directory dot-lein :present)
+    (symlink (<< "~{dot-lein}/profiles.clj") (<< "~{home}/.dots/profiles.clj"))))
 
 (def-inline joker
   "Setting up Joker linter"
@@ -42,15 +57,3 @@
     (download url (<< "/tmp/~{archive}") sum)
     (directory (<< "~{home}/bin/") :present)
     (unzip (<< "/tmp/~{archive}") (<< "~{home}/bin/"))))
-
-(def-inline profile
-  "lein profile"
-  []
-  (let [{:keys [home]} (configuration)
-        base "https://gist.githubusercontent.com/narkisr"
-        id "f260d4024ece207616c0bd6307a295c3"
-        version  "1f65c2c5f981b01f2ea3b6462d924a691f145253"
-        sum "8bdbec70922349b1f7f65816bf3231588de45b145b3bd792c5a6a8924760e09e"
-        dest (<< "~{home}/.lein")]
-    (directory dest :present)
-    (download (<< "~{base}/~{id}/raw/~{version}/profiles.clj") (<< "~{dest}/profiles.clj") sum)))
