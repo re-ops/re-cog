@@ -73,11 +73,15 @@
 (def ^{:doc "Dev desktop"}
   dev-desktop (into #{'re-cog.recipes.xmonad 're-cog.recipes.chrome} jvm-dev))
 
-(defn all-functions [namespaces]
+(defn all-functions
+  "Get all the functions from provided namespaces"
+  [namespaces]
   (mapcat
    (fn [n] (vals (ns-publics n))) namespaces))
 
-(defn dep-nodes [fns]
+(defn dep-nodes
+  "Get dependencies from fns"
+  [fns]
   (mapcat
    (fn [f]
      (when-let [deps (:depends (meta f))]
@@ -85,7 +89,9 @@
          (list [deps f])
          (map (fn [d] [d f]) deps)))) fns))
 
-(defn execution-graph [namespaces]
+(defn execution-graph
+  "Create execution graphs from namespaces"
+  [namespaces]
   (let [fs (all-functions namespaces)
         deps (dep-nodes fs)]
     (apply g/digraph (concat deps fs))))
