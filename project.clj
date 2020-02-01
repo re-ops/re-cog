@@ -66,7 +66,7 @@
     :welcome (println "Welcome to re-cog!" )
   }
 
-  :source-paths  ["src"]
+  :source-paths  ["src" "dev"]
 
   :profiles {
      :package {
