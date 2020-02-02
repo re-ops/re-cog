@@ -57,3 +57,13 @@
     (download url (<< "/tmp/~{archive}") sum)
     (directory (<< "~{home}/bin/") :present)
     (unzip (<< "/tmp/~{archive}") (<< "~{home}/bin/"))))
+
+(def-inline cljfmt
+  "Single binary code format for Clojure"
+  []
+  (let [{:keys [home user]} (configuration)
+        url "https://github.com/narkisr/cljfmt-graalvm/releases/download/0.1.0/cljfmt"
+        dest (<< "~{home}/bin/cljfmt")]
+    (directory (<< "~{home}/bin") :present)
+    (download url dest "290872ee18769995b3a2e8e5b12711586fdfcf5dca26b78b79b87d8fc8eab495")
+    (chmod dest "+x")))

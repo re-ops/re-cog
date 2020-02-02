@@ -23,16 +23,6 @@
     (untar dest "/opt/")
     (symlink "/usr/local/bin/nvim" "/opt/nvim-linux64/bin/nvim")))
 
-(def-inline cljfmt
-  "Single binary code format for Clojure"
-  []
-  (let [{:keys [home user]} (configuration)
-        url "https://github.com/narkisr/cljfmt-graalvm/releases/download/0.1.0/cljfmt"
-        dest (<< "~{home}/bin/cljfmt")]
-    (directory (<< "~{home}/bin") :present)
-    (download url dest "290872ee18769995b3a2e8e5b12711586fdfcf5dca26b78b79b87d8fc8eab495")
-    (chmod dest "+x")))
-
 (def-inline config
   "Configure nvim"
   []

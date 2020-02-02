@@ -37,6 +37,7 @@
               ['re-cog.recipes.access
                're-cog.recipes.nvim
                're-cog.recipes.build
+               're-cog.recipes.cleanup
                're-cog.recipes.k8s
                're-cog.recipes.deep
                're-cog.recipes.cloud
