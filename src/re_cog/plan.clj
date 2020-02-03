@@ -70,8 +70,16 @@
 
 ; Desktop profiles
 
-(def ^{:doc "Dev desktop"}
-  dev-desktop (into #{'re-cog.recipes.xmonad 're-cog.recipes.chrome} jvm-dev))
+(def base-desktop #{'re-cog.recipes.xmonad 're-cog.recipes.chrome})
+
+(def ^{:doc "JVM dev desktop"}
+  jvm-desktop (into base-desktop jvm-dev))
+
+(def ^{:doc "IOT dev desktop"}
+  iot-desktop (into base-desktop iot-dev))
+
+(def ^{:doc "Clojure dev desktop"}
+  clj-desktop (into base-desktop clj-dev))
 
 (defn all-functions
   "Get all the functions from provided namespaces"
