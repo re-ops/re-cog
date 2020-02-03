@@ -44,6 +44,6 @@
 
 #_(defn dropbox
     [{:keys [home]}]
-    (if (desktop?)
+    (if (ubuntu-desktop?)
       (dropbox-desktop)
       (dropbox-headless home)))

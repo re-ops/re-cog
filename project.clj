@@ -26,7 +26,7 @@
      [com.fzakaria/slf4j-timbre "0.3.8"]
 
      ; common utilities and shared functions
-     [re-share "0.11.10"]
+     [re-share "0.12.0"]
      [re-scan "0.2.1"]
 
      ; clojure to bash
@@ -42,6 +42,9 @@
      [cli-matic "0.3.11"]
      [progrock "0.1.2"]
 
+     ; in memory datalog
+     [datascript "0.18.8"]
+     [camel-snake-kebab "0.4.1"]
   ]
 
   :plugins [

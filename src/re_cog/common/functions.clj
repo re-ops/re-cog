@@ -52,7 +52,7 @@
    '[re-cog.common.functions :refer [sh! file-checksum coherce success failure]]
    '[re-cog.scripts.common :refer [shell-args]]
    ; os info
-   '[re-share.oshi :refer (read-metrics os get-processes)]
+   '[re-share.oshi :refer (read-all get-processes)]
    '[re-share.core :refer [measure gen-uuid]]
    ; templating
    '[cljstache.core :refer [render]]
@@ -60,10 +60,10 @@
    '[digest :as digest]
    '[clojure.java.io :as io]
    '[me.raynes.fs :as fs :refer (list-dir tmpdir exists?)]
+   ; datalog facts
+   '[re-cog.facts.datalog :refer (os ubuntu-desktop? ubuntu-18.04-desktop? ubuntu-19.10-desktop? verify query singleton)]
+   '[datascript.core :as d]
    ; common
    '[re-cog.facts.config :refer (configuration)]
-   '[re-cog.facts.query :refer (desktop?)]
    '[taoensso.timbre :refer (info error debug trace)]
    '[clojure.core.strint :refer (<<)]))
-
-

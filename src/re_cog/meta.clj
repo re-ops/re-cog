@@ -26,6 +26,7 @@
                're-cog.resources.user
                ; facts
                're-cog.facts.oshi
+               're-cog.facts.datalog
                're-cog.facts.query
                're-cog.facts.security])))
 
@@ -75,5 +76,7 @@
     (first
      (filter #(and (var? (second %)) (= f (var-get (second %)))) m)))))
 
-(defn fn-meta [f]
+(defn fn-meta
+  "Get the meta data of a function by passing it in"
+  [f]
   (first (filter identity (map (fn [[_ v]] (meta-from f v)) (merge (recipes) (resources))))))

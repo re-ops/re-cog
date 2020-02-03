@@ -9,8 +9,3 @@
   "Run a osquery query"
   [query]
   (parse-string (:out (sh "/usr/bin/osqueryi" "--json" query)) true))
-
-(defn desktop?
-  "check if we are running within a desktop machine"
-  []
-  (= (:exit (sh "bash" "-c" "type Xorg")) 0))

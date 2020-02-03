@@ -4,7 +4,6 @@
    [re-cog.resources.exec :refer [run]]
    [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.facts.config :refer (configuration)]
-   [re-cog.facts.query :refer (desktop?)]
    [re-cog.resources.file :refer (line line-set uncomment copy)]
    [re-cog.resources.permissions :refer (set-file-acl)]
    [re-cog.resources.service :refer (service on-boot)]))
@@ -39,6 +38,6 @@
 (def-inline disable-bluetooth
   "Disabling bluetooth on desktop machines"
   []
-  (if (desktop?)
+  (if (ubuntu-desktop?)
     (on-boot "bluetooth" :disable)
     {}))

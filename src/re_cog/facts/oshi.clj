@@ -2,7 +2,7 @@
   (:require
    [serializable.fn :as s]
    [re-cog.common.defs :refer (def-serial)]
-   [re-share.oshi :refer (read-metrics os get-processes)]))
+   [re-share.oshi :refer (read-all get-processes)]))
 
 (def-serial all-processes
   "Get all processes"
@@ -18,14 +18,4 @@
   [f]
   (let [f' (eval f)]
     (filter f' (get-processes))))
-
-(def-serial operating-system
-  "Getting all OS information using oshi"
-  []
-  (get-in (read-metrics) [:operatingSystem]))
-
-(def-serial hardware
-  "Getting all Hardware information using oshi"
-  []
-  (get-in (read-metrics) [:hardware]))
 
