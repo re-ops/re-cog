@@ -4,6 +4,5 @@ jdk:
   - openjdk8
 
 script:
-  - cp ./resources/re-ops.edn ~/.re-ops.edn
   - lein travis
   - ./bin/binary.sh
