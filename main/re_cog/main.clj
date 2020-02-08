@@ -7,9 +7,9 @@
    [taoensso.timbre  :as timbre :refer (set-level! refer-timbre)]
    [cli-matic.core :refer [run-cmd]]
    [progrock.core :as pr]
+   [re-cog.facts.datalog :refer (populate)]
    [re-cog.scripts.common :refer (bind-bash)]
-   [re-cog.meta :refer (fn-meta)]
-   ))
+   [re-cog.meta :refer (fn-meta)]))
 
 (refer-timbre)
 
@@ -28,6 +28,7 @@
 
 (defn provision [{:keys [plan config level]}]
   (setup-logging :level level)
+  (populate)
   (let [namespaces  (resolve- plan)]
       (doseq [n namespaces]
         (require n))
