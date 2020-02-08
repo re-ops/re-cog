@@ -17,8 +17,7 @@
 
 (defn stop
   "Shuts down and destroys the current development system."
-  []
-  )
+  [])
 
 (defn go
   "Initializes the current development system and starts it running."
