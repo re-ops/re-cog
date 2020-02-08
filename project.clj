@@ -56,7 +56,7 @@
 
    :aliases {
      "travis" [
-      "with-profile"  "do" "clean," "compile," "cljfmt" "check"
+       "do" "clean," "compile," "cljfmt" "check"
      ]
      "docs" [
          "with-profile" "codox" "do" "codox"
