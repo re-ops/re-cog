@@ -1,4 +1,4 @@
-(defproject re-cog "0.3.0"
+(defproject re-cog "0.3.1"
   :description "Distributed provisioning Clojure functions to be used with Re-gent"
   :url "https://github.com/re-ops/re-cog"
   :license {:name "Apache License, Version 2.0" :url "http://www.apache.org/licenses/LICENSE-2.0.html"}
@@ -26,7 +26,7 @@
      [com.fzakaria/slf4j-timbre "0.3.8"]
 
      ; common utilities and shared functions
-     [re-share "0.12.0"]
+     [re-share "0.13.0"]
      [re-scan "0.2.1"]
 
      ; clojure to bash
