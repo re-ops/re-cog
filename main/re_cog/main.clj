@@ -35,6 +35,7 @@
             bar (pr/progress-bar (count fs))]
         (doseq [[i f] (map-indexed vector fs)]
           (pr/print (pr/tick bar i))
+          (info "Running" f)
           (f))
         (pr/print (pr/done bar)))))
 
