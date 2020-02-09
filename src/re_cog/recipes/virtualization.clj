@@ -13,16 +13,20 @@
   []
   (letfn [(init []
             (script ("sudo" "/usr/bin/lxd" "init" "--auto")))]
-    (let [{:keys [user]} (configuration)]
-      (package "lxd" :present)
-      (package "zfsutils-linux" :present)
-      (run init))))
+    (package "lxd" :present)
+    (package "zfsutils-linux" :present)
+    (run init)))
 
 (def-inline kvm
   "Installing KVM"
   []
-  (let [{:keys [user]} (configuration)]
+  (let [version (ubuntu-version)]
+    (cond
+      (<= version 18.04) (package "libvirt-bin" :present)
+      (>= version 18.10) (do
+                           (package "libvirt-daemon-system" :present)
+                           (package "libvirt-clients" :present)))
     (package "qemu-kvm" :present)
-    (package  "libvirt-bin" :present)
     (package "bridge-utils" :present)
-    (package "virt-manager" :present)))
+    (if (ubuntu-desktop?)
+      (package "virt-manager" :present))))

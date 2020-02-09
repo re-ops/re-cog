@@ -109,6 +109,15 @@
      [?f :family "Ubuntu"]
      [?v :version/version "19.10"]]))
 
+(defn ubuntu-version
+  "Are we running in Ubuntu desktop"
+  []
+  (BigDecimal.
+   (singleton
+    '[:find ?v :where
+      [_ :family "Ubuntu"]
+      [_ :version/version ?v]])))
+
 (defn os
   "Grab the current operating system"
   []
