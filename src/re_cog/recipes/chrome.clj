@@ -10,7 +10,7 @@
 
 (require-recipe)
 
-(def-inline install
+(def-inline {:depends #'re-cog.recipes.access/permissions} install
   "Install google chrome"
   []
   (let [sources "/etc/apt/sources.list.d"
