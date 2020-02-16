@@ -21,7 +21,8 @@
   "Installing git if missing"
   [bin]
   (when-not (fs/exists? bin)
-    (re-cog.resources.package/package "git" :present)))
+    (when-not (= 0 (:exit (re-cog.resources.package/package "git" :present)))
+      (failure "failed to install git"))))
 
 (def-serial repo-exists?
   "check if repo exists"
