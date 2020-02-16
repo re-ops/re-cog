@@ -9,7 +9,7 @@
 
 (require-functions)
 
-(def-serial binary
+(defn binary
   "Grab git binary path"
   []
   (case (os)
@@ -17,7 +17,7 @@
     :FreeBSD "/usr/local/bin/git"
     :default (throw (ex-info (<< "No matching git path found for ~(os)") {}))))
 
-(def-serial install-missing
+(defn install-missing
   "Installing git if missing"
   [bin]
   (when-not (fs/exists? bin)
