@@ -7,8 +7,6 @@
    [re-cog.meta :refer :all]
    [clojure.tools.namespace.repl :refer (refresh refresh-all)]))
 
-(setup "re-share" ["oshi.*"] [])
-
 (defn init
   "Constructs the current development system."
   []
