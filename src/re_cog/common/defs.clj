@@ -81,7 +81,8 @@
         letfn-vec (inlined-functions body profile)
         body' (do-body body)
         sum (re-share.core/md5 (str body'))
-        meta-sum (assoc meta :sum sum)]
+        used-functions (mapv (comp keyword first) letfn-vec)
+        meta+ (merge meta {:sum sum :resources used-functions})]
     `(do
        (def ~name
          (s/fn ~args (let [~profile (atom #{})]
@@ -90,7 +91,7 @@
                            (if-let [e# (first (filter (fn [m#] (not (= (m# :exit) 0))) (deref ~profile)))]
                              e#
                              (merge result# {:resources (deref ~profile)})))))))
-       (alter-meta! (var ~name) #(merge % ~meta-sum)))))
+       (alter-meta! (var ~name) #(merge % ~meta+)))))
 
 (defn require-defs
   "Require common constant values"

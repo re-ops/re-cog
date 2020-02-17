@@ -1,6 +1,6 @@
 (ns re-cog.facts.datalog
   (:require
-   [re-cog.common.defs :refer (def-serial def-inline)]
+   [re-cog.common.datalog :refer (add-items add-ns with-id)]
    [taoensso.timbre :refer (info)]
    [camel-snake-kebab.core :as csk]
    [re-share.oshi :refer (operating-system hardware)]
@@ -13,18 +13,6 @@
   "check if we are running within a desktop machine"
   []
   (= (:exit (sh "bash" "-c" "type Xorg")) 0))
-
-(defn with-id
-  "Create a datom with an id"
-  [id m]
-  [(assoc m :db/id id)])
-
-(defn add-ns [n m]
-  (into {} (map (fn [[k v]] [(keyword (name n) (name k)) v]) m)))
-
-(defn add-items [n ms]
-  (doseq [fact (map (partial add-ns n) ms)]
-    (d/transact! db (with-id -1 fact))))
 
 (defn add-oshi-seq [n ms]
   (letfn [(filter-nils [m] (filter (fn [[_ v]] (not (nil? v))) m))

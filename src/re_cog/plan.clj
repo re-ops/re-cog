@@ -1,6 +1,8 @@
 (ns re-cog.plan
   "Execution plans support"
   (:require
+   [re-cog.common.datalog :refer (add-ns with-id)]
+   [datascript.core :as d]
    [loom.alg :as alg]
    [loom.graph :as g]))
 
@@ -107,8 +109,20 @@
 (defn execution-plan [namespaces]
   (alg/topsort (execution-graph namespaces)))
 
+(defn all-recipes []
+  (filter
+   (fn [n] (.contains (str n) "re-cog.recipe"))
+   (map ns-name (all-ns))))
+
+; recipe metadata
+(def db (d/create-conn))
+
+(defn populate []
+  (doseq [m (map meta (all-functions (all-recipes))) :let [n (ns-name (:ns m))]]
+    (d/transact! db (with-id -1 (add-ns n m)))))
+
 (comment
-  (require
-   're-cog.recipes.osquery
-   're-cog.recipes.build)
+  (clojure.pprint/pprint @db)
+  (doseq [n base-desktop] (require n))
+  (populate)
   (loom.io/view (execution-plan iot-dev)))
