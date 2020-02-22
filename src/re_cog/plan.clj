@@ -8,7 +8,7 @@
 
 ; Basic profiles
 (def ^{:doc "Minimal set of recipes"}
-  lean #{'re-cog.recipes.access 're-cog.recipes.shell 're-cog.recipes.hardening 're-cog.recipes.cleanup})
+  lean #{'re-cog.recipes.access 're-cog.recipes.shell 're-cog.recipes.tmux 're-cog.recipes.hardening 're-cog.recipes.cleanup})
 
 (def ^{:doc "Base setup common to all plans (shell, hardening, osquery etc.)"}
   base (into #{'re-cog.recipes.osquery 're-cog.recipes.monitoring} lean))

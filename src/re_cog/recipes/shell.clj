@@ -10,20 +10,6 @@
 
 (require-recipe)
 
-(def-inline tmux
-  "Setup tmux for user"
-  []
-  (let [{:keys [home user]} (configuration)
-        dest (<< "~{home}/.tmux")]
-    (package "tmux" :present)
-    (clone "git://github.com/narkisr/.tmux.git" dest)
-    (directory (<< "~{dest}/plugins/") :present)
-    (clone "git://github.com/tmux-plugins/tpm" (<< "~{dest}/plugins/tpm"))
-    (symlink (<< "~{home}/.tmux.conf") (<< "~{dest}/.tmux.conf"))
-    (chown dest user user {})
-    (clone "git://github.com/narkisr/.tmuxinator.git" (<< "~{home}/.tmuxinator.git"))
-    (chown (<< "~{home}/.tmuxinator.git") user user {:recursive true})))
-
 (def-inline zsh
   "zsh setup"
   []
