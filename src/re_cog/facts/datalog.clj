@@ -17,7 +17,7 @@
 (defn add-oshi-seq [n ms]
   (letfn [(filter-nils [m] (filter (fn [[_ v]] (not (nil? v))) m))
           (kebab-keys [m] (map (fn [[k v]] [(csk/->kebab-case k) v]) m))]
-    (add-items n (map (fn [m] (into {} (kebab-keys (filter-nils m)))) ms))))
+    (add-items db n (map (fn [m] (into {} (kebab-keys (filter-nils m)))) ms))))
 
 (defn add-oshi-section [s]
   (doseq [[n m] s]
