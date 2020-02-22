@@ -25,7 +25,7 @@
 (def-inline {:depends #'re-cog.recipes.access/permissions} tmx
   "Setting up tmx https://github.com/narkisr/tmx"
   []
-  (let [version "0.2.1"
+  (let [version "0.2.2"
         sum "022b3bc09a4315b462ae419f043f54ca200a0666baef2cc5f81d1d4e07fb6615"
         url (<< "https://github.com/narkisr/tmx/releases/download/~{version}/tmx")
         dest "/usr/local/bin/tmx"]
