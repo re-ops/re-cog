@@ -26,7 +26,7 @@
   "Setting up tmx https://github.com/narkisr/tmx"
   []
   (let [version "0.2.2"
-        sum "022b3bc09a4315b462ae419f043f54ca200a0666baef2cc5f81d1d4e07fb6615"
+        sum "5d624f40caef8b8c5f8b420474778499f55ffeab7a2fc19c892d00aa20f05c70"
         url (<< "https://github.com/narkisr/tmx/releases/download/~{version}/tmx")
         dest "/usr/local/bin/tmx"]
     (download url dest sum)
