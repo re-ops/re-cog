@@ -22,14 +22,19 @@
       (when-not  (clojure.string/includes? (<< "~{user}:/bin/zsh") (slurp "/etc/passwd"))
         (run (chsh user))))))
 
-(def-inline oh-my-zsh
-  "Setup https://github.com/robbyrussell/oh-my-zsh"
+(def-inline minimal-zsh
+  "Minmal zsh setup"
   []
   (let [{:keys [home user]} (configuration)
-        dest (<< "~{home}/.oh-my-zsh")]
-    (clone "git://github.com/narkisr/oh-my-zsh.git" dest)
+        dest (<< "~{home}/.minimal-zsh")]
+    (clone "git://github.com/narkisr/minimal-zsh.git" dest)
     (chown dest user user {})
     (symlink (<< "~{home}/.zshrc") (<< "~{dest}/.zshrc"))))
+
+(def-inline {:depends #'re-cog.recipes.access/permissions} z
+  "rupa z"
+  []
+  (clone "git://github.com/rupa/z.git" "/opt/z"))
 
 (def-inline dot-files
   "Setting up dot files from git://github.com/narkisr/dots.git"
