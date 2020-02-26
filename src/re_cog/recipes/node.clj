@@ -4,7 +4,7 @@
    [re-cog.resources.exec :refer [run]]
    [re-cog.common.recipe :refer (require-recipe)]
    [re-cog.facts.config :refer (configuration)]
-   [re-cog.resources.file :refer (symlink)]))
+   [re-cog.resources.file :refer (symlink directory)]))
 
 (require-recipe)
 
@@ -21,4 +21,5 @@
             (script ("/usr/bin/npm" "install" "vuepress")))]
     (let [{:keys [home]} (configuration)]
       (run install)
-      (symlink  (<< "~{home}/bin/vuepress") (<< "~{home}/nodemodules/vuepress.js")))))
+      (directory (<< "~{home}/bin/") :present)
+      (symlink (<< "~{home}/bin/vuepress") (<< "~{home}/node_modules/vuepress/cli.js")))))
