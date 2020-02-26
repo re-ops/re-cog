@@ -9,7 +9,7 @@
 (require-recipe)
 
 (def-inline install
-  "Settimgn up nodejs"
+  "Setting up nodejs"
   []
   (package "nodejs" :present)
   (package "npm" :present))
