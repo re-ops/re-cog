@@ -17,14 +17,21 @@
             (fn []
               (script (~bin "install" ~pkg))))]
     (let [{:keys [home]} (configuration)
-          version "19.2.0"
-          release (<< "graalvm-ce-linux-amd64-~{version}")
-          dest (<< "graalvm-ce-~{version}")
+          version "20.0.0"
+          release (<< "graalvm-ce-java8-linux-amd64-~{version}")
+          dest (<< "graalvm-ce-java8-~{version}")
           tmp (<< "/tmp/~{release}.tar.gz")
-          expected "9d8a82788c3aaede4a05366f79f8b0b328957d0bb7479c986f6f1354b1c7c4ea"
-          url (<< "https://github.com/oracle/graal/releases/download/vm-~{version}/~{release}.tar.gz")]
+          expected "16ef8d89f014b4d295b7ca0c54343eab3c7d24e18b2d376665f5b12bb643723d"
+          url (<< "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-~{version}/~{release}.tar.gz")]
       (download url tmp expected)
       (untar tmp "/opt/")
       (directory (<< "~{home}/bin/") :present)
       (symlink (<< "~{home}/bin/gu") (<< "/opt/~{dest}/lib/installer/bin/gu"))
-      (run (gu (<< "/opt/~{dest}/lib/installer/bin/gu") "native-image")))))
+      (run (gu (<< "/opt/~{dest}/lib/installer/bin/gu") "native-image"))
+      (symlink (<< "~{home}/bin/native-image") (<< "/opt/~{dest}/bin/native-image")))))
+
+(def-inline native-code
+  "Setting up native code compilation tools"
+  []
+  (package "build-essential" :present)
+  (package "zlib1g-dev" :present))
