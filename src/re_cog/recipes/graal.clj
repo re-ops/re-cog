@@ -26,5 +26,5 @@
       (download url tmp expected)
       (untar tmp "/opt/")
       (directory (<< "~{home}/bin/") :present)
-      (symlink (<< "/opt/~{dest}/bin/gu") (<< "~{home}/bin/gu"))
-      (run (gu (<< "/opt/~{dest}/bin/gu") "native-image")))))
+      (symlink (<< "~{home}/bin/gu") (<< "/opt/~{dest}/lib/installer/bin/gu"))
+      (run (gu (<< "/opt/~{dest}/lib/installer/bin/gu") "native-image")))))
