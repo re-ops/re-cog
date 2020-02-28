@@ -10,7 +10,7 @@
 
 (require-recipe)
 
-(def-inline install
+(def-inline {:depends #'re-cog.recipes.access/permissions} install
   "Setting up Graal"
   []
   (letfn [(gu [bin pkg]
