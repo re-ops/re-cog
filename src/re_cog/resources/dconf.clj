@@ -19,17 +19,23 @@
   [k]
   (update (sh "/usr/bin/dconf" "read" k) :out clojure.string/trim))
 
+(defn spit-conf [m]
+  (letfn [(pair [s [k v]]
+            (if-not (#{"false" "true"} v)
+              (str s (name k) "='" v "'\n")
+              (str s (name k) "=" v "\n")))]
+    (apply str (map (fn [[k vs]] (str "[" k "]\n" (reduce pair "" vs) "\n")) m))))
+
 (def-serial load
-  "Populate a dconf subpath from stdin"
-  [k f]
-  (assert (fs/exists? f))
-  (sh "/usr/bin/dconf" "load" k f))
+  "Populate a dconf subpath from m"
+  [k m]
+  (sh "/usr/bin/dconf" "load" k :in (spit-conf m)))
 
 (defn read-values [kv]
   (let [[k v] (clojure.string/split kv #"=")]
     [(keyword k) (clojure.string/replace v #"'" "")]))
 
-(defn read-conf [s]
+(defn slurp-conf [s]
   (let [dirs (clojure.string/split s #"\n\n")]
     (into {}
           (map
@@ -38,12 +44,13 @@
                [(apply str (butlast (rest k))) (into {} (map read-values vs))])) dirs))))
 
 (def-serial dump
-  "Persist a dconf path into a file"
+  "Read a dconf path into :out"
   [k f]
   (sh "/usr/bin/dconf" "dump" k))
 
 (comment
-  (read-conf (:out (dump "/org/mate/" "/tmp/foo")))
+  (println (spit-conf (slurp-conf (:out (dump "/org/mate/terminal/" "/tmp/foo")))))
+  (load  "/org/mate/terminal/keybindings/" {"/" {:select-all "disabled"}})
   (write "/org/mate/terminal/profiles/default/allow-bold" "false")
   (read "/org/mate/terminal/profiles/default/allow-bold")
   (load "/org/mate/terminal/profiles/default/" "false")
