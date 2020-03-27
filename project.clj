@@ -72,6 +72,18 @@
   :source-paths  ["src" "dev"]
 
   :profiles {
+     :dev {
+       :source-paths  ["dev"]
+       :set-version {
+         :updates [
+            {:path "main/re_cog/main.clj" :search-regex #"\"\d+\.\d+\.\d+\""}
+            {:path "bin/binary.sh" :search-regex #"\d+\.\d+\.\d+"}
+            {:path "README.md" :search-regex #"\d+\.\d+\.\d+"}
+          ]}
+
+     }
+
+
      :package {
         :source-paths  ["src" "main"]
         :main re-cog.main
