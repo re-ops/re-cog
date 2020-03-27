@@ -8,8 +8,7 @@
    [cli-matic.core :refer [run-cmd]]
    [progrock.core :as pr]
    [re-cog.facts.datalog :refer (populate)]
-   [re-cog.scripts.common :refer (bind-bash)]
-   [re-cog.meta :refer (fn-meta)]))
+   [re-cog.scripts.common :refer (bind-bash)]))
 
 (refer-timbre)
 
@@ -40,12 +39,6 @@
           (f))
         (pr/print (pr/done bar)))))
 
-(defn meta-print [{:keys [function]}]
-  (let [[n f] (clojure.string/split function #"\/")]
-    (require (symbol n))
-    (if-let [m (fn-meta (resolve- function))]
-      (clojure.pprint/pprint m)
-      (throw (ex-info "No meta found for provided function" {:function function})))))
 
 (def CONFIGURATION {
     :app {
@@ -60,10 +53,6 @@
               {:option "plan" :short "p" :env "PP" :as "plan" :type :string :default :present}
               {:option "level" :short "l" :env "LL" :as "log level" :type :keyword :default :info}]
        :runs  provision}
-      {:command "meta" :short "m"
-       :description "Print recipe function meta"
-       :opts [{:option "function" :short "f" :as "functions" :type :string :default :present}]
-       :runs  meta-print}
     ]
   })
 

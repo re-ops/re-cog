@@ -30,54 +30,7 @@
                're-cog.facts.query
                're-cog.facts.security])))
 
-(defn recipes
-  "Recipe function names (not inlined so not uniquly named)"
-  []
-  (apply merge
-         (map resolve-
-              ['re-cog.recipes.access
-               're-cog.recipes.nvim
-               're-cog.recipes.build
-               're-cog.recipes.cleanup
-               're-cog.recipes.k8s
-               're-cog.recipes.deep
-               're-cog.recipes.cloud
-               're-cog.recipes.osquery
-               're-cog.recipes.shell
-               're-cog.recipes.tmux
-               're-cog.recipes.docker
-               're-cog.recipes.virtualization
-               're-cog.recipes.backup
-               're-cog.recipes.clojure
-               're-cog.recipes.python
-               're-cog.recipes.platformio
-               're-cog.recipes.3dprint
-               're-cog.recipes.intellij
-               're-cog.recipes.node
-               're-cog.recipes.hardening
-               're-cog.recipes.security
-               're-cog.recipes.monitoring
-               're-cog.recipes.zfs
-               're-cog.recipes.wireguard
-               're-cog.recipes.graal
-               're-cog.recipes.chrome
-               're-cog.recipes.xmonad])))
-
 (defn resource-functions
   "Flatten list of function to var map"
   []
   (apply merge (vals (resources))))
-
-(defn meta-from
-  "Function metadata (for remote execution)"
-  [f m]
-  {:post [#(not (nil? %))]}
-  (meta
-   (second
-    (first
-     (filter #(and (var? (second %)) (= f (var-get (second %)))) m)))))
-
-(defn fn-meta
-  "Get the meta data of a function by passing it in"
-  [f]
-  (first (filter identity (map (fn [[_ v]] (meta-from f v)) (merge (recipes) (resources))))))
