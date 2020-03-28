@@ -82,7 +82,7 @@
 
      }
 
-    :codox {
+     :codox {
         :dependencies [[org.clojure/tools.reader "1.1.0"]
                        [codox-theme-rdash "0.1.2"]]
               :plugins [[lein-codox "0.10.7"]]
@@ -91,11 +91,11 @@
                       :source-paths ["src"]
                       :source-uri "https://github.com/re-ops/re-core/blob/master/{filepath}#L{line}"
               }
-     }
-     :package {
+    }
+    :package {
         :source-paths  ["src" "main"]
         :main re-cog.main
-     }
+    }
   }
 
 
