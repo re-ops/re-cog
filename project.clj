@@ -49,7 +49,6 @@
 
   :plugins [
       [lein-tag "0.1.0"]
-      [lein-codox "0.10.7"]
       [lein-ancient "0.6.15" :exclusions [org.clojure/clojure]]
       [lein-set-version "0.3.0"]
       [lein-cljfmt "0.5.6"]]
@@ -83,7 +82,16 @@
 
      }
 
-
+    :codox {
+        :dependencies [[org.clojure/tools.reader "1.1.0"]
+                       [codox-theme-rdash "0.1.2"]]
+              :plugins [[lein-codox "0.10.7"]]
+              :codox {:project {:name "re-core"}
+                      :themes [:rdash]
+                      :source-paths ["src"]
+                      :source-uri "https://github.com/re-ops/re-core/blob/master/{filepath}#L{line}"
+              }
+     }
      :package {
         :source-paths  ["src" "main"]
         :main re-cog.main
