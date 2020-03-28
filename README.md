@@ -1,12 +1,14 @@
 # Intro
 
-Re-cog is a set of remote functions that are executable by [Re-gent](https://github.com/re-ops/re-gent) and divided into a number categories:
+Re-cog is a set of serializable functions that can be executed by [Re-gent](https://github.com/re-ops/re-gent).
+
+The functions are divided into a number categories:
 
 * Resources which are used in provisioning recipes to setup remote machines (see [Re-cipes](https://github.com/re-ops/re-cipes)).
 * Facts which are use to get information from remote machines including security audit, performance metrics.
 * Common shell scripts that we can execute remotely.
 
-All the functions are serializable which means that we can change them locally refresh the REPL and run the latest version on our remote hosts (no restart required!), this provides the same productive [Reloaded](https://re-ops.github.io/re-docs/usage/#reloaded) workflow as local Clojure functions.
+We can change the functions on the fly by refreshing the REPL and run the latest version on our remote hosts (no restart required!) using the [Reloaded](https://re-ops.github.io/re-docs/usage/#reloaded) workflow.
 
 Re-cog resources facts and scripts have a number of use cases:
 
