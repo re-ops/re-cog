@@ -68,7 +68,7 @@ The recipe functions use [resources](https://github.com/re-ops/re-cog/tree/maste
 
 ### Re-mote pipelines
 
-Remote Re-cog scripts are used within Re-mote pipelines:
+Re-mote pipeline are using Re-cog scripts/facts/resources:
 
 ```clojure
 (defn ^{:category :stats} cpu-persist
@@ -97,7 +97,7 @@ The pipeline uses the [cpu](https://github.com/re-ops/re-core/blob/master/src/re
 ```
 ### Adhoc invocation
 
-In some cases it is useful to run Re-cog functions in an adhoc manner (for interactive data collection or during development):
+In some cases it is useful to invoke Re-cog resrouces/facts/scripts in an adhoc manner (for interactive data collection or during development):
 
 ```clojure
 ; collecting the cpu vulnerabilities from our hosts
