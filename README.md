@@ -26,7 +26,7 @@ It is a part of the [Re-ops](https://re-ops.github.io/re-ops/) project that offe
 
 A recipe is a Clojure namespace which includes a list of functions used to provision a component in a system, each one of those functions use resources/facts and is serializable by using [def-inline](https://github.com/re-ops/re-cog/blob/master/src/re_cog/common/defs.clj#L73).
 
-In the following example we have sets up the ZSH shell, we start with requiring our Re-cog resources and facts and adding support for by require-recipe:
+In the following example we setup a ZSH shell, we start by requiring our Re-cog resources/facts and adding def-inline by using the require-recipe macro:
 
 ```clojure
 (ns re-cipes.shell
