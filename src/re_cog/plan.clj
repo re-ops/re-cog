@@ -32,7 +32,6 @@
 (defn execution-plan [namespaces]
   (alg/topsort (execution-graph namespaces)))
 
-
 ; recipe metadata
 ;; (defn all-recipes []
 ;;   (filter
