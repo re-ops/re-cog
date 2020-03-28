@@ -1,8 +1,0 @@
-language: clojure
-
-jdk:
-  - openjdk8
-
-script:
-  - lein travis
-  - ./bin/binary.sh

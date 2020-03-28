@@ -1,1 +1,0 @@
-{:known-macros [re-cog.common.defs/def-serial re-cog.common.defs/def-inline]}
