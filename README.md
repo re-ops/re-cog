@@ -14,7 +14,7 @@ Re-cog function have a number of use cases:
 * To be used in Re-mote [pipelines](https://re-ops.github.io/re-docs/#abstractions).
 * To be directly invoked on a cluster of machines for ad-hoc execution.
 
-It is a part of the [Re-ops](https://re-ops.github.io/re-ops/) project that offers a live coding environment for configuration management.
+It is a part of the [Re-ops](https://re-ops.github.io/re-ops/) project that offers a live coding environment for managing and information gathering from remote systems.
 
 [![Build Status](https://travis-ci.org/re-ops/re-cog.png)](https://travis-ci.org/re-ops/re-cog)
 
