@@ -1,18 +1,18 @@
 # Intro
 
-Re-cog is a base set of remote functions that are executable by [Re-gent](https://github.com/re-ops/re-gent), the functions are divided into two categories:
+Re-cog is a set of remote functions that are executable by [Re-gent](https://github.com/re-ops/re-gent) and divided into a number categories:
 
-* Resources which are used in provisioning recipes to setup remote machines (see [Re-cipes](https://github.com/re-ops/re-cipes))
+* Resources which are used in provisioning recipes to setup remote machines (see [Re-cipes](https://github.com/re-ops/re-cipes)).
 * Facts which are use to get information from remote machines including security audit, performance metrics.
+* Common shell scripts that we can execute remotely.
 
 All the functions are serializable which means that we can change them locally refresh the REPL and run the latest version on our remote hosts (no restart required!), this provides the same productive [Reloaded](https://re-ops.github.io/re-docs/usage/#reloaded) workflow as local Clojure functions.
 
 Re-cog function have a number of use cases:
 
-* To be used within provisioning recipes.
-* To be used in Re-mote pipelines.
+* To be used within provisioning [recipes](https://github.com/re-ops/re-cipes).
+* To be used in Re-mote [pipelines](https://re-ops.github.io/re-docs/#abstractions).
 * To be directly invoked on a cluster of machines for ad-hoc execution.
-
 
 It is a part of the [Re-ops](https://re-ops.github.io/re-ops/) project that offers a live coding environment for configuration management.
 
@@ -20,11 +20,53 @@ It is a part of the [Re-ops](https://re-ops.github.io/re-ops/) project that offe
 
 # Usage
 
-## Provisioning Recipes
+### Provisioning Recipes
 
-## Re-mote pipelines
+A recipe is a Clojure namespace which includes a list of functions used to provision a component in a system, each one of those functions use resources/facts and is serializable by using [def-inline](https://github.com/re-ops/re-cog/blob/master/src/re_cog/common/defs.clj#L73).
 
-## Adhoc invocation
+In the following example we have sets up the ZSH shell, we start with requiring our Re-cog resources and facts and adding support for by require-recipe:
+
+```clojure
+(ns re-cipes.shell
+  "Setting up shell"
+  (:require
+   [re-cog.resources.git :refer (clone)]
+   [re-cog.resources.exec :refer [run]]
+   [re-cog.common.recipe :refer (require-recipe)]
+   [re-cog.facts.config :refer (configuration)]
+   [re-cog.resources.download :refer (download)]
+   [re-cog.resources.file :refer (symlink directory chmod)]))
+
+(require-recipe)
+```
+The recipe functions use [resources](https://github.com/re-ops/re-cog/tree/master/src/re_cog/resources) (clone,chown etc..) and [facts](https://github.com/re-ops/re-cog/tree/master/src/re_cog/facts) (configuration) to provision the machine, each of the functions is responsible to a single component of our recipe:
+
+```clojure
+(def-inline zsh
+  "zsh setup"
+  []
+  (letfn [(chsh [user]
+            (fn []
+              (script ("sudo" "/usr/bin/chsh" "-s" "/usr/bin/zsh" ~user))))]
+    (let [{:keys [home user]} (configuration)
+          dest (<< "~{home}/.tmux")]
+      (package "zsh" :present)
+      (when-not  (clojure.string/includes? (<< "~{user}:/bin/zsh") (slurp "/etc/passwd"))
+        (run (chsh user))))))
+
+(def-inline minimal-zsh
+  "Minmal zsh setup"
+  []
+  (let [{:keys [home user]} (configuration)
+        dest (<< "~{home}/.minimal-zsh")]
+    (clone "git://github.com/narkisr/minimal-zsh.git" dest)
+    (chown dest user user {})
+    (symlink (<< "~{home}/.zshrc") (<< "~{dest}/.zshrc"))))
+```
+
+### Re-mote pipelines
+
+### Adhoc invocation
 
 # Copyright and license
 
