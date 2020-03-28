@@ -44,7 +44,7 @@
     :app {
       :command     "re-cog"
       :description "Re-cog provisioning cli"
-      :version     "0.3.2"
+      :version     "0.4.0"
     }
     :commands [
       {:command "provision" :short "p!"
