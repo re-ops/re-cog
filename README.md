@@ -8,7 +8,7 @@ Re-cog is a set of remote functions that are executable by [Re-gent](https://git
 
 All the functions are serializable which means that we can change them locally refresh the REPL and run the latest version on our remote hosts (no restart required!), this provides the same productive [Reloaded](https://re-ops.github.io/re-docs/usage/#reloaded) workflow as local Clojure functions.
 
-Re-cog function have a number of use cases:
+Re-cog resources facts and scripts have a number of use cases:
 
 * To be used within provisioning [recipes](https://github.com/re-ops/re-cipes).
 * To be used in Re-mote [pipelines](https://re-ops.github.io/re-docs/#abstractions).
@@ -66,7 +66,41 @@ The recipe functions use [resources](https://github.com/re-ops/re-cog/tree/maste
 
 ### Re-mote pipelines
 
+Remote Re-cog scripts are used within Re-mote pipelines:
+
+```clojure
+(defn ^{:category :stats} cpu-persist
+  "Collect CPU and idle usage with persistence (metrics collection):
+     (cpu-persist hs)
+  "
+  [hs]
+  (run> (cpu hs) | (enrich "cpu") | (persist) | (riemann)))
+```
+
+The pipeline uses the [cpu](https://github.com/re-ops/re-core/blob/master/src/re_mote/zero/stats.clj#L116) function that extends hosts:
+
+```clojure
+; shell function is a Re-cog resource
+(extend-type Hosts
+  Stats
+  ...
+  (cpu
+    ([this]
+     (into-dec (zip this (run-hosts this shell (shell-args cpu-script) timeout) :stats :cpu :usr :sys :idle)))
+    ([this _]
+     (cpu this)))
+  ...
+)
+
+```
 ### Adhoc invocation
+
+In some cases it is useful to run Re-cog functions in an adhoc manner (for interactive data collection or during development):
+
+```clojure
+; collecting the cpu vulnerabilities from our hosts
+(run-hosts (hosts ip :hostname) re-cog.facts.security/cpu-vulns [] [10 :second])
+```
 
 # Copyright and license
 
