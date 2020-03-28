@@ -1,18 +1,20 @@
 # Intro
 
-Re-cog is a of remote provisioning functions that are exetuable by [Re-gent](https://github.com/re-ops/re-gent)
+Re-cog is a base set of serializable functions that are exetuable by [Re-gent](https://github.com/re-ops/re-gent), the functions are categorized into two categories:
+
+* Resources which are used in provisioning recipes to setup remote machines (check [re-cipes](https://github.com/re-ops/re-cipes))
+* Facts which are use to get information from remote machines including security audit, performance metrics
 
 It is a part of the [Re-ops](https://re-ops.github.io/re-ops/) project that offers a live coding environment for configuration management.
 
 [![Build Status](https://travis-ci.org/re-ops/re-mote.png)](https://travis-ci.org/re-ops/re-cog)
 
-# Basic Usage
+# Usage
 
-TBD
 
 # Copyright and license
 
-Copyright [2019] [Ronen Narkis]
+Copyright [2020] [Ronen Narkis]
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
