@@ -79,10 +79,9 @@ Re-mote pipeline are using Re-cog scripts/facts/resources:
   (run> (cpu hs) | (enrich "cpu") | (persist) | (riemann)))
 ```
 
-The pipeline uses the [cpu](https://github.com/re-ops/re-core/blob/master/src/re_mote/zero/stats.clj#L116) function that extends hosts:
+The pipeline uses the [cpu](https://github.com/re-ops/re-core/blob/master/src/re_mote/zero/stats.clj#L116) function that extends hosts, here we use both the shell resource function and cpu-script:
 
 ```clojure
-; shell function is a Re-cog resource
 (extend-type Hosts
   Stats
   ...
