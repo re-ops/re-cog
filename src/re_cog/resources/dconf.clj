@@ -19,17 +19,16 @@
   [k]
   (update (sh "/usr/bin/dconf" "read" k) :out clojure.string/trim))
 
-(defn spit-conf [m]
+(def-serial load-
+  "Populate a dconf subpath from m"
+  [k m]
   (letfn [(pair [s [k v]]
             (if-not (#{"false" "true"} v)
               (str s (name k) "='" v "'\n")
-              (str s (name k) "=" v "\n")))]
-    (apply str (map (fn [[k vs]] (str "[" k "]\n" (reduce pair "" vs) "\n")) m))))
-
-(def-serial load
-  "Populate a dconf subpath from m"
-  [k m]
-  (sh "/usr/bin/dconf" "load" k :in (spit-conf m)))
+              (str s (name k) "=" v "\n")))
+          (spit-conf [m]
+                     (apply str (map (fn [[k vs]] (str "[" k "]\n" (reduce pair "" vs) "\n")) m)))]
+    (sh "/usr/bin/dconf" "load" k :in (spit-conf m))))
 
 (defn read-values [kv]
   (let [[k v] (clojure.string/split kv #"=")]
