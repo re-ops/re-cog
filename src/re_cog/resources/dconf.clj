@@ -49,8 +49,8 @@
 
 (comment
   (println (spit-conf (slurp-conf (:out (dump "/org/mate/terminal/")))))
-  (load  "/org/mate/terminal/keybindings/" {"/" {:select-all "disabled"}})
+  (load-  "/org/mate/terminal/keybindings/" {"/" {:select-all "disabled"}})
   (write "/org/mate/terminal/profiles/default/allow-bold" "false")
   (read "/org/mate/terminal/profiles/default/allow-bold")
-  (load "/org/mate/terminal/profiles/default/" "false")
+  (load- "/org/mate/terminal/profiles/default/" "false")
   (read "/org/mate/terminal/profiles/default/allow-bold"))
