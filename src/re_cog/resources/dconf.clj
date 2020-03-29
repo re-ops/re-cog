@@ -44,11 +44,11 @@
 
 (def-serial dump
   "Read a dconf path into :out"
-  [k f]
+  [k]
   (sh "/usr/bin/dconf" "dump" k))
 
 (comment
-  (println (spit-conf (slurp-conf (:out (dump "/org/mate/terminal/" "/tmp/foo")))))
+  (println (spit-conf (slurp-conf (:out (dump "/org/mate/terminal/")))))
   (load  "/org/mate/terminal/keybindings/" {"/" {:select-all "disabled"}})
   (write "/org/mate/terminal/profiles/default/allow-bold" "false")
   (read "/org/mate/terminal/profiles/default/allow-bold")
