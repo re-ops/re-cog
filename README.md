@@ -96,7 +96,7 @@ The pipeline uses the [cpu](https://github.com/re-ops/re-core/blob/master/src/re
 ```
 ### Adhoc invocation
 
-In some cases it is useful to invoke Re-cog resrouces/facts/scripts in an adhoc manner (for interactive data collection or during development):
+In some cases it is useful to invoke Re-cog functions in an adhoc manner (for interactive data collection or during development):
 
 ```clojure
 ; collecting the cpu vulnerabilities from our hosts
