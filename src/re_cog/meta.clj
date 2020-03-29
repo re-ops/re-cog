@@ -24,6 +24,7 @@
                're-cog.resources.download
                're-cog.resources.archive
                're-cog.resources.user
+               're-cog.resources.dconf
                ; facts
                're-cog.facts.oshi
                're-cog.facts.datalog
