@@ -5,4 +5,3 @@ jdk:
 
 script:
   - lein travis
-  - ./bin/binary.sh
