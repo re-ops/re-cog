@@ -75,11 +75,8 @@
        :source-paths  ["dev"]
        :set-version {
          :updates [
-            {:path "main/re_cog/main.clj" :search-regex #"\"\d+\.\d+\.\d+\""}
-            {:path "bin/binary.sh" :search-regex #"\d+\.\d+\.\d+"}
             {:path "README.md" :search-regex #"\d+\.\d+\.\d+"}
           ]}
-
      }
 
      :codox {
@@ -91,10 +88,6 @@
                       :source-paths ["src"]
                       :source-uri "https://github.com/re-ops/re-core/blob/master/{filepath}#L{line}"
               }
-    }
-    :package {
-        :source-paths  ["src" "main"]
-        :main re-cog.main
     }
   }
 
