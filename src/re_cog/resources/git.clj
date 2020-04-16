@@ -20,9 +20,9 @@
 (defn install-missing
   "Installing git if missing"
   [bin]
-  (when-not (fs/exists? bin)
-    (when-not (= 0 (:exit (re-cog.resources.package/package "git" :present)))
-      (failure "failed to install git"))))
+  (if-not (fs/exists? bin)
+    (re-cog.resources.package/package "git" :present)
+    {:exit 0 :noop true}))
 
 (def-serial repo-exists?
   "check if repo exists"
@@ -36,20 +36,24 @@
 (def-serial pull
   "Pull implementation"
   [repo dest]
-  (if (= 0 (:exit (repo-exists? repo dest)))
-    (let [git (binary)
-          dir (<< "--git-dir=~{dest}.git")]
-      (install-missing git)
-      (run (fn [] (script (~git ~dir "pull")))))
-    (failure (<< "Skipping pull remote ~{repo} is no found under ~{dest}"))))
+  (let [git (binary)
+        {:keys [exit] :as binary-install} (install-missing git)]
+    (if-not (= 0 exit)
+      binary-install
+      (if (= 0 (:exit (repo-exists? repo dest)))
+        (let [dir (<< "--git-dir=~{dest}.git")]
+          (run (fn [] (script (~git ~dir "pull")))))
+        (failure (<< "Skipping pull remote ~{repo} is no found under ~{dest}"))))))
 
 (def-serial clone
   "Clone implementation"
   [repo dest]
-  (let [git (binary)]
-    (install-missing git)
-    (letfn [(clone-script []
-              (script (~git "clone" ~repo ~dest)))]
-      (if-not (= 0 (:exit (repo-exists? repo dest)))
-        (run clone-script)
-        (success (<< "Skipping clone ~{repo} exists under ~{dest}"))))))
+  (let [git (binary)
+        {:keys [exit] :as binary-install} (install-missing git)]
+    (if-not (= 0 exit)
+      binary-install
+      (letfn [(clone-script []
+                (script (~git "clone" ~repo ~dest)))]
+        (if-not (= 0 (:exit (repo-exists? repo dest)))
+          (run clone-script)
+          (success (<< "Skipping clone ~{repo} exists under ~{dest}")))))))
