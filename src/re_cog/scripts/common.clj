@@ -12,6 +12,7 @@
 (defn validate!
   "validating a bash script"
   [f]
+  {:pre (fn? f)}
   (do-script (bash!) (f)))
 
 (defn shell-args
@@ -20,6 +21,7 @@
     * Adds a checksum of the script as a second arg
   "
   [script-fn]
+  {:pre (fn? script-fn)}
   [(md5 (script-fn)) (validate! script-fn)])
 
 (defn bind-bash
