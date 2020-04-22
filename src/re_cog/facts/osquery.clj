@@ -1,5 +1,5 @@
-(ns re-cog.facts.query
-  "query functions"
+(ns re-cog.facts.osquery
+  "osquery functions"
   (:require
    [clojure.java.shell :refer [sh]]
    [cheshire.core :refer (parse-string)]

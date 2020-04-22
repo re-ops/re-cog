@@ -1,5 +1,6 @@
 (ns re-cog.facts.datalog
   (:require
+   [re-cog.common.defs :refer (def-serial)]
    [re-cog.common.datalog :refer (add-items add-ns with-id)]
    [taoensso.timbre :refer (info)]
    [camel-snake-kebab.core :as csk]
@@ -14,7 +15,9 @@
   []
   (= (:exit (sh "bash" "-c" "type Xorg")) 0))
 
-(defn add-oshi-seq [n ms]
+(defn add-oshi-seq
+  "Add a sequence of facts"
+  [n ms]
   (letfn [(filter-nils [m] (filter (fn [[_ v]] (not (nil? v))) m))
           (kebab-keys [m] (map (fn [[k v]] [(csk/->kebab-case k) v]) m))]
     (add-items db n (map (fn [m] (into {} (kebab-keys (filter-nils m)))) ms))))
@@ -51,11 +54,19 @@
     [?e :services/state "RUNNING"]
     [?e :services/name ?name]])
 
+(defn get-db []
+  (assert (not (empty? @re-cog.facts.datalog/db)))
+  @re-cog.facts.datalog/db)
+
+(def-serial run-query
+  "Run a remote datalog query against our facts db"
+  [q]
+  (d/q q (get-db)))
+
 (defn query
   "Run a remote datalog query against our facts db"
   [q]
-  (assert (not (empty? @db)))
-  (d/q q @db))
+  (d/q q (get-db)))
 
 (defn verify
   "Run a query and check if its true (we get a non empty result)"
@@ -113,4 +124,8 @@
 
 (comment
   (query '[:find ?v :where [_ :version/version ?v]])
+  (query '[:find ?v ?n :where [?e :disk-stores/size ?v] [?e :disk-stores/name ?n]])
+  (query '[:find ?e ?m  :where [?e :disk-stores/partitions ?m]])
+  (query '[:find ?e ?m  :where [?e :memory/virtualMemory ?m]])
+  (unknown-disks)
   (populate))

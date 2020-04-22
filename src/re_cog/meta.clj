@@ -29,7 +29,7 @@
                ; facts
                're-cog.facts.oshi
                're-cog.facts.datalog
-               're-cog.facts.query
+               're-cog.facts.osquery
                're-cog.facts.security])))
 
 (defn resource-functions
