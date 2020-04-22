@@ -16,6 +16,7 @@
          (map resolve-
               [; resources
                're-cog.resources.exec
+               're-cog.resources.disk
                're-cog.resources.permissions
                're-cog.resources.service
                're-cog.resources.file
