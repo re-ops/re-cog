@@ -30,6 +30,14 @@
         (d/transact! db (with-id -1 (add-ns (csk/->kebab-case n) m)))
         (d/transact! db (with-id -1 {n m}))))))
 
+#_(defn populate
+    "Add all facts to the DB"
+    []
+    (d/transact! db (with-id 1 {:os/desktop (desktop?)}))
+    (add-oshi-section (operating-system))
+    (add-oshi-section (hardware))
+    (info "Loaded facts into datascript db"))
+
 (defn populate
   "Add all facts to the DB"
   []
