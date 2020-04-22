@@ -1,7 +1,7 @@
 (ns re-cog.facts.datalog
   (:require
+   [clojure.string :refer  (join)]
    [re-cog.common.defs :refer (def-serial)]
-   [re-cog.common.datalog :refer (add-items add-ns with-id)]
    [taoensso.timbre :refer (info)]
    [camel-snake-kebab.core :as csk]
    [re-share.oshi :refer (operating-system hardware)]
@@ -10,25 +10,37 @@
 
 (def db (d/create-conn))
 
+(defn with-id
+  "Create a datom with an id"
+  [id m]
+  [(assoc m :db/id id)])
+
 (defn desktop?
   "check if we are running within a desktop machine"
   []
   (= (:exit (sh "bash" "-c" "type Xorg")) 0))
 
-(defn add-oshi-seq
-  "Add a sequence of facts"
-  [n ms]
-  (letfn [(filter-nils [m] (filter (fn [[_ v]] (not (nil? v))) m))
-          (kebab-keys [m] (map (fn [[k v]] [(csk/->kebab-case k) v]) m))]
-    (add-items db n (map (fn [m] (into {} (kebab-keys (filter-nils m)))) ms))))
+(defn flatten-keys* [a ks m]
+  (cond
+    (map? m) (reduce into (map (fn [[k v]] (flatten-keys* a (conj ks k) v)) (seq m)))
+    (sequential? m) (reduce into (map-indexed (fn [k v] (flatten-keys* a (conj ks k) v)) m))
+    :else (assoc a ks m)))
+
+(defn flatten-keys [m]
+  (flatten-keys* {} [] m))
+
+(defn join-keys [[ks v]]
+  (let [id-and-key (group-by keyword? ks)
+        datom-k (keyword (join "/" (map (comp csk/->kebab-case name) (id-and-key true))))
+        position-k (join "" (id-and-key false))]
+    [[datom-k v] (.hashCode (join "/" (or (butlast ks) ks)))]))
+
+(defn fact-pairs [ms]
+  (map (fn [[id fs]] [id (into {} (map first fs))]) ms))
 
 (defn add-oshi-section [s]
-  (doseq [[n m] s]
-    (if (sequential? m)
-      (add-oshi-seq (csk/->kebab-case n) m)
-      (if (map? m)
-        (d/transact! db (with-id -1 (add-ns (csk/->kebab-case n) m)))
-        (d/transact! db (with-id -1 {n m}))))))
+  (doseq [[id m] (fact-pairs (group-by second (map join-keys (flatten-keys s))))]
+    (d/transact! db (with-id id m))))
 
 (defn populate
   "Add all facts to the DB"
@@ -125,7 +137,6 @@
 (comment
   (query '[:find ?v :where [_ :version/version ?v]])
   (query '[:find ?v ?n :where [?e :disk-stores/size ?v] [?e :disk-stores/name ?n]])
-  (query '[:find ?e ?m  :where [?e :disk-stores/partitions ?m]])
   (query '[:find ?e ?m  :where [?e :memory/virtualMemory ?m]])
   (unknown-disks)
   (populate))
