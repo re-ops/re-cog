@@ -1,7 +1,6 @@
 (ns re-cog.plan
   "Execution plans support"
   (:require
-   [re-cog.common.datalog :refer (add-ns with-id)]
    [datascript.core :as d]
    [loom.alg :as alg]
    [loom.graph :as g]))
