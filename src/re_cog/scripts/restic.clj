@@ -41,4 +41,4 @@
        ("export" (set! RESTIC_PASSWORD ~(escape pass)))
        ("export" (set! ~(prefix type "ACCOUNT_KEY") ~(escape key)))
        ("export" (set! ~(prefix type "ACCOUNT_ID") ~(escape id)))
-       ("/usr/bin/restic" "restore" "latest" "-r" ~source "--target" ~target)))))
+       ("/usr/bin/restic" "restore" "latest" "-r" ~source "--target" ~target "--verify")))))
