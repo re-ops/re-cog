@@ -2,14 +2,14 @@
   (:require  [pallet.stevedore :refer (script)]))
 
 (defn kernel-hostname
-  "Set hosname in kernel for all OSes"
+  "Set hosname in kernel"
   [hostname fqdn]
   (script
    (set! HOSTNAME ~hostname)
    (set! FQDN (quoted ~fqdn))
    (pipe ("echo" "kernel.hostname=${HOSTNAME}") ("sudo" "tee" "-a"  "/etc/sysctl.conf"))
    (pipe ("echo" "kernel.domainname=${FQDN}") ("sudo" "tee" "-a"  "/etc/sysctl.conf"))
-   ("sudo" "/sbin/sysctl" "-e" "-p")))
+   ("sudo" "/usr/sbin/sysctl" "--system")))
 
 (defn override-hostname
   "sets hostname and hosts file"
