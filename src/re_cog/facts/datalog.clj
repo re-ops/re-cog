@@ -111,23 +111,20 @@
      [?f :family "Ubuntu"]
      [?v :version/version "18.04"]]))
 
-(defn ubuntu-19.10-desktop?
+(defn ubuntu-20.04-desktop?
   "Are we running in Ubuntu desktop"
   []
   (verify
    '[:find ?v :where
      [?e :os/desktop true]
      [?f :family "Ubuntu"]
-     [?v :version/version "19.10"]]))
+     [?v :version/version "20.04"]]))
 
 (defn ubuntu-version
   "Are we running in Ubuntu desktop"
   []
-  (BigDecimal.
-   (singleton
-    '[:find ?v :where
-      [_ :family "Ubuntu"]
-      [_ :version/version ?v]])))
+  (let [q '[:find ?v :where [_ :family "Ubuntu"] [_ :version/version ?v]]]
+    (-> q singleton (clojure.string/replace #"\\s*LTS" "") (BigDecimal.))))
 
 (defn os
   "Grab the current operating system"

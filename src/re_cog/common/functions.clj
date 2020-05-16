@@ -62,7 +62,7 @@
    '[clojure.java.io :as io]
    '[me.raynes.fs :as fs :refer (list-dir tmpdir exists?)]
    ; datalog facts
-   '[re-cog.facts.datalog :refer (os ubuntu-desktop? ubuntu-18.04-desktop? ubuntu-19.10-desktop? ubuntu-version verify query singleton get-db)]
+   '[re-cog.facts.datalog :refer (os ubuntu-desktop? ubuntu-version verify query singleton get-db)]
    '[datascript.core :as d]
    ; common
    '[re-cog.facts.config :refer (configuration)]
