@@ -131,6 +131,16 @@
   []
   (keyword (singleton '[:find ?os :where [_ :family ?os]])))
 
+(defn hostname
+  "Grab the current hostname"
+  []
+  (singleton '[:find ?hostname :where [_ :network-params/host-name ?hostname]]))
+
+(defn fqdn
+  "Grab the current full qualified domain name"
+  []
+  (singleton '[:find ?fqdn :where [_ :network-params/domain-name ?fqdn]]))
+
 (comment
   (query '[:find ?v :where [_ :version/version ?v]])
   (query '[:find ?v ?n :where [?e :disk-stores/size ?v] [?e :disk-stores/name ?n]])

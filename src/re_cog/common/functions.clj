@@ -43,7 +43,7 @@
    '[re-cog.resources.exec :refer [run]]))
 
 (defn require-functions
-  "Require common resource functions"
+  "Require common resource functions in order to suppoert inlined functions"
   []
   (require
    ; scripting
@@ -52,8 +52,7 @@
    '[pallet.stevedore.bash]
    '[re-cog.common.functions :refer [sh! file-checksum coherce success failure]]
    '[re-cog.scripts.common :refer [shell-args]]
-   ; os info
-   '[re-share.oshi :refer (read-all get-processes)]
+   ; profiling
    '[re-share.core :refer [measure gen-uuid]]
    ; templating
    '[cljstache.core :refer [render]]
@@ -62,7 +61,7 @@
    '[clojure.java.io :as io]
    '[me.raynes.fs :as fs :refer (list-dir tmpdir exists?)]
    ; datalog facts
-   '[re-cog.facts.datalog :refer (os ubuntu-desktop? ubuntu-version verify query singleton get-db)]
+   '[re-cog.facts.datalog :refer (os ubuntu-desktop? ubuntu-version verify query singleton get-db fqdn hostname)]
    '[datascript.core :as d]
    ; common
    '[re-cog.facts.config :refer (configuration)]
