@@ -7,14 +7,26 @@
 
 ; shell
 (def-serial shell
-  "Excute a script using bash"
-  [sum script]
+  "Execute a script remotly using bash (script is computed before hand)"
+  [sum script & {:keys [cached?] :or {cached? false}}]
   (let [f (fs/file (fs/tmpdir) sum)]
-    (when-not (fs/exists? f)
-      (spit f script))
-    (sh "bash" (.getPath f))))
+    (try
+      (when-not (fs/exists? f)
+        (spit f script))
+      (sh "/usr/bin/bash" (.getPath f))
+      (finally
+        (when-not cached?
+          (.delete f))))))
 
-(defn run
-  "A local version of shell function"
-  [script]
-  (apply shell (shell-args script)))
+(def-serial run
+  "Excute a script using bash (script-fn is in scope)"
+  [script-fn & {:keys [cached?] :or {cached? false}}]
+  (let [[sum forced! _] (shell-args script-fn)
+        f (fs/file (fs/tmpdir) sum)]
+    (try
+      (when-not (fs/exists? f)
+        (spit f forced!))
+      (sh "/usr/bin/bash" (.getPath f))
+      (finally
+        (when-not cached?
+          (.delete f))))))

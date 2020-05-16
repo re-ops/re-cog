@@ -19,10 +19,11 @@
   "Gets a function that produces a set of args for the re-cog shell function:
     * Prepends a check that bash is the default user shell to the script arg
     * Adds a checksum of the script as a second arg
+    * The cached? optional argument will store the generated script enhancing performance for repeatedly executed scripts
   "
-  [script-fn]
+  [script-fn & {:keys [cached?] :or {cached? false}}]
   {:pre (fn? script-fn)}
-  [(md5 (script-fn)) (validate! script-fn)])
+  [(md5 (script-fn)) (validate! script-fn) :cached? cached?])
 
 (defn bind-bash
   "Bind stevedore language to bash"
