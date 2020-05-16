@@ -45,6 +45,9 @@
      ; in memory datalog
      [datascript "0.18.8"]
      [camel-snake-kebab "0.4.1"]
+
+     ; configuration
+     [aero "1.1.6"]
   ]
 
   :plugins [
