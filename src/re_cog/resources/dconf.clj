@@ -14,7 +14,7 @@
   [k v]
   (sh "/usr/bin/dconf" "write" k v))
 
-(def-serial read
+(def-serial read-
   "Read a single value to dconf key"
   [k]
   (update (sh "/usr/bin/dconf" "read" k) :out clojure.string/trim))
