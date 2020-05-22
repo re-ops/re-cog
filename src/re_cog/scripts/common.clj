@@ -10,8 +10,8 @@
    (fn []
      (case (os)
        :Ubuntu (if (>= (ubuntu-version) 20.04) "/usr/bin/bash" "/bin/bash")
-       (keyword "Raspbian GNU/Linux") "/bin/bash")
-     :else (throw (ex-info "No matching os found for bash path resolving" {:os (os)})))))
+       (keyword "Raspbian GNU/Linux") "/bin/bash"
+       :else (throw (ex-info "No matching os found for bash path resolving" {:os (os)}))))))
 
 (defn bash!
   "check that we are running within bash!"
