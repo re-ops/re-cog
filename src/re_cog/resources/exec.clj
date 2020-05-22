@@ -2,7 +2,7 @@
   (:require
    [me.raynes.fs :as fs]
    [clojure.java.shell :refer [sh]]
-   [re-cog.scripts.common :refer (shell-args)]
+   [re-cog.scripts.common :refer (shell-args bash-path)]
    [re-cog.common.defs :refer (def-serial)]))
 
 ; shell
@@ -13,7 +13,7 @@
     (try
       (when-not (fs/exists? f)
         (spit f script))
-      (sh "/usr/bin/bash" (.getPath f))
+      (sh (bash-path) (.getPath f))
       (finally
         (when-not cached?
           (.delete f))))))
@@ -26,7 +26,7 @@
     (try
       (when-not (fs/exists? f)
         (spit f forced!))
-      (sh "/usr/bin/bash" (.getPath f))
+      (sh (bash-path) (.getPath f))
       (finally
         (when-not cached?
           (.delete f))))))

@@ -1,7 +1,17 @@
 (ns re-cog.scripts.common
   (:require
    [re-share.core :refer (md5)]
+   [re-cog.facts.datalog :refer (os ubuntu-version)]
    [pallet.stevedore :refer (script do-script)]))
+
+(def bash-path
+  "Get the bash path for the current OS"
+  (memoize
+   (fn []
+     (case (os)
+       :Ubuntu (if (>= (ubuntu-version) 20.04) "/usr/bin/bash" "/bin/bash")
+       (keyword "Raspbian GNU/Linux") "/bin/bash")
+     :else (throw (ex-info "No matching os found for bash path resolving" {:os (os)})))))
 
 (defn bash!
   "check that we are running within bash!"
