@@ -121,10 +121,10 @@
      [?v :version/version "20.04"]]))
 
 (defn ubuntu-version
-  "Are we running in Ubuntu desktop"
+  "Ubuntu major version number"
   []
   (let [q '[:find ?v :where [_ :family "Ubuntu"] [_ :version/version ?v]]]
-    (-> q singleton (clojure.string/replace #"\s*LTS" "") (BigDecimal.))))
+    (->> q singleton (re-find #"\d+.\d+") (BigDecimal.))))
 
 (defn os
   "Grab the current operating system"
