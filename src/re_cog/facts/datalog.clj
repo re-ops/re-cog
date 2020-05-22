@@ -129,7 +129,7 @@
 (defn os
   "Grab the current operating system"
   []
-  (keyword (singleton '[:find ?os :where [_ :family ?os]])))
+  (keyword (clojure.string/replace (singleton '[:find ?os :where [_ :family ?os]]) #"\s" "_")))
 
 (defn hostname
   "Grab the current hostname"
