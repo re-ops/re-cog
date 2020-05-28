@@ -1,9 +1,7 @@
 (ns re-cog.resources.dconf
   "Linux Dconf resources"
   (:require
-   [me.raynes.fs :as fs]
    [clojure.java.shell :refer (sh)]
-   [re-cog.resources.exec :refer (run)]
    [re-cog.common.functions :refer (require-functions)]
    [re-cog.common.defs :refer (def-serial)]))
 

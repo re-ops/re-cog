@@ -1,6 +1,5 @@
 (ns re-cog.resources.service
   (:require
-   [re-cog.resources.exec :refer (run)]
    [re-cog.common.functions :refer (require-functions)]
    [re-cog.common.defs :refer (def-serial)]
    [re-cog.common.constants :refer (require-constants)]))

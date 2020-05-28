@@ -51,6 +51,7 @@
    '[pallet.stevedore :refer (script)]
    '[pallet.stevedore.bash]
    '[re-cog.common.functions :refer [sh! file-checksum coherce success failure]]
+   '[re-cog.common.resources :refer [run-]]
    '[re-cog.scripts.common :refer [shell-args bash-path]]
    ; profiling
    '[re-share.core :refer [measure gen-uuid]]

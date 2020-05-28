@@ -1,7 +1,7 @@
 (ns re-cog.resources.package
   (:require
    [re-cog.resources.download :refer (download)]
-   [re-cog.resources.exec :refer (run)]
+   [re-cog.common.resources :refer (run-)]
    [re-cog.common.functions :refer (require-functions)]
    [re-cog.common.defs :refer (def-serial def-inline)]
    [re-cog.common.constants :refer (require-constants)]))
@@ -43,7 +43,7 @@
   []
   (letfn [(update-script []
             (script ("sudo" ~apt-bin "update")))]
-    (run update-script)))
+    (run- update-script)))
 
 (def-serial upgrade
   "Upgrade installed packages:
@@ -52,7 +52,7 @@
   []
   (letfn [(upgrade-script []
             (script ("sudo" ~apt-bin "upgrade" "-y")))]
-    (run upgrade-script)))
+    (run- upgrade-script)))
 
 (def-serial repository
   "Package repository resource:

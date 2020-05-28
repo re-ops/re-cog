@@ -1,8 +1,11 @@
 (ns re-cog.scripts.common
   (:require
+   [clojure.java.shell :refer [sh]]
+   [me.raynes.fs :as fs]
    [re-share.core :refer (md5)]
    [re-cog.facts.datalog :refer (os ubuntu-version)]
-   [pallet.stevedore :refer (script do-script)]))
+   [pallet.stevedore :refer (script do-script)]
+   [re-cog.common.defs :refer (def-serial)]))
 
 (def bash-path
   "Get the bash path for the current OS"
@@ -39,3 +42,15 @@
   "Bind stevedore language to bash"
   []
   (.bindRoot (var pallet.stevedore/*script-language*) :pallet.stevedore.bash/bash))
+
+(def-serial shell
+  "Remotely execute a script with a provided sum value (not intended to be used locally or as a resource)"
+  [sum script & {:keys [cached?] :or {cached? false}}]
+  (let [f (fs/file (fs/tmpdir) sum)]
+    (try
+      (when-not (fs/exists? f)
+        (spit f script))
+      (sh (bash-path) (.getPath f))
+      (finally
+        (when-not cached?
+          (.delete f))))))

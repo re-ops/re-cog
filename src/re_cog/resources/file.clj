@@ -2,7 +2,7 @@
   "File resources"
   (:require
    [clojure.core.strint :refer (<<)]
-   [re-cog.resources.exec :refer (run)]
+   [re-cog.common.resources :refer (run-)]
    [re-cog.common.functions :refer (require-functions)]
    [re-cog.common.defs :refer (def-serial)]))
 
@@ -84,7 +84,7 @@
             (if (contains? options :recursive)
               (script ("/bin/chmod" ~mode ~dest))
               (script ("/bin/chmod" ~mode ~dest "-R"))))]
-    (run chmod-script)))
+    (run- chmod-script)))
 
 (def-serial chown
   "Change file/directory owner using uid & gid resource:
@@ -96,7 +96,7 @@
               (if (opts :recursive)
                 (script ("/bin/chown" ~u-g ~dest))
                 (script ("/bin/chown" ~u-g ~dest "-R")))))]
-    (run chown-script)))
+    (run- chown-script)))
 
 (def-serial line
   "File line resource either append or remove lines:

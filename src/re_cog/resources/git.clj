@@ -5,7 +5,7 @@
    [re-cog.common.defs :refer (def-serial)]
    [clojure.core.strint :refer (<<)]
    [re-cog.common.functions :refer (require-functions)]
-   [re-cog.resources.exec :refer (run)]))
+   [re-cog.common.resources :refer (run-)]))
 
 (require-functions)
 
@@ -42,7 +42,7 @@
       binary-install
       (if (= 0 (:exit (repo-exists? repo dest)))
         (let [dir (<< "--git-dir=~{dest}.git")]
-          (run (fn [] (script (~git ~dir "pull")))))
+          (run- (fn [] (script (~git ~dir "pull")))))
         (failure (<< "Skipping pull remote ~{repo} is no found under ~{dest}"))))))
 
 (def-serial clone
@@ -55,5 +55,5 @@
       (letfn [(clone-script []
                 (script (~git "clone" ~repo ~dest)))]
         (if-not (= 0 (:exit (repo-exists? repo dest)))
-          (run clone-script)
+          (run- clone-script)
           (success (<< "Skipping clone ~{repo} exists under ~{dest}")))))))
