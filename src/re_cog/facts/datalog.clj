@@ -40,7 +40,8 @@
 
 (defn add-oshi-section [s]
   (doseq [[id m] (fact-pairs (group-by second (map join-keys (flatten-keys s))))]
-    (d/transact! db (with-id id m))))
+    (let [purged (into {} (filter second m))]
+      (d/transact! db (with-id id purged)))))
 
 (defn populate
   "Add all facts to the DB"
