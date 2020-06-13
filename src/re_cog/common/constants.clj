@@ -2,6 +2,8 @@
 
 (def apt-bin "/usr/bin/apt")
 
+(def ufw-bin "/usr/sbin/ufw")
+
 (def dpkg-bin "/usr/bin/dpkg")
 
 (def systemd-bin "/usr/sbin/service")
@@ -12,4 +14,4 @@
   "Require common constant values"
   []
   (require
-   '[re-cog.common.constants :refer [apt-bin dpkg-bin systemd-bin systemctl-bin]]))
+   '[re-cog.common.constants :refer [apt-bin dpkg-bin systemd-bin systemctl-bin ufw-bin]]))
