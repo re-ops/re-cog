@@ -1,7 +1,6 @@
 (ns re-cog.resources.ufw
   "UFW firewall resource"
   (:require
-   [clojure.core.strint :refer (<<)]
    [re-cog.common.functions :refer (require-functions)]
    [re-cog.common.constants :refer (require-constants)]
    [re-cog.common.defs :refer (def-serial)]))
@@ -13,7 +12,7 @@
   "Add a UFW rule:
    (add-rule 22 :allow 1 :from ip :on \"eth-0\" :proto \"tcp\")
    "
-  [port state position opts]
+  [port state opts]
   (letfn [(add []
             (let [from (opts :from "any")
                   on (opts :on "any")
@@ -21,11 +20,11 @@
                   proto (opts :proto "any")]
               (cond
                 (opts :on) (script
-                            ("sudo" ~ufw-bin "insert" ~position ~state' "in" "on" ~on "to" "any" "port" ~port "proto" ~proto))
+                            ("sudo" ~ufw-bin ~state' "in" "on" ~on "to" "any" "port" ~port "proto" ~proto))
                 (opts :from) (script
-                              ("sudo" ~ufw-bin "insert" ~position ~state' "from" ~from "to" "any" "port" ~port "proto" ~proto))
+                              ("sudo" ~ufw-bin ~state' "from" ~from "to" "any" "port" ~port "proto" ~proto))
                 :else (script
-                       ("sudo" ~ufw-bin "insert" ~position ~state' "to" "any" "port" ~port "proto" ~proto)))))]
+                       ("sudo" ~ufw-bin ~state' "to" "any" "port" ~port "proto" ~proto)))))]
     (assert (#{:allow :deny} state))
     (run- add)))
 
