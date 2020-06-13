@@ -16,6 +16,7 @@
          (map resolve-
               [; resources
                're-cog.resources.exec
+               're-cog.resources.sysctl
                're-cog.resources.ufw
                're-cog.resources.disk
                're-cog.resources.permissions

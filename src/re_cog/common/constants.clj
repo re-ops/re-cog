@@ -10,8 +10,10 @@
 
 (def systemctl-bin "/bin/systemctl")
 
+(def sysctl-bin "/usr/sbin/sysctl")
+
 (defn require-constants
   "Require common constant values"
   []
   (require
-   '[re-cog.common.constants :refer [apt-bin dpkg-bin systemd-bin systemctl-bin ufw-bin]]))
+   '[re-cog.common.constants :refer [apt-bin dpkg-bin systemd-bin systemctl-bin ufw-bin sysctl-bin]]))
