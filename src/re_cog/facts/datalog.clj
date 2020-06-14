@@ -1,6 +1,6 @@
 (ns re-cog.facts.datalog
   (:require
-   [clojure.string :refer  (join)]
+   [clojure.string :refer  (join split)]
    [re-cog.common.defs :refer (def-serial)]
    [taoensso.timbre :refer (info)]
    [camel-snake-kebab.core :as csk]
@@ -43,12 +43,21 @@
     (let [purged (into {} (filter second m))]
       (d/transact! db (with-id id purged)))))
 
+(defn jvm-properties []
+  (into {}
+        (map
+         (fn [[k v]] [(keyword (join "/" (split k #"\." 2))) v]) (into {} (System/getProperties)))))
+
+(defn add-properties [properties]
+  (d/transact! db (with-id (.hashCode properties) properties)))
+
 (defn populate
   "Add all facts to the DB"
   []
   (d/transact! db (with-id 1 {:os/desktop (desktop?)}))
   (add-oshi-section (operating-system))
   (add-oshi-section (hardware))
+  (add-properties (jvm-properties))
   (info "Loaded facts into datascript db"))
 
 ; Queries
@@ -144,7 +153,7 @@
 
 (comment
   (query '[:find ?v :where [_ :version/version ?v]])
+  (query '[:find ?v :where [_ :java/version ?v]])
   (query '[:find ?v ?n :where [?e :disk-stores/size ?v] [?e :disk-stores/name ?n]])
-  (query '[:find ?e ?m  :where [?e :memory/virtualMemory ?m]])
   (unknown-disks)
   (populate))
