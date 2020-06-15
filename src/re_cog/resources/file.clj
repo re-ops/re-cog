@@ -104,8 +104,9 @@
     (line \"/tmp/foo\" \"bar\" :present); append line
     (line \"/tmp/foo\" (line-eq \"bar\") :absent); remove lines equal to bar from the file
     (line \"/tmp/foo\" (fn [curr] (> 5 (.length curr))) :absent); remove lines using a function
+    (line \"/tmp/foo\" \"bar\" :replace :with \"foo\"); remove lines using a function
   "
-  [file v state]
+  [file v state & {:keys [with]}]
   (letfn [(line-eq [line] (fn [curr] (not (= curr line))))
           (add-line [line]
                     (let [contents (slurp file)]
@@ -114,6 +115,18 @@
                         (do
                           (spit file (str line "\n") :append true)
                           (success "line added to file")))))
+          (replace-line [pred]
+                        (let [f (if (string? pred) (comp not (line-eq pred)) pred)
+                              contents (slurp file)
+                              replace-with (fn [line] (if (f line) with line))
+                              filtered (map replace-with
+                                            (clojure.string/split-lines contents))
+                              output (clojure.string/join "\n" filtered)]
+                          (if-not (= contents output)
+                            (do
+                              (spit file output)
+                              (success "line replaced in file"))
+                            (success "line not present in file"))))
           (rm-line [pred]
                    (let [f (if (string? pred) (line-eq pred) pred)
                          contents (slurp file)
@@ -124,7 +137,7 @@
                          (spit file output)
                          (success "line removed from file"))
                        (success "line not present in file"))))]
-    (let [fns {:present add-line :absent rm-line}]
+    (let [fns {:present add-line :absent rm-line :replace replace-line}]
       ((fns state) v))))
 
 (def-serial line-set
