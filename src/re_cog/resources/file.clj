@@ -102,12 +102,15 @@
   "File line resource either append or remove lines:
 
     (line \"/tmp/foo\" \"bar\" :present); append line
-    (line \"/tmp/foo\" (line-eq \"bar\") :absent); remove lines equal to bar from the file
-    (line \"/tmp/foo\" (fn [curr] (> 5 (.length curr))) :absent); remove lines using a function
-    (line \"/tmp/foo\" \"bar\" :replace :with \"foo\"); remove lines using a function
+    (line \"/tmp/foo\" (line-eq \"bar\") :absent); remove all lines equal to bar from the file
+    (line \"/tmp/foo\" (fn [_ curr] (> 5 (.length curr))) :absent); remove lines using a function
+    (line \"/tmp/foo\" \"bar\" :replace :with \"foo\"); replace lines equal to bar with foo
+    (line \"/tmp/foo\" (fn [i _] (= i 2))  :replace :with \"foo\"); replace line in position 2 with value
+    (line \"/tmp/foo\" (fn [i _] (= i 2))  :uncomment :with \"#\"); uncomment line in position 2
+    (line \"/tmp/foo\" (fn [i _] (= i 2))  :comment :with \"#\"); uncomment line in position 2
   "
   [file v state & {:keys [with]}]
-  (letfn [(line-eq [line] (fn [curr] (not (= curr line))))
+  (letfn [(line-eq [line] (fn [_ curr] (not (= curr line))))
           (add-line [line]
                     (let [contents (slurp file)]
                       (if (clojure.string/includes? contents line)
@@ -115,30 +118,58 @@
                         (do
                           (spit file (str line "\n") :append true)
                           (success "line added to file")))))
-          (replace-line [pred]
-                        (let [f (if (string? pred) (comp not (line-eq pred)) pred)
+          (replace-line [target]
+                        (let [pred (if (string? target) (comp not (line-eq target)) target)
                               contents (slurp file)
-                              replace-with (fn [line] (if (f line) with line))
-                              filtered (map replace-with
-                                            (clojure.string/split-lines contents))
+                              replace-with (fn [i line] (if (pred i line) with line))
+                              filtered (map-indexed replace-with
+                                                    (clojure.string/split-lines contents))
                               output (clojure.string/join "\n" filtered)]
                           (if-not (= contents output)
                             (do
                               (spit file output)
                               (success "line replaced in file"))
                             (success "line not present in file"))))
-          (rm-line [pred]
-                   (let [f (if (string? pred) (line-eq pred) pred)
+          (uncomment [target]
+                     (let [pred (if (string? target) (comp not (line-eq target)) target)
+                           contents (slurp file)
+                           replace-with (fn [i line]
+                                          (if (pred i line)
+                                            (clojure.string/replace-first line (re-pattern with) " ") line))
+                           filtered (map-indexed replace-with
+                                                 (clojure.string/split-lines contents))
+                           output (clojure.string/join "\n" filtered)]
+                       (if-not (= contents output)
+                         (do
+                           (spit file output)
+                           (success "line uncommented in file"))
+                         (success "line not present in file"))))
+
+          (comment- [target]
+                    (let [pred (if (string? target) (comp not (line-eq target)) target)
+                          contents (slurp file)
+                          replace-with (fn [i line]
+                                         (if (and (pred i line) (not (clojure.string/starts-with? with line)))
+                                           (str with " " line) line))
+                          filtered (map-indexed replace-with
+                                                (clojure.string/split-lines contents))
+                          output (clojure.string/join "\n" filtered)]
+                      (if-not (= contents output)
+                        (do
+                          (spit file output)
+                          (success "line commented in file"))
+                        (success "line not present in file"))))
+          (rm-line [target]
+                   (let [pred (if (string? target) (line-eq target) target)
                          contents (slurp file)
-                         filtered (filter f (clojure.string/split-lines contents))
+                         filtered (keep-indexed pred (clojure.string/split-lines contents))
                          output (clojure.string/join "\n" filtered)]
                      (if-not (= contents output)
                        (do
                          (spit file output)
                          (success "line removed from file"))
                        (success "line not present in file"))))]
-    (let [fns {:present add-line :absent rm-line :replace replace-line}]
-      ((fns state) v))))
+    (({:present add-line :absent rm-line :replace replace-line :uncomment uncomment :comment comment-} state) v)))
 
 (def-serial line-set
   "Set existing line value"
@@ -155,19 +186,3 @@
             edited (map (set-key k v sep) (clojure.string/split-lines lines))]
         (spit dest (clojure.string/join "\n" edited))
         (success "value in file line was set")))))
-
-(def-serial uncomment
-  "Uncomment a line
-     (uncomment \"/etc/ssh/sshd_config\" \"PermitRootLogin\" \"#\") 
-  "
-  [dest k c]
-  (letfn [(strip [line]
-            (if (.startsWith line (str c k))
-              (.substring line 1)
-              line))]
-    (if-not (fs/exists? dest)
-      (error (<< "~{dest} not found"))
-      (let [lines (slurp dest)
-            edited (map strip (clojure.string/split-lines lines))]
-        (spit dest (clojure.string/join "\n" edited))
-        (success "Uncommented line")))))
