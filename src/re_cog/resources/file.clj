@@ -118,6 +118,7 @@
                         (do
                           (spit file (str line "\n") :append true)
                           (success "line added to file")))))
+
           (replace-line [target]
                         (let [pred (if (string? target) (comp not (line-eq target)) target)
                               contents (slurp file)
@@ -130,6 +131,7 @@
                               (spit file output)
                               (success "line replaced in file"))
                             (success "line not present in file"))))
+
           (uncomment [target]
                      (let [pred (if (string? target) (comp not (line-eq target)) target)
                            contents (slurp file)
