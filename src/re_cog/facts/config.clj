@@ -1,16 +1,16 @@
 (ns re-cog.facts.config
   (:require
+   [clojure.core.strint :refer (<<)]
    [aero.core :refer (read-config)]
    [me.raynes.fs :refer (exists?)]))
 
-(def dev-conf "/tmp/resources/config.edn")
-(def tmp-conf "resources/config.edn")
+(def root "/tmp/resources/")
 
 (defn configuration
   ([]
-   {:pre [(or (exists? dev-conf) (exists? tmp-conf))]}
-   (cond
-     (exists? tmp-conf) (read-config tmp-conf)
-     (exists? dev-conf) (read-config dev-conf)))
+   {:pre [(exists? root)]}
+   (letfn [(profile []
+             (if (exists? (<< "~{root}/prod/secrets.edn")) :prod :dev))]
+     (read-config (<< "~{root}/config.edn") {:profile (profile)})))
   ([& ks]
    (get-in (configuration) ks)))
