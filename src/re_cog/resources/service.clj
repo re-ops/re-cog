@@ -20,5 +20,5 @@
   (do (assert (#{:enable :disable} state))
       (let [{:keys [out] :as m} (sh systemctl-bin "list-units" "--full" "-all")]
         (if (.contains out srv)
-          (sh "sudo" systemctl-bin (name state) (<< "~{srv}.service"))
+          (sh "sudo" systemctl-bin (name state) srv)
           m))))
