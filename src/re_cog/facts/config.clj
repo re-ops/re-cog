@@ -4,7 +4,7 @@
    [aero.core :refer (read-config)]
    [me.raynes.fs :refer (exists?)]))
 
-(def root "/tmp/resources/")
+(def root "/tmp/resources")
 
 (defn configuration
   ([]
