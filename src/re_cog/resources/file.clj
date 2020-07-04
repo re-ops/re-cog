@@ -79,7 +79,7 @@
     (chmod \"/home\"/re-ops/.ssh\" \"0777\")
     (chmod \"/home\"/re-ops/.ssh\" \"0777\" :recursive true)
   "
-  [dest mode & options]
+  [dest mode options]
   (letfn [(chmod-script []
             (if (contains? options :recursive)
               (script ("/bin/chmod" ~mode ~dest))
