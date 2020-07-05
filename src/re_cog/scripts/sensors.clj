@@ -13,9 +13,10 @@
 (defn temp-script []
   (do-script
    (vm-fail)
-   (script (set! R @(pipe ("cat" "/proc/cpuinfo") ("awk" "'/model name/{print $4;exit}'")))
-           (case @R
-             "'Intel(R)'" ("sensors -A -u")
-             "AMD" ("sensors -A -u")
-             "ARMv7" (do (let t ("cat" "/sys/class/thermal/thermal_zone0/temp")) (/ t 1000))
-             "*" (do (println "'no matching cpu type found'") ("exit" 1))))))
+   (script
+    (set! R @(pipe ("cat" "/proc/cpuinfo") ("awk" "'/model name/{print $4;exit}'")))
+    (case @R
+      "'Intel(R)'" ("sensors -A -u")
+      "AMD" ("sensors -A -u")
+      "ARMv7" (pipe ("cat" "/sys/class/thermal/thermal_zone0/temp") ("/usr/bin/awk" "'{printf(\"cpu\ntemp1:\n  temp1_input: %s\", $1/1000)'"))
+      "*" (do (println "'no matching cpu type found'") ("exit" 1))))))
