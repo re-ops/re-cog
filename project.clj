@@ -26,7 +26,7 @@
      [com.fzakaria/slf4j-timbre "0.3.8"]
 
      ; common utilities and shared functions
-     [re-share "0.13.0"]
+     [re-share "0.16.1"]
      [re-scan "0.2.1"]
 
      ; clojure to bash
