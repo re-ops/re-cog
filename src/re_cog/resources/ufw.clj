@@ -10,10 +10,10 @@
 
 (def-serial add-rule
   "Add a UFW rule:
-   (add-rule 22 :allow 1 :from ip :on \"eth-0\" :proto \"tcp\")
+     (add-rule 22 :allow {:from ip :on \"eth-0\" :proto \"tcp\"})
    "
   [port state opts]
-  (letfn [(add []
+  (letfn [(add-port []
             (let [from (opts :from "any")
                   on (opts :on "any")
                   state' (name state)
@@ -26,7 +26,21 @@
                 :else (script
                        ("sudo" ~ufw-bin ~state' "to" "any" "port" ~port "proto" ~proto)))))]
     (assert (#{:allow :deny} state))
-    (run- add)))
+    (run- add-port)))
+
+(def-serial add-interface
+  "Add a UFW rule:
+     (add-interface \"eth-0\" :in :allow)
+   "
+  [ifc dir state]
+  (letfn [(add-ifc []
+            (let [state' (name state)
+                  dir' (name dir)]
+              (script
+               ("sudo" ~ufw-bin ~state' ~dir' "on" ~ifc))))]
+    (assert (#{:allow :deny} state))
+    (assert (#{:in :out} dir))
+    (run- add-ifc)))
 
 (def-serial del-rule
   "Delete a UFW rule:
@@ -49,12 +63,20 @@
     (run- reset)))
 
 (def-serial set-state
-  "Add a UFW rule:
-   (add-rule 22 :allow 1 :from ip :on \"eth-0\" :proto \"tcp\")
-   "
+  ""
   [state]
   (letfn [(set- [k]
             (fn [] (script
                     ("sudo" ~ufw-bin "--force" ~k))))]
     (assert (#{:enable :disable} state))
     (run- (set- (name state)))))
+
+(def-serial enable-forwarding
+  "Enable bridge forwarding:
+     (enable-forwarding) 
+  "
+  []
+  (letfn [(enable- []
+            (script
+             ("sudo" ~ufw-bin "default" "allow" "FORWARD")))]
+    (run- enable-)))
