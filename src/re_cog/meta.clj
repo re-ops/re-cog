@@ -15,6 +15,7 @@
   (apply merge
          (map resolve-
               [; resources
+               're-cog.resources.random
                're-cog.resources.exec
                're-cog.resources.sysctl
                're-cog.resources.ufw
