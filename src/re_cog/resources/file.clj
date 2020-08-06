@@ -188,3 +188,13 @@
             edited (map (set-key k v sep) (clojure.string/split-lines lines))]
         (spit dest (clojure.string/join "\n" edited))
         (success "value in file line was set")))))
+
+(def-serial edn-set
+  "Set a value in an edn file"
+  [dest ks v]
+  (let [data (clojure.edn/read-string (slurp dest))]
+    (if (= (get-in data ks) v)
+      (success "value is already set")
+      (do
+        (spit dest (with-out-str (pr (assoc-in data ks v))))
+        (success "value was set in file")))))
