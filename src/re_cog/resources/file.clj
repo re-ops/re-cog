@@ -79,11 +79,14 @@
     (chmod \"/home\"/re-ops/.ssh\" \"0777\")
     (chmod \"/home\"/re-ops/.ssh\" \"0777\" :recursive true)
   "
-  [dest mode options]
+  [dest mode opts]
   (letfn [(chmod-script []
-            (if (contains? options :recursive)
-              (script ("/bin/chmod" ~mode ~dest))
-              (script ("/bin/chmod" ~mode ~dest "-R"))))]
+            (let [options (if (opts :recursive) "-R" "")]
+              (script
+               (set! ID @("id" "-u"))
+               (if (= "0" $ID)
+                 ("sudo" "/bin/chmod" ~mode ~dest ~options)
+                 ("/bin/chmod" ~mode ~dest ~options)))))]
     (run- chmod-script)))
 
 (def-serial chown
@@ -92,10 +95,13 @@
       (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\" {:recursive true}); chown -R"
   [dest user group opts]
   (letfn [(chown-script []
-            (let [u-g (<< "~{user}:~{group}")]
-              (if (opts :recursive)
-                (script ("/bin/chown" ~u-g ~dest))
-                (script ("/bin/chown" ~u-g ~dest "-R")))))]
+            (let [u-g (<< "~{user}:~{group}")
+                  options (if (opts :recursive) "-R" "")]
+              (script
+               (set! ID @("id" "-u"))
+               (if (= "0" $ID)
+                 ("sudo" "/bin/chown" ~u-g ~dest ~options)
+                 ("/bin/chown" ~u-g ~dest ~options)))))]
     (run- chown-script)))
 
 (def-serial line
