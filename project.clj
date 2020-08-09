@@ -1,5 +1,5 @@
-(defproject re-cog "0.4.20"
-  :description "Distributed provisioning Clojure functions to be used with Re-gent"
+(defproject re-cog "0.4.21"
+  :description "Re-cog is a set of serializable functions including provisioning resources, system facts and commonly used remotely executable functions"
   :url "https://github.com/re-ops/re-cog"
   :license {:name "Apache License, Version 2.0" :url "http://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [

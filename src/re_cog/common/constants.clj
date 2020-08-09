@@ -12,8 +12,12 @@
 
 (def sysctl-bin "/usr/sbin/sysctl")
 
+(def openssl-bin "/usr/bin/openssl")
+
+(def cat-bin "/usr/bin/cat")
+
 (defn require-constants
   "Require common constant values"
   []
   (require
-   '[re-cog.common.constants :refer [apt-bin dpkg-bin systemd-bin systemctl-bin ufw-bin sysctl-bin]]))
+   '[re-cog.common.constants :refer [apt-bin dpkg-bin systemd-bin systemctl-bin ufw-bin sysctl-bin openssl-bin cat-bin]]))
