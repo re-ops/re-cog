@@ -54,7 +54,7 @@
                       (list 'merge
                             (list 'dissoc m :result)
                             (list m :result)
-                            {:type (keyword name) :uuid (list 're-share.core/gen-uuid)}))
+                            {:type (keyword name) :args (filterv (fn [a] (not (#{"&" "script-fn"} (str a)))) args) :uuid (list 're-share.core/gen-uuid)}))
                 (m :result)))))
 
 (defn distinct-by [f coll]
