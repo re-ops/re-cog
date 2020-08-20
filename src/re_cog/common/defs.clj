@@ -47,14 +47,18 @@
   "Capture function source for inlining"
   [f profile]
   (let [[_ name _ args body] (source-of f)
-        m (gensym 'm)]
+        m (gensym "m")
+        args-only (gensym "args-only")]
     (list name args
-          (list 'let [m (list 're-share.core/measure (list 'fn [] body))]
+          (list 'let [m (list 're-share.core/measure (list 'fn [] body))
+                      args-only (filterv (fn [a] (not (= "&" (str a)))) args)]
                 (list 'swap! profile 'conj
                       (list 'merge
                             (list 'dissoc m :result)
                             (list m :result)
-                            {:type (keyword name) :args (filterv (fn [a] (not (#{"&" "script-fn"} (str a)))) args) :uuid (list 're-share.core/gen-uuid)}))
+                            {:type (keyword name)
+                             :args (list 'filterv (list comp not fn?) args-only)
+                             :uuid (list 're-share.core/gen-uuid)}))
                 (m :result)))))
 
 (defn distinct-by [f coll]
