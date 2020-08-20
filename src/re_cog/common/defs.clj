@@ -57,7 +57,7 @@
                             (list 'dissoc m :result)
                             (list m :result)
                             {:type (keyword name)
-                             :args (list 'filterv (list comp not fn?) args-only)
+                             :args (list 'filterv (list 'comp 'not 'fn?) args-only)
                              :uuid (list 're-share.core/gen-uuid)}))
                 (m :result)))))
 
