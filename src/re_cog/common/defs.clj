@@ -46,7 +46,8 @@
 (defn inlined
   "Capture function source for inlining"
   [f profile]
-  (let [[_ name _ args body] (source-of f)
+  (let [[_ name _ args body] (source-of (symbol f))
+        fqn (str f)
         m (gensym "m")
         args-only (gensym "args-only")]
     (list name args
@@ -56,7 +57,7 @@
                       (list 'merge
                             (list 'dissoc m :result)
                             (list m :result)
-                            {:type (keyword name)
+                            {:type fqn
                              :args (list 'filterv (list 'comp 'not 'fn?) args-only)
                              :uuid (list 're-share.core/gen-uuid)}))
                 (m :result)))))
@@ -70,8 +71,9 @@
   (let [fs (atom [])]
     (postwalk
      (fn [exp]
-       (when (and (symbol? exp) ((resource-functions) exp))
-         (swap! fs conj (inlined exp profile)))) body)
+       (when (symbol? exp)
+         (when-let [f ((resource-functions) exp)]
+           (swap! fs conj (inlined f profile))))) body)
     (distinct-by first @fs)))
 
 (defmacro def-inline
