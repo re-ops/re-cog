@@ -63,7 +63,7 @@
     (run- reset)))
 
 (def-serial set-state
-  ""
+  "set ufw state to either enabled or disabled"
   [state]
   (letfn [(set- [k]
             (fn [] (script
