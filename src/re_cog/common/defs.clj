@@ -1,6 +1,7 @@
 (ns re-cog.common.defs
   "Def macros"
   (:require
+   [re-cog.common.grant :refer (sudo-calls)]
    [serializable.fn :as s]
    [re-share.core :refer [measure gen-uuid]]
    [clojure.spec.alpha :as sp]
@@ -35,8 +36,11 @@
   "Define a serializable function"
   ([& in-args]
    (let [{:keys [name args meta body]} (parse-args in-args)
-         body' (do-body body)]
-     `(def ~name (s/fn ~args ~body')))))
+         body' (do-body body)
+         sudoers (sudo-calls body')]
+     `(do
+        (def ~name (s/fn ~args ~body'))
+        (alter-meta! (var ~name) #(merge % ~meta {:sudo-usage (quote ~sudoers)}))))))
 
 (defn source-of
   "Get the source of a function (works only from the repl)"

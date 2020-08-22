@@ -1,4 +1,4 @@
-(defproject re-cog "0.4.21"
+(defproject re-cog "0.4.22"
   :description "Re-cog is a set of serializable functions including provisioning resources, system facts and commonly used remotely executable functions"
   :url "https://github.com/re-ops/re-cog"
   :license {:name "Apache License, Version 2.0" :url "http://www.apache.org/licenses/LICENSE-2.0.html"}
@@ -48,6 +48,10 @@
 
      ; configuration
      [aero "1.1.6"]
+
+     ; analysis
+     [org.clojure/core.match "1.0.0"]
+     [org.clojure/core.unify "0.5.7"]
   ]
 
   :plugins [

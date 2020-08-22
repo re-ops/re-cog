@@ -204,3 +204,30 @@
       (do
         (spit dest (with-out-str (pr (assoc-in data ks v))))
         (success "value was set in file")))))
+
+(comment
+  (use 'clojure.core.unify)
+  (unifier
+   '(def-serial chown
+      [?dest ?user ?group ?recursive]
+      (letfn [(chown-script []
+                (let [?u-g (str ?user ":" ?group)]
+                  (script
+                   (set! ID @("id" "-u"))
+                   (if (= "0" $ID)
+                     (if ?recursive
+                       ("sudo" "/bin/chown" ?u-g ?dest)
+                       ("/bin/chown" ?u-g ?dest))))))]
+        (run- chown-script)))
+
+   '(def-serial chown
+      ["/home/ronen" "ronen" "sudoers" true]
+      (letfn [(chown-script []
+                (let [?u-g (str ?user ":" ?group)]
+                  (script
+                   (set! ID @("id" "-u"))
+                   (if (= "0" $ID)
+                     (if ?recursive
+                       ("sudo" "/bin/chown" ?u-g ?dest)
+                       ("/bin/chown" ?u-g ?dest))))))]
+        (run- chown-script)))))
