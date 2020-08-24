@@ -18,11 +18,13 @@
                're-cog.resources.openssl
                're-cog.resources.random
                're-cog.resources.exec
+               're-cog.resources.nginx
                're-cog.resources.sysctl
                're-cog.resources.ufw
                're-cog.resources.disk
                're-cog.resources.permissions
                're-cog.resources.service
+               're-cog.resources.systemd
                're-cog.resources.file
                're-cog.resources.package
                're-cog.resources.git

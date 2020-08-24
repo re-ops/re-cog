@@ -1,0 +1,15 @@
+[Unit]
+Description={{description}}
+
+[Service]
+ExecStart={{exec}}
+WorkingDirectory={{working-directory}}
+PrivateTmp=1
+NoNewPrivileges=1
+PrivateUsers=1
+
+[Install]
+WantedBy=default.target
+
+Restart=always
+RestartSec=60
