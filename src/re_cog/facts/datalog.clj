@@ -119,7 +119,8 @@
    '[:find ?e ?f ?v :where
      [?e :os/desktop true]
      [?f :family "Ubuntu"]
-     [?v :version/version "18.04"]]))
+     [_ :version-info/version ?v]
+     [(clojure.string/starts-with? ?v "18.04")]]))
 
 (defn ubuntu-20_04-desktop?
   "Are we running in Ubuntu desktop"
@@ -128,12 +129,13 @@
    '[:find ?v :where
      [?e :os/desktop true]
      [?f :family "Ubuntu"]
-     [?v :version/version "20.04"]]))
+     [_ :version-info/version ?v]
+     [(clojure.string/starts-with? ?v "20.04")]]))
 
 (defn ubuntu-version
   "Ubuntu major version number"
   []
-  (let [q '[:find ?v :where [_ :family "Ubuntu"] [_ :version/version ?v]]]
+  (let [q '[:find ?v :where [_ :family "Ubuntu"] [_ :version-info/version ?v]]]
     (->> q singleton (re-find #"\d+.\d+") (BigDecimal.))))
 
 (defn os
@@ -152,7 +154,7 @@
   (singleton '[:find ?fqdn :where [_ :network-params/domain-name ?fqdn]]))
 
 (comment
-  (query '[:find ?v :where [_ :version/version ?v]])
+  (query '[:find ?v :where [_ :version-info/version ?v]])
   (query '[:find ?v :where [_ :java/version ?v]])
   (query '[:find ?v ?n :where [?e :disk-stores/size ?v] [?e :disk-stores/name ?n]])
   (unknown-disks)
