@@ -8,7 +8,7 @@
    [clojure.java.shell :refer [sh]]
    [datascript.core :as d]))
 
-(def db (d/create-conn))
+(def db (atom nil))
 
 (defn with-id
   "Create a datom with an id"
@@ -31,17 +31,19 @@
 
 (defn join-keys [[ks v]]
   (let [id-and-key (group-by keyword? ks)
-        datom-k (keyword (join "/" (map (comp csk/->kebab-case name) (id-and-key true))))
-        position-k (join "" (id-and-key false))]
-    [[datom-k v] (.hashCode (join "/" (or (butlast ks) ks)))]))
+        keyz (map (comp csk/->kebab-case name) (id-and-key true))
+        suffix (join "." (rest keyz))
+        datom-k (if-not (empty? suffix) (keyword (first keyz) suffix) (keyword (first keyz)))]
+    [[datom-k v] (.hashCode (join "." (or (butlast ks) ks)))]))
 
 (defn fact-pairs [ms]
   (map (fn [[id fs]] [id (into {} (map first fs))]) ms))
 
 (defn add-oshi-section [s]
-  (doseq [[id m] (fact-pairs (group-by second (map join-keys (flatten-keys s))))]
-    (let [purged (into {} (filter second m))]
-      (d/transact! db (with-id id purged)))))
+  (let [joined (group-by second (map join-keys (flatten-keys s)))]
+    (doseq [[id m] (fact-pairs joined)]
+      (let [purged (into {} (filter second m))]
+        (d/transact! db (with-id id purged))))))
 
 (defn jvm-properties []
   (into {}
@@ -54,7 +56,8 @@
 (defn populate
   "Add all facts to the DB"
   []
-  (d/transact! db (with-id 1 {:os/desktop (desktop?)}))
+  (reset! db (d/empty-db))
+  (d/transact! db (with-id 1 {:os.desktop (desktop?)}))
   (add-oshi-section (operating-system))
   (add-oshi-section (hardware))
   (add-properties (jvm-properties))
@@ -108,8 +111,8 @@
   "Are we running in Ubuntu desktop"
   []
   (verify
-   '[:find ?e ?f :where
-     [?e :os/desktop true]
+   '[:find ?f :where
+     [_ :os/desktop true]
      [?f :family "Ubuntu"]]))
 
 (defn ubuntu-18.04-desktop?
@@ -127,8 +130,8 @@
   []
   (verify
    '[:find ?v :where
-     [?e :os/desktop true]
-     [?f :family "Ubuntu"]
+     [_ :os/desktop true]
+     [_ :family "Ubuntu"]
      [_ :version-info/version ?v]
      [(clojure.string/starts-with? ?v "20.04")]]))
 
