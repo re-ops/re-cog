@@ -10,7 +10,7 @@
 (defn init
   "Constructs the current development system."
   []
-  (setup "re-cog" ["oshi.*"] [])
+  (setup "re-cog" [] ["oshi.*"])
   (populate))
 
 (defn stop
