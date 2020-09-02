@@ -57,7 +57,7 @@
   "Add all facts to the DB"
   []
   (reset! db (d/empty-db))
-  (d/transact! db (with-id 1 {:os.desktop (desktop?)}))
+  (d/transact! db (with-id 1 {:os/desktop (desktop?)}))
   (add-oshi-section (operating-system))
   (add-oshi-section (hardware))
   (add-properties (jvm-properties))
