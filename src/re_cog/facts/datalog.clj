@@ -111,28 +111,18 @@
   "Are we running in Ubuntu desktop"
   []
   (verify
-   '[:find ?f :where
-     [_ :os/desktop true]
+   '[:find ?d ?f :where
+     [?d :os/desktop true]
      [?f :family "Ubuntu"]]))
-
-(defn ubuntu-18.04-desktop?
-  "Are we running in Ubuntu desktop"
-  []
-  (verify
-   '[:find ?e ?f ?v :where
-     [?e :os/desktop true]
-     [?f :family "Ubuntu"]
-     [_ :version-info/version ?v]
-     [(clojure.string/starts-with? ?v "18.04")]]))
 
 (defn ubuntu-20_04-desktop?
   "Are we running in Ubuntu desktop"
   []
   (verify
-   '[:find ?v :where
-     [_ :os/desktop true]
-     [_ :family "Ubuntu"]
-     [_ :version-info/version ?v]
+   '[:find ?v ?d ?f ?i :where
+     [?d :os/desktop true]
+     [?f :family "Ubuntu"]
+     [?i :version-info/version ?v]
      [(clojure.string/starts-with? ?v "20.04")]]))
 
 (defn ubuntu-version
