@@ -9,8 +9,8 @@
 (defn configuration
   ([]
    {:pre [(exists? root)]}
-   (letfn [(profile []
-             (if (exists? (<< "~{root}/prod/secrets.edn")) :prod :dev))]
-     (read-config (<< "~{root}/config.edn") {:profile (profile)})))
+   (if (exists? (<< "~{root}/prod/secrets.edn"))
+     (read-config (<< "~{root}/prod/config.edn"))
+     (read-config (<< "~{root}/dev/config.edn"))))
   ([& ks]
    (get-in (configuration) ks)))
