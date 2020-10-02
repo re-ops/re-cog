@@ -13,8 +13,8 @@
 
 (def-serial download
   "Download file resource, if checksum is provided download will be lazy:
-      (download url dest expected :sha256) ; download only if file missing or checksum mismatch
-      (download url dest); always download "
+      (download url dest expected :hash-type :sha256) ; download only if file missing or checksum mismatch
+     "
   [url dest sum & opts]
   (if (or (not (fs/exists? dest)) (not (= sum (file-checksum dest opts))))
     (do
