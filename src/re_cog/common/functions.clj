@@ -64,6 +64,9 @@
    ; datalog facts
    '[re-cog.facts.datalog :refer (os ubuntu-desktop? ubuntu-version verify query singleton get-db fqdn hostname)]
    '[datascript.core :as d]
+   ; case handling 
+   '[camel-snake-kebab.core :as csk]
+   '[clojure.string :refer (upper-case capitalize)]
    ; common
    '[re-cog.facts.config :refer (configuration)]
    '[taoensso.timbre :refer (info error debug trace)]

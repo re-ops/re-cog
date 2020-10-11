@@ -1,0 +1,18 @@
+[Unit]
+Description={{description}}
+
+[Service]
+ExecStart={{start}}
+{{#stop}}ExecStop={{value}}{{/stop}}
+{{#cwd}}WorkingDirectory={{value}}{{/cwd}}
+{{#environment}}Environment="{{name}}={{value}}" {{/environment}}
+{{#hardening}}{{name}}={{value}}{{/hardening}}
+
+[Install]
+{{^wanted-by}}WantedBy=default.target{{/wanted-by}}
+{{#wanted-by}}WantedBy={{value}}{{/wanted-by}}
+
+{{#restart}}
+Restart=always
+RestartSec=60
+{{/restart}}
