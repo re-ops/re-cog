@@ -18,7 +18,7 @@
      [digest "1.4.9"]
 
      ; templating
-     [cljstache "2.0.4"]
+     [cljstache "2.0.6"]
 
      ; logging
      [com.taoensso/timbre "4.10.0"]
