@@ -32,7 +32,7 @@
         source (slurp (io/resource "main/resources/service.mustache"))
         nested (into {} (map (fn [[k v]] [k {:value v}]) (dissoc opts :environment :hardening)))
         environment (mapv (fn [[k v]] {:name (upper-case (name k)) :value v}) environment)
-        hardening (mapv (fn [[k v]] {:name (capitalize (csk/->camelCase (name k))) :value v}) hardening)
+        hardening (mapv (fn [[k v]] {:name (csk/->PascalCase (name k)) :value v}) hardening)
         args (merge {:start start :description description :environment environment :hardening hardening} nested)
         service (<< "~{service-name}.service")]
     (letfn [(enable []
