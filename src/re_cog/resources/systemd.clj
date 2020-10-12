@@ -20,12 +20,14 @@
      (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:environment {:dispaly :0}})
      ; Wanted by
      (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:wanted-by \"default.target\"})
-     ; Enable restart section
-     (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:restart true})
+     ; Restart 
+     (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:restart always :restart-sec 60})
      ; Hardening options
      (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:hardening {:private-devices true}})
      ; A user service
      (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:user \"re-ops\"})
+     ; Environment file
+     (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:enviroment-file \"re-ops\"})
   "
   [service-name description start {:keys [user environment hardening] :as opts}]
   (let [dest (if user (<< "/home/~{user}/.config/systemd/user/") "/etc/systemd/system/")

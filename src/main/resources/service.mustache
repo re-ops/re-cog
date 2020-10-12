@@ -3,6 +3,7 @@ Description={{description}}
 
 [Service]
 ExecStart={{start}}
+{{#environment-file}}EnvironmentFile={{value}}{{/environment-file}}
 {{#stop}}ExecStop={{value}}{{/stop}}
 {{#cwd}}WorkingDirectory={{value}}{{/cwd}}
 {{#environment}}
@@ -11,12 +12,11 @@ Environment="{{name}}={{value}}"
 {{#hardening}}
 {{name}}={{value}}
 {{/hardening}}
+{{#restart}}Restart={{value}}{{/restart}}
+{{#restart-sec}}RestartSec={{value}}{{/restart-sec}}
 
 [Install]
 {{^wanted-by}}WantedBy=default.target{{/wanted-by}}
 {{#wanted-by}}WantedBy={{value}}{{/wanted-by}}
 
-{{#restart}}
-Restart=always
-RestartSec=60
-{{/restart}}
+
