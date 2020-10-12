@@ -8,7 +8,9 @@
 
 (defn configuration
   ([]
-   {:pre [(exists? root)]}
+   {:pre []}
+   (when-not (exists? root)
+     (throw (ex-info (<< "missing configuration directory ~{root}") {})))
    (if (exists? (<< "~{root}/prod/secrets.edn"))
      (read-config (<< "~{root}/prod/config.edn"))
      (read-config (<< "~{root}/dev/config.edn"))))
