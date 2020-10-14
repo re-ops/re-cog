@@ -37,12 +37,15 @@
         hardening (mapv (fn [[k v]] {:name (csk/->PascalCase (name k)) :value v}) hardening)
         args (merge {:start start :description description :environment environment :hardening hardening} nested)
         service (<< "~{service-name}.service")]
-    (letfn [(enable []
-              (if user
-                (script (~systemctl-bin "--user" "enable" ~service))
-                (script ("sudo" ~systemctl-bin "enable" ~service))))]
+    (letfn [(linger []
+              (script ("/usr/bin/loginctl" "enable-linger" ~user)))
+            (enable []
+                    (if user
+                      (script (~systemctl-bin "--user" "enable" ~service))
+                      (script ("sudo" ~systemctl-bin "enable" ~service))))]
       (if user
-        (fs/mkdirs dest))
+        (fs/mkdirs dest)
+        (run- linger))
       (spit (<< "~{dest}/~{service}") (render source args))
       (run- enable)
       (success (<< "user service created")))))
