@@ -90,3 +90,12 @@
   [id]
   (sh "/usr/bin/apt-key" "fingerprint" id))
 
+(def-serial set-selection
+  "Set debconf selection for setting package options during headless installation"
+  [package k t value]
+  (letfn [(set-selection [option]
+            (fn []
+              (script
+               (pipe ("echo" ~option)
+                     ("sudo" "debconf-set-selections")))))]
+    (run- (set-selection (<< "~{package} ~{package}/~{k} ~{t} ~{value}")))))

@@ -20,7 +20,7 @@
      (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:environment {:dispaly :0}})
      ; Wanted by
      (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:wanted-by \"default.target\"})
-     ; Restart 
+     ; Restart
      (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:restart always :restart-sec 60})
      ; Hardening options
      (set-service \"foo\" \"run foo\" \"/bin/tmx start --p foo\" {:hardening {:private-devices true}})
@@ -38,12 +38,13 @@
         args (merge {:start start :description description :environment environment :hardening hardening} nested)
         service (<< "~{service-name}.service")]
     (letfn [(linger []
-              (script ("/usr/bin/loginctl" "enable-linger" ~user)))
+              (script
+               ("/usr/bin/loginctl" "enable-linger" ~user)))
             (enable []
                     (if user
                       (script (~systemctl-bin "--user" "enable" ~service))
                       (script ("sudo" ~systemctl-bin "enable" ~service))))]
-      (if user
+      (when user
         (fs/mkdirs dest)
         (run- linger))
       (spit (<< "~{dest}/~{service}") (render source args))
