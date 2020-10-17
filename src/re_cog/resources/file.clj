@@ -21,7 +21,12 @@
       (coherce ((states state))))))
 
 (def-serial file
-  "A file resource"
+  "A file resource:
+   ; touch a file
+   (file \"/tmp/1\" :present)
+   ; delete a file
+   (file \"/tmp/1\" :absent)
+  "
   [path state]
   (letfn [(touch [f]
             (if (fs/exists? f) true (fs/touch f)))
@@ -31,7 +36,9 @@
       (coherce ((states state) path)))))
 
 (def-serial symlink
-  "Symlink resource"
+  "Symlink a file:
+     ; create a new symlink
+     (symlink \"/home/re-ops/.minimal-zsh/.zshrc\" \"/home/re-ops/.zshrc\") "
   [path target]
   (letfn [(symlink-target [t]
             (let [f (java.nio.file.Paths/get (java.net.URI. (<< "file://~{t}")))]
@@ -47,7 +54,10 @@
           (failure (<< "failed to create symlink ~{actual} is not ~{path}")))))))
 
 (def-serial template
-  "Template resource"
+  "Template resource:
+    ; apply a template and create a file:
+    (template \"/tmp/resources/templates/lxd/preseed.mustache\" \"/tmp/preseed.yaml\")
+  "
   [tmpl dest args]
   (let [source (slurp tmpl)
         out (render source args)]
@@ -56,7 +66,7 @@
 
 (def-serial copy
   "Copy a local file:
-    (copy src dest)
+    (copy \"/tmp/foo\" \"/tmp/bla\")
   "
   [src dest]
   (try
@@ -66,7 +76,7 @@
 
 (def-serial rename
   "Move a local file:
-    (rename \"/tmp/foo\" \"bla\")
+    (rename \"/tmp/foo\" \"/tmp/bla\")
   "
   [src dest]
   (try
@@ -91,8 +101,10 @@
 
 (def-serial chown
   "Change file/directory owner using uid & gid resource:
-      (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\"); using user/group
-      (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\" {:recursive true}); chown -R"
+      ; change file/folder ownership using user/group
+      (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\")
+      ; change file/folder ownership recursively
+      (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\" {:recursive true})"
   [dest user group opts]
   (letfn [(chown-script []
             (let [u-g (<< "~{user}:~{group}")
@@ -180,7 +192,9 @@
     (({:present add-line :absent rm-line :replace replace-line :uncomment uncomment :comment comment-} state) v)))
 
 (def-serial line-set
-  "Set existing line value"
+  "Set an existing line value:
+    (line-set \"/etc/ssh/sshd_config\" \"PermitRootLogin\" \"no\" \" \")
+  "
   [dest k v sep]
   (letfn [(set-key [k v sep]
             (fn [line]
@@ -196,7 +210,9 @@
         (success "value in file line was set")))))
 
 (def-serial edn-set
-  "Set a value in an edn file"
+  "Set a value in an edn file:
+     (edn-set \"/tmp/secrets.edn\" [:lxc :pass] \"password\")
+  "
   [dest ks v]
   (let [data (clojure.edn/read-string (slurp dest))]
     (if (= (get-in data ks) v)
@@ -204,3 +220,19 @@
       (do
         (spit dest (with-out-str (pr (assoc-in data ks v))))
         (success "value was set in file")))))
+
+(def-serial replace-all
+  "Replace all occurrences of a Regex match in a file
+    (replace-all \"/etc/apt/sources.list\" \"us.\" \"local.\")
+  "
+  [dest match with]
+  (letfn [(edit [line]
+            (let [post (clojure.string/replace line (re-pattern match) with)]
+              {:updated? (not (= post line)) :line post}))]
+    (if-not (fs/exists? dest)
+      (error (<< "~{dest} not found"))
+      (let [lines (slurp dest)
+            edited (map edit (clojure.string/split-lines lines))
+            updated (count (filter :updated? edited))]
+        (spit dest (clojure.string/join "\n" (map :line edited)))
+        (success (<< "~{updated} lines were updated in ~{dest}"))))))
