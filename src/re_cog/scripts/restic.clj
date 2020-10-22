@@ -32,6 +32,16 @@
        ("export" (set! ~(prefix type "ACCOUNT_ID") ~(escape id)))
        ("/usr/bin/restic" ~action "-r" ~target)))))
 
+(defn backup
+  "A single arg action script"
+  [action m]
+  (run "backup" m))
+
+(defn unlock
+  "A single arg action script"
+  [action m]
+  (run "unlock" m))
+
 (defn restore
   "restic backup script"
   [{:keys [dest pass id key type] :as b} target]
