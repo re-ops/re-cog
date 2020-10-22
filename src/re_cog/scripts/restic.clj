@@ -32,10 +32,10 @@
        ("export" (set! ~(prefix type "ACCOUNT_ID") ~(escape id)))
        ("/usr/bin/restic" ~action "-r" ~target)))))
 
-(defn backup
+(defn check
   "A single arg action script"
   [m]
-  (run "backup" m))
+  (run "check" m))
 
 (defn unlock
   "A single arg action script"
