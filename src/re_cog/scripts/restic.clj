@@ -21,16 +21,16 @@
        ("export" (set! ~(prefix type "ACCOUNT_ID") ~(escape id)))
        ("/usr/bin/restic" "backup" ~src "-r" ~target)))))
 
-(defn check
-  "restic backup script"
-  [{:keys [dest pass id key type] :as b}]
+(defn run
+  "A single arg action script"
+  [action {:keys [dest pass id key type] :as b}]
   (fn []
     (let [target (<< "~{type}:~{dest}")]
       (script
        ("export" (set! RESTIC_PASSWORD ~(escape pass)))
        ("export" (set! ~(prefix type "ACCOUNT_KEY") ~(escape key)))
        ("export" (set! ~(prefix type "ACCOUNT_ID") ~(escape id)))
-       ("/usr/bin/restic" "check" "-r" ~target)))))
+       ("/usr/bin/restic" ~action "-r" ~target)))))
 
 (defn restore
   "restic backup script"
