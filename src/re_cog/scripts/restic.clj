@@ -34,12 +34,12 @@
 
 (defn backup
   "A single arg action script"
-  [action m]
+  [m]
   (run "backup" m))
 
 (defn unlock
   "A single arg action script"
-  [action m]
+  [m]
   (run "unlock" m))
 
 (defn restore
