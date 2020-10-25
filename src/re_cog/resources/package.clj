@@ -26,9 +26,7 @@
   "
   [pkg state]
   (letfn [(install [pkg]
-            (if (.endsWith pkg "deb")
-              (sh "sudo" "/usr/bin/env" "DEBIAN_FRONTEND=noninteractive" dpkg-bin "-i" pkg)
-              (sh "sudo" "/usr/bin/env" "DEBIAN_FRONTEND=noninteractive" apt-bin "install" pkg "-y")))
+            (sh "sudo" "/usr/bin/env" "DEBIAN_FRONTEND=noninteractive" apt-bin "install" pkg "-y"))
           (uninstall [pkg]
                      (if (.endsWith pkg "deb")
                        (sh "sudo" dpkg-bin "-r" pkg)
