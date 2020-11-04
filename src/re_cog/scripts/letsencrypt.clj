@@ -13,3 +13,12 @@
      ("export" (set! LEXICON_CLOUDFLARE_TOKEN ~token))
      ("/srv/dehydrated/dehydrated" "--register" "--accept-terms")
      ("/srv/dehydrated/dehydrated" "--cron" "--hook" "/srv/dehydrated/dehydrated.default.sh" "--challenge" "dns-01"))))
+
+(defn apply-domains
+  "Set the domains for which certificates will be generated"
+  [domains]
+  (fn []
+    (script
+     ("/usr/bin/rm" "/srv/dehydrated/domains.txt")
+     (doseq [d ~domains]
+       ("echo" @d >> "/srv/dehydrated/domains.txt")))))
