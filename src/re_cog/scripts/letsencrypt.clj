@@ -19,6 +19,6 @@
   [domains]
   (fn []
     (script
-     ("/usr/bin/rm" "/srv/dehydrated/domains.txt")
+     ("/usr/bin/rm" "-f" "/srv/dehydrated/domains.txt")
      (doseq [d ~domains]
        ("echo" @d >> "/srv/dehydrated/domains.txt")))))
