@@ -9,6 +9,7 @@
   (fn []
     (script
      ("export" (set! PROVIDER "cloudflare"))
-     ("export" (set! LEXICON_CLOUDFLARE_USERNAME user))
-     ("export" (set! LEXICON_CLOUDFLARE_TOKEN token))
+     ("export" (set! LEXICON_CLOUDFLARE_USERNAME ~user))
+     ("export" (set! LEXICON_CLOUDFLARE_TOKEN ~token))
+     ("/srv/dehydrated/dehydrated" "--register" "--accept-terms")
      ("/srv/dehydrated/dehydrated" "--cron" "--hook" "/srv/dehydrated/dehydrated.default.sh" "--challenge" "dns-01"))))
