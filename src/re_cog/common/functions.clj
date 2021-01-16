@@ -57,6 +57,8 @@
    '[re-share.core :refer [measure gen-uuid]]
    ; templating
    '[cljstache.core :refer [render]]
+   ; resources
+   '[clj-yaml.core :as yaml]
    ; io
    '[digest :as digest]
    '[clojure.java.io :as io]

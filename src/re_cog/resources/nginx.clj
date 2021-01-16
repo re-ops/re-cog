@@ -9,10 +9,18 @@
 (require-constants)
 
 (def-serial site-enabled
-  "An nginx site enabled with ssl and optional basic auth"
-  [nginx name external internal basic-auth?]
-  (let [source (slurp (io/resource "main/resources/site.conf"))
-        m {:fqdn (fqdn) :external-port external :internal-port internal :basic-auth basic-auth?}
+  "An nginx site enabled with ssl and optional basicauth/websockets:
+    ; by default options are false
+    (site-enabled nginx \"grafana\" external-port 3000 {})
+    ; enable basic auth
+    (site-enabled nginx \"grafana\" external-port 3000 {:basic-auth true})
+    ; enable websockets
+    (site-enabled nginx \"grafana\" external-port 3000 {:websockets true})
+  "
+  [nginx name external internal opts]
+  (let [{:keys [basic-auth websockets] :or {basic-auth false websockets false}} opts
+        source (slurp (io/resource "main/resources/site.conf"))
+        m (merge {:fqdn (fqdn) :external-port external :internal-port internal :websockets websockets :basic-auth basic-auth})
         out (render source m)
         {:keys [enabled]} nginx]
     (spit (<< "~{enabled}/~{name}.conf")  out)

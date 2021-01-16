@@ -221,6 +221,20 @@
         (spit dest (with-out-str (pr (assoc-in data ks v))))
         (success "value was set in file")))))
 
+(def-serial yaml-set
+  "Set a value in a yaml file:
+     (yaml-set \"/tmp/test.yaml\" [:parent :key] \"value\")
+  "
+  [dest ks v]
+  (let [data (yaml/parse-string (slurp dest))]
+    (if (= (get-in data ks) v)
+      (success "value is already set")
+      (do
+        (spit dest
+              (yaml/generate-string
+               (assoc-in data ks v) :dumper-options {:flow-style :block}))
+        (success "value was set in file")))))
+
 (def-serial replace-all
   "Replace all occurrences of a Regex match in a file
     (replace-all \"/etc/apt/sources.list\" \"us.\" \"local.\")
