@@ -1,4 +1,4 @@
-(defproject re-cog "0.5.18"
+(defproject re-cog "0.5.19"
   :description "Re-cog is a set of serializable functions including provisioning resources, system facts and commonly used remotely executable functions"
   :url "https://github.com/re-ops/re-cog"
   :license {:name "Apache License, Version 2.0" :url "http://www.apache.org/licenses/LICENSE-2.0.html"}
@@ -49,7 +49,7 @@
      [aero "1.1.6"]
 
      ; yaml resources
-     [clj-commons/clj-yaml "0.7.0"]
+     [narkisr/clj-yaml "0.7.2"]
   ]
 
   :plugins [
