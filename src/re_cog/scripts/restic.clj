@@ -33,14 +33,19 @@
        ("/usr/bin/restic" ~action "-r" ~target)))))
 
 (defn check
-  "A single arg action script"
+  "Check a backup"
   [m]
   (run "check" m))
 
 (defn unlock
-  "A single arg action script"
+  "Unlock a backup lock"
   [m]
   (run "unlock" m))
+
+(defn init
+  "Initialize a backup"
+  [m]
+  (run "init" m))
 
 (defn restore
   "restic backup script"
