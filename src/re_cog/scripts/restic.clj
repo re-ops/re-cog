@@ -19,7 +19,7 @@
        ("export" (set! RESTIC_PASSWORD ~(escape pass)))
        ("export" (set! ~(prefix type "ACCOUNT_KEY") ~(escape key)))
        ("export" (set! ~(prefix type "ACCOUNT_ID") ~(escape id)))
-       ("/usr/bin/restic" "backup" ~src "-r" ~target)))))
+       ("/usr/local/bin/restic" "backup" ~src "-r" ~target)))))
 
 (defn run
   "A single arg action script"
@@ -30,7 +30,7 @@
        ("export" (set! RESTIC_PASSWORD ~(escape pass)))
        ("export" (set! ~(prefix type "ACCOUNT_KEY") ~(escape key)))
        ("export" (set! ~(prefix type "ACCOUNT_ID") ~(escape id)))
-       ("/usr/bin/restic" ~action "-r" ~target)))))
+       ("/usr/local/bin/restic" ~action "-r" ~target)))))
 
 (defn check
   "Check a backup"
