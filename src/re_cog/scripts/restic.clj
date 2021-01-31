@@ -4,6 +4,8 @@
    [clojure.string :refer (upper-case)]
    [clojure.core.strint :refer (<<)]))
 
+(def restic-bin "/usr/local/bin/restic")
+
 (defn escape [s]
   (str \" s \"))
 
@@ -19,7 +21,7 @@
        ("export" (set! RESTIC_PASSWORD ~(escape pass)))
        ("export" (set! ~(prefix type "ACCOUNT_KEY") ~(escape key)))
        ("export" (set! ~(prefix type "ACCOUNT_ID") ~(escape id)))
-       ("/usr/local/bin/restic" "backup" ~src "-r" ~target)))))
+       (~restic-bin "backup" ~src "-r" ~target)))))
 
 (defn run
   "A single arg action script"
@@ -30,7 +32,7 @@
        ("export" (set! RESTIC_PASSWORD ~(escape pass)))
        ("export" (set! ~(prefix type "ACCOUNT_KEY") ~(escape key)))
        ("export" (set! ~(prefix type "ACCOUNT_ID") ~(escape id)))
-       ("/usr/local/bin/restic" ~action "-r" ~target)))))
+       (~restic-bin ~action "-r" ~target)))))
 
 (defn check
   "Check a backup"
@@ -56,4 +58,4 @@
        ("export" (set! RESTIC_PASSWORD ~(escape pass)))
        ("export" (set! ~(prefix type "ACCOUNT_KEY") ~(escape key)))
        ("export" (set! ~(prefix type "ACCOUNT_ID") ~(escape id)))
-       ("/usr/bin/restic" "restore" "latest" "-r" ~source "--target" ~target "--verify")))))
+       (~restic-bin "restore" "latest" "-r" ~source "--target" ~target "--verify")))))
