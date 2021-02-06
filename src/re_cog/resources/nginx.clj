@@ -18,10 +18,9 @@
     (site-enabled nginx \"grafana\" external-port 3000 {:websockets true})
   "
   [nginx name external internal opts]
-  (let [{:keys [basic-auth websockets] :or {basic-auth false websockets false}} opts
+  (let [{:keys [enabled]} nginx
+        {:keys [basic-auth websockets] :or {basic-auth false websockets false tls-3 true} :as with-defaults} opts
         source (slurp (io/resource "main/resources/site.conf"))
-        m (merge {:fqdn (fqdn) :external-port external :internal-port internal :websockets websockets :basic-auth basic-auth})
-        out (render source m)
-        {:keys [enabled]} nginx]
-    (spit (<< "~{enabled}/~{name}.conf")  out)
+        m (merge with-defaults {:fqdn (fqdn) :external-port external :internal-port internal})]
+    (spit (<< "~{enabled}/~{name}.conf")  (render source m))
     (success (<< "enabled site added"))))
