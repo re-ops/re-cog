@@ -4,6 +4,7 @@
    [re-cog.common.defs :refer (def-serial)]
    [taoensso.timbre :refer (info)]
    [camel-snake-kebab.core :as csk]
+   [re-cog.facts.re-gent :refer (pool-status)]
    [re-share.oshi :refer (operating-system hardware)]
    [clojure.java.shell :refer [sh]]
    [datascript.core :as d]))
@@ -45,6 +46,13 @@
       (let [purged (into {} (filter second m))]
         (d/transact! db (with-id id purged))))))
 
+(defn add-thread-pool-section
+  "Re-gent task thread pool status"
+  []
+  (when-let [pool (pool-status)]
+    (let [m (into {} (map (fn [[k v]] [(keyword (str "pool-status" "/" (csk/->kebab-case (name k)))) v]) pool))]
+      (d/transact! db (with-id (.hashCode m) m)))))
+
 (defn jvm-properties []
   (into {}
         (map
@@ -60,6 +68,7 @@
   (d/transact! db (with-id 1 {:os/desktop (desktop?)}))
   (add-oshi-section (operating-system))
   (add-oshi-section (hardware))
+  (add-thread-pool-section)
   (add-properties (jvm-properties))
   (info "Loaded facts into datascript db"))
 
@@ -78,6 +87,18 @@
     :where
     [?e :services/state "RUNNING"]
     [?e :services/name ?name]])
+
+(def pool-state
+  '[:find ?a ?t ?s :where
+    [_ :pool-status/active-count ?a]
+    [_ :pool-status/task-count ?t]
+    [_ :pool-status/queue-size ?s]])
+
+(def java-version
+  '[:find ?v :where
+    [_ :java/runtime.version ?v]])
+
+; DB access functions
 
 (defn get-db []
   (assert (not (empty? @re-cog.facts.datalog/db)))
@@ -105,7 +126,7 @@
   (assert (not (empty? @db)))
   (-> q (d/q @db) first first))
 
-; facts
+; Facts
 
 (defn ubuntu-desktop?
   "Are we running in Ubuntu desktop"
