@@ -1,5 +1,6 @@
 (ns re-cog.scripts.hostname
-  (:require  [pallet.stevedore :refer (script)]))
+  (:require
+   [pallet.stevedore :refer (script)]))
 
 (defn hostnamectl
   "sets hostname and hosts file"
