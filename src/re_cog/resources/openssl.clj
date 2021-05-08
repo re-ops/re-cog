@@ -3,7 +3,7 @@
   (:require
    [re-cog.common.functions :refer (require-functions)]
    [re-cog.common.constants :refer (require-constants)]
-   [re-cog.common.resources :refer (run-)]
+   [re-cog.common.resources :refer (run!-)]
    [re-cog.common.defs :refer (def-serial)]))
 
 (require-functions)
@@ -22,5 +22,5 @@
                (let [pem (<< "~{dest}/dhparam.pem")]
                  (script
                   (~openssl-bin "dhparam" "-dsaparam" "-out" ~pem "4096"))))]
-    (run- certs)
-    (run- dht)))
+    (run!- certs)
+    (run!- dht)))

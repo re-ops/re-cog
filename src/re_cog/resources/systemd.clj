@@ -1,6 +1,7 @@
 (ns re-cog.resources.systemd
   "Systemd related resources"
   (:require
+   [re-cog.common.resources :refer (run!-)]
    [camel-snake-kebab.core :as csk]
    [re-cog.common.defs :refer (def-serial)]
    [clojure.string :refer (upper-case capitalize)]
@@ -46,12 +47,12 @@
                      ("/usr/bin/loginctl" "enable-linger" ~user)))
             (enable []
                     (if user
-                      (script (~systemctl-bin "--user" "enable" ~service))
+                      (script ("sudo" "XDG_RUNTIME_DIR=/run/user/1000" "-u" ~user  ~systemctl-bin "--user" "enable" ~service))
                       (script ("sudo" ~systemctl-bin "enable" ~service))))]
       (when user
         (fs/mkdirs dest)
-        (run- chown)
-        (run- linger))
+        (run!- chown)
+        (run!- linger))
       (spit (<< "~{dest}/~{service}") (render source args))
-      (run- enable)
+      (run!- enable)
       (success (<< "user service created")))))

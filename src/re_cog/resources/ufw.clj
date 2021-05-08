@@ -73,7 +73,7 @@
 
 (def-serial enable-forwarding
   "Enable bridge forwarding:
-     (enable-forwarding) 
+     (enable-forwarding)
   "
   []
   (letfn [(enable- []

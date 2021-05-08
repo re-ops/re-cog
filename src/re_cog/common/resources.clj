@@ -6,7 +6,8 @@
    [re-cog.scripts.common :refer (shell-args bash-path)]))
 
 (defn run-
-  "Excute a script generated from a function using bash (intended to be used from other resource functions)"
+  "Excute a script generated from a function using bash (intended to be used from other resource functions)
+     Note: output should be verifired unelss last statement in resource!"
   [script-fn]
   (let [[sum forced! _] (shell-args script-fn)
         f (fs/file (fs/tmpdir) sum)]
@@ -16,3 +17,11 @@
       (sh (bash-path) (.getPath f))
       (finally
         (.delete f)))))
+
+(defn run!-
+  "Excute a script and throw an exception if failing"
+  [script-fn]
+  (let [{:keys [exit] :as res} (run- script-fn)]
+    (if (= 0 exit)
+      res
+      (throw (ex-info "failed to run script" res)))))
