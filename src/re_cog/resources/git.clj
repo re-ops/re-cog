@@ -14,6 +14,7 @@
   []
   (case (os)
     :Ubuntu "/usr/bin/git"
+    :Raspbian_GNU/Linux "/usr/bin/git"
     :FreeBSD "/usr/local/bin/git"
     :default (throw (ex-info (<< "No matching git path found for ~(os)") {}))))
 

@@ -72,6 +72,7 @@
   [file]
   (case (os)
     :Ubuntu (sh "sudo" "/usr/bin/apt-key" "add" file)
+    :Raspbian_GNU/Linux (sh "sudo" "/usr/bin/apt-key" "add" file)
     :default (throw (ex-info (<< "cant import apt key under os ~(os)") {}))))
 
 (def-serial key-server
