@@ -95,8 +95,8 @@
               (script
                (set! ID @("id" "-u"))
                (if (= "0" $ID)
-                 ("sudo" "/bin/chmod" ~mode ~dest ~options)
-                 ("/bin/chmod" ~mode ~dest ~options)))))]
+                 ("sudo" "/usr/bin/chmod" ~mode ~dest ~options)
+                 ("/usr/bin/chmod" ~mode ~dest ~options)))))]
     (run- chmod-script)))
 
 (def-serial chown
@@ -112,8 +112,8 @@
               (script
                (set! ID @("id" "-u"))
                (if (= "0" $ID)
-                 ("sudo" "/bin/chown" ~u-g ~dest ~options)
-                 ("/bin/chown" ~u-g ~dest ~options)))))]
+                 ("sudo" "/usr/bin/chown" ~u-g ~dest ~options)
+                 ("/usr/bin/chown" ~u-g ~dest ~options)))))]
     (run- chown-script)))
 
 (def-serial line
