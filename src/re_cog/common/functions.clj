@@ -66,6 +66,8 @@
    ; datalog facts
    '[re-cog.facts.datalog :refer (os ubuntu-desktop? ubuntu-version verify query singleton get-db fqdn hostname)]
    '[datascript.core :as d]
+   ; scheduled results
+   '[re-cog.zero.scheduled :refer (get-scheduled-result get-result)]
    ; case handling 
    '[camel-snake-kebab.core :as csk]
    '[clojure.string :refer (upper-case capitalize)]
