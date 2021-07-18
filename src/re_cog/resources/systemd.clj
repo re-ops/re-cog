@@ -39,9 +39,10 @@
         args (merge {:start start :description description :environment environment :hardening hardening} nested)
         service (<< "~{service-name}.service")]
     (letfn [(chown []
-              (let [config (<< "/home/~{user}/.config/")]
+              (let [config (<< "/home/~{user}/.config/")
+                    perm (<< "~{user}:~{user}")]
                 (script
-                 ("/usr/bin/chown" ~user "-R" ~config))))
+                 ("/usr/bin/chown" ~perm "-R" ~config))))
             (linger []
                     (script
                      ("/usr/bin/loginctl" "enable-linger" ~user)))
@@ -50,9 +51,10 @@
                       (script ("sudo" "XDG_RUNTIME_DIR=/run/user/1000" "-u" ~user  ~systemctl-bin "--user" "enable" ~service))
                       (script ("sudo" ~systemctl-bin "enable" ~service))))]
       (when user
-        (fs/mkdirs dest)
-        (run!- chown)
-        (run!- linger))
+        (fs/mkdirs dest))
       (spit (<< "~{dest}/~{service}") (render source args))
+      (when user
+        (run!- linger)
+        (run!- chown))
       (run!- enable)
       (success (<< "user service created")))))
