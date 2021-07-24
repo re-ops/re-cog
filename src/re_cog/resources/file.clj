@@ -17,6 +17,7 @@
             (if (fs/exists? dest) true (fs/mkdir dest)))
           (lazy-rm []
                    (if (fs/exists? dest) (fs/delete-dir dest) true))]
+    (assert (#{:present :absent} state))
     (let [states {:present lazy-mkdir :absent lazy-rm}]
       (coherce ((states state))))))
 
@@ -32,6 +33,7 @@
             (if (fs/exists? f) true (fs/touch f)))
           (delete [f]
                   (if (fs/exists? f) (fs/delete f) true))]
+    (assert (#{:present :absent} state))
     (let [states {:present touch :absent delete}]
       (coherce ((states state) path)))))
 
@@ -56,7 +58,7 @@
 (def-serial template
   "Template resource:
     ; apply a template and create a file:
-    (template \"/tmp/resources/templates/lxd/preseed.mustache\" \"/tmp/preseed.yaml\")
+    (template \"/tmp/resources/templates/lxd/preseed.mustache\" \"/tmp/preseed.yaml\" {})
   "
   [tmpl dest args]
   (let [source (slurp tmpl)
@@ -189,7 +191,9 @@
                          (spit file output)
                          (success "line removed from file"))
                        (success "line not present in file"))))]
-    (({:present add-line :absent rm-line :replace replace-line :uncomment uncomment :comment comment-} state) v)))
+    (let [states {:present add-line :absent rm-line :replace replace-line :uncomment uncomment :comment comment-}]
+      (assert (into #{} (keys states)) state)
+      ((states state) v))))
 
 (def-serial line-set
   "Set an existing line value:
