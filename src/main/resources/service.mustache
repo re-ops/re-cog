@@ -1,5 +1,7 @@
 [Unit]
 Description={{description}}
+{{#wants}}Wants={{value}}{{/wants}}
+{{#after}}After={{value}}{{/after}}
 
 [Service]
 ExecStart={{start}}
