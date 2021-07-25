@@ -62,9 +62,13 @@
   "
   [tmpl dest args]
   (let [source (slurp tmpl)
-        out (render source args)]
-    (spit dest out)
-    (success (<< "created file from template under ~{dest}"))))
+        out (render source args)
+        parent (fs/parent dest)]
+    (if (not (fs/exists? parent))
+      (failure (<< "~{parent} missing, cannot spit template into ~{dest}"))
+      (do
+        (spit dest out)
+        (success (<< "created file from template under ~{dest}"))))))
 
 (def-serial copy
   "Copy a local file:
