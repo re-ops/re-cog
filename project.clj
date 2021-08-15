@@ -1,4 +1,4 @@
-(defproject re-cog "0.6.5"
+(defproject re-cog "0.6.6"
   :description "Re-cog is a set of serializable functions including provisioning resources, system facts and commonly used remotely executable functions"
   :url "https://github.com/re-ops/re-cog"
   :license {:name "Apache License, Version 2.0" :url "http://www.apache.org/licenses/LICENSE-2.0.html"}
@@ -25,7 +25,7 @@
      [com.fzakaria/slf4j-timbre "0.3.20"]
 
      ; common utilities and shared functions
-     [re-share "0.17.0"]
+     [re-share "0.18.0"]
      [re-scan "0.2.1"]
 
      ; clojure to bash
