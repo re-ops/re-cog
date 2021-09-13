@@ -130,8 +130,7 @@
     (line \"/tmp/foo\" (fn [_ curr] (> 5 (.length curr))) :absent); remove lines using a function
     (line \"/tmp/foo\" \"bar\" :replace :with \"foo\"); replace lines equal to bar with foo
     (line \"/tmp/foo\" (fn [i _] (= i 2))  :replace :with \"foo\"); replace line in position 2 with value
-    (line \"/tmp/foo\" (fn [i _] (= i 2))  :uncomment :with \"#\"); uncomment line in position 2
-    (line \"/tmp/foo\" (fn [i _] (= i 2))  :comment :with \"#\"); uncomment line in position 2
+    (line \"/tmp/foo\" (fn [i _] (= i 2))  :comment :with \"#\"); comment line in position 2
   "
   [file v state & {:keys [with]}]
   (letfn [(line-eq [line] (fn [_ curr] (not (= curr line))))
@@ -156,35 +155,6 @@
                               (success "line replaced in file"))
                             (success "line not present in file"))))
 
-          (uncomment [target]
-                     (let [pred (if (string? target) (comp not (line-eq target)) target)
-                           contents (slurp file)
-                           replace-with (fn [i line]
-                                          (if (pred i line)
-                                            (clojure.string/replace-first line (re-pattern with) " ") line))
-                           filtered (map-indexed replace-with
-                                                 (clojure.string/split-lines contents))
-                           output (clojure.string/join "\n" filtered)]
-                       (if-not (= contents output)
-                         (do
-                           (spit file output)
-                           (success "line uncommented in file"))
-                         (success "line not present in file"))))
-
-          (comment- [target]
-                    (let [pred (if (string? target) (comp not (line-eq target)) target)
-                          contents (slurp file)
-                          replace-with (fn [i line]
-                                         (if (and (pred i line) (not (clojure.string/starts-with? with line)))
-                                           (str with " " line) line))
-                          filtered (map-indexed replace-with
-                                                (clojure.string/split-lines contents))
-                          output (clojure.string/join "\n" filtered)]
-                      (if-not (= contents output)
-                        (do
-                          (spit file output)
-                          (success "line commented in file"))
-                        (success "line not present in file"))))
           (rm-line [target]
                    (let [pred (if (string? target) (line-eq target) target)
                          contents (slurp file)
@@ -195,9 +165,37 @@
                          (spit file output)
                          (success "line removed from file"))
                        (success "line not present in file"))))]
-    (let [states {:present add-line :absent rm-line :replace replace-line :uncomment uncomment :comment comment-}]
+    (let [states {:present add-line :absent rm-line :replace replace-line}]
       (assert (into #{} (keys states)) state)
       ((states state) v))))
+
+(def-serial uncomment
+  "Uncomment a line with separator value:
+    (uncomment \"/etc/ssh/sshd_config\" \"PermitRootLogin\" \"#\")
+  "
+  [dest k sep]
+  (if-not (fs/exists? dest)
+    (error (<< "~{dest} not found"))
+    (let [lines (slurp dest)
+          edited (clojure.string/replace-first lines (str sep k) k)]
+      (spit dest edited)
+      (success "line was uncommented"))))
+
+(def-serial uncomment-nth
+  "Uncomment a line number nth with separator:
+    (uncomment-nth \"/etc/ssh/sshd_config\" \"#\" 1)
+  "
+  [dest sep n]
+  (if-not (fs/exists? dest)
+    (error (<< "~{dest} not found"))
+    (let [lines (clojure.string/split-lines (slurp dest))
+          edited (map-indexed
+                  (fn [i line]
+                    (if-not (= i n)
+                      line
+                      (clojure.string/replace-first line sep ""))) lines)]
+      (spit dest (clojure.string/join "\n" edited))
+      (success "line was uncommented at position"))))
 
 (def-serial line-set
   "Set an existing line value:

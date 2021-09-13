@@ -38,7 +38,7 @@
   (require
    '[re-cog.resources.package :refer [package repository]]
    '[re-cog.resources.git :refer [clone pull repo-exists? binary install-missing]]
-   '[re-cog.resources.file :refer [chown file directory symlink line line-set]]
+   '[re-cog.resources.file :refer [chown file directory symlink line line-set uncomment uncomment-nth]]
    '[re-cog.resources.disk :refer [partition- mount]]
    '[re-cog.resources.exec :refer [run]]))
 
