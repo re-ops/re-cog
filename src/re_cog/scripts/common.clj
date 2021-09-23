@@ -34,9 +34,9 @@
     * Adds a checksum of the script as a second arg
     * The cached? optional argument will store the generated script enhancing performance for repeatedly executed scripts
   "
-  [script-fn & {:keys [cached?] :or {cached? false}}]
+  [script-fn & {:keys [cached? wait?] :or {cached? false wait? true}}]
   {:pre (fn? script-fn)}
-  [(md5 (script-fn)) (validate! script-fn) :cached? cached?])
+  [(md5 (script-fn)) (validate! script-fn) :cached? cached? :wait wait?])
 
 (defn bind-bash
   "Bind stevedore language to bash"
@@ -45,12 +45,21 @@
 
 (def-serial shell
   "Remotely execute a script with a provided sum value (not intended to be used locally or as a resource)"
-  [sum script & {:keys [cached?] :or {cached? false}}]
+  [sum script & {:keys [cached? wait?] :or {cached? false wait? true}}]
   (let [f (fs/file (fs/tmpdir) sum)]
     (try
       (when-not (fs/exists? f)
         (spit f script))
-      (sh (bash-path) (.getPath f))
+      (if wait?
+        (sh (bash-path) (.getPath f))
+        (try
+          (let [process (. (Runtime/getRuntime) exec (into-array String [(bash-path) (.getPath f)]))
+                exit (. process exitValue)]
+            (if (= exit "process hasn't exited")
+              {:out "Process is running" :err "" :exit 0}
+              {:out "Process failed to run" :err "" :exit exit}))
+          (catch java.io.IOException e
+            {:out "Process failed to run" :err (. e getMessage) :exit 1})))
       (finally
         (when-not cached?
           (.delete f))))))
