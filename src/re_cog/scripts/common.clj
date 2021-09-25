@@ -34,9 +34,9 @@
     * Adds a checksum of the script as a second arg
     * The cached? optional argument will store the generated script enhancing performance for repeatedly executed scripts
   "
-  [script-fn & {:keys [cached? wait?] :or {cached? false wait? true}}]
+  [script-fn & {:keys [cached? wait? timeout] :or {cached? false wait? true timeout 2}}]
   {:pre (fn? script-fn)}
-  [(md5 (script-fn)) (validate! script-fn) :cached? cached? :wait wait?])
+  [(md5 (script-fn)) (validate! script-fn) :cached? cached? :wait? wait? :timeout timeout])
 
 (defn bind-bash
   "Bind stevedore language to bash"
@@ -45,7 +45,7 @@
 
 (def-serial shell
   "Remotely execute a script with a provided sum value (not intended to be used locally or as a resource)"
-  [sum script & {:keys [cached? wait?] :or {cached? false wait? true}}]
+  [sum script & {:keys [cached? wait? timeout] :or {cached? false wait? true timeout 2}}]
   (let [f (fs/file (fs/tmpdir) sum)]
     (try
       (when-not (fs/exists? f)
@@ -53,11 +53,11 @@
       (if wait?
         (sh (bash-path) (.getPath f))
         (try
-          (let [process (. (Runtime/getRuntime) exec (into-array String [(bash-path) (.getPath f)]))
-                exit (. process exitValue)]
-            (if (= exit "process hasn't exited")
+          (let [process (. (Runtime/getRuntime) exec (into-array String [(bash-path) (.getPath f)]))]
+            (. process waitFor timeout java.util.concurrent.TimeUnit/SECONDS)
+            (if (= (. process exitValue) 0)
               {:out "Process is running" :err "" :exit 0}
-              {:out "Process failed to run" :err "" :exit exit}))
+              {:out "Process failed to run" :err "" :exit 1}))
           (catch java.io.IOException e
             {:out "Process failed to run" :err (. e getMessage) :exit 1})))
       (finally
