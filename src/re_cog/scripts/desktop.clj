@@ -15,10 +15,9 @@
 (defn xmonad
   "Launch xmonad"
   []
-  (fn []
-    (script
-     ("export" (set! DISPLAY ":0"))
-     ("/usr/bin/xmonad" "--replace"))))
+  (script
+   ("export" (set! DISPLAY ":0"))
+   ("/usr/bin/xmonad" "--replace")))
 
 (defn librewriter
   "Launch a docment in libreoffice-writer in view only mode"
@@ -58,7 +57,7 @@
 
 (defn xdot-key
   "Click a keyboard key"
-  [& ks]
+  [ks]
   (fn []
     (let [combination (join "+" (map (comp capitalize name) ks))]
       (script

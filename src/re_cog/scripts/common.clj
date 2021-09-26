@@ -53,11 +53,14 @@
       (if wait?
         (sh (bash-path) (.getPath f))
         (try
-          (let [process (. (Runtime/getRuntime) exec (into-array String [(bash-path) (.getPath f)]))]
-            (. process waitFor timeout java.util.concurrent.TimeUnit/SECONDS)
-            (if (= (. process exitValue) 0)
-              {:out "Process is running" :err "" :exit 0}
-              {:out "Process failed to run" :err "" :exit 1}))
+          (let [process (. (Runtime/getRuntime) exec (into-array String [(bash-path) (.getPath f)]))
+                exited (. process waitFor timeout java.util.concurrent.TimeUnit/SECONDS)
+                {:keys [inputStream]} (bean process)]
+            (if exited
+              (if (= (. process exitValue) 0)
+                {:out "Process is done running" :err (slurp inputStream) :exit 0}
+                {:out "Process failed to run" :err (slurp inputStream) :exit 1})
+              {:out "Process is running" :err "" :exit 0}))
           (catch java.io.IOException e
             {:out "Process failed to run" :err (. e getMessage) :exit 1})))
       (finally
