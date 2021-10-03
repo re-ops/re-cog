@@ -15,9 +15,12 @@
 (defn xmonad
   "Launch xmonad"
   []
-  (script
-   ("export" (set! DISPLAY ":0"))
-   ("/usr/bin/xmonad" "--replace")))
+  (fn []
+    (script
+     ("/usr/bin/pgrep" "xmonad")
+     (when (not (= $? 0))
+       ("export" (set! DISPLAY ":0"))
+       ("/usr/bin/xmonad" "--replace")))))
 
 (defn librewriter
   "Launch a docment in libreoffice-writer in view only mode"
@@ -50,7 +53,9 @@
   (fn []
     (script
      (if (file-exists? "/usr/bin/xdotool")
-       ("/usr/bin/xdotool" "type" ~s)
+       (do
+         ("export" (set! DISPLAY ":0"))
+         ("/usr/bin/xdotool" "type" ~s))
        (do
          (println "xdot not found!")
          ("exit" 1))))))
@@ -62,7 +67,9 @@
     (let [combination (join "+" (map (comp capitalize name) ks))]
       (script
        (if (file-exists? "/usr/bin/xdotool")
-         ("/usr/bin/xdotool" "key" ~combination)
+         (do
+           ("export" (set! DISPLAY ":0"))
+           ("/usr/bin/xdotool" "key" ~combination))
          (do
            (println "xdot not found!")
            ("exit" 1)))))))
