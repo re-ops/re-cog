@@ -44,7 +44,7 @@
            (println "chrome not found!")
            ("exit" 1))))
      ("export" (set! DISPLAY ":0"))
-     ("nohup" "sh" "-c" "\"$browser" "--start-fullscreen" "--new-window" "'" ~url "'" "&\"")
+     ("nohup" "sh" "-c" "\"$browser" "--start-fullscreen" "--incognito" "--new-window" "'" ~url "'" "&\"")
      ("exit" 0))))
 
 (defn xdot-type
