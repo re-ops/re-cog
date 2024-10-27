@@ -92,34 +92,43 @@
 
 (def-serial chmod
   "Change file/directory mode resource:
-    (chmod \"/home\"/re-ops/.ssh\" \"0777\")
-    (chmod \"/home\"/re-ops/.ssh\" \"0777\" :recursive true)
+    (chmod \"/home/re-ops/.ssh\" \"0777\")
+    (chmod \"/home/re-ops/.ssh\" \"0777\" :recursive true)
+    (chmod \"/home/re-ops/.ssh\" \"0777\" :recursive true :sudo true)
   "
   [dest mode opts]
   (letfn [(chmod-script []
-            (let [options (if (opts :recursive) "-R" "")]
+            (let [options (if (:recursive opts) "-R" "")
+                  sudo  (if (opts :sudo?) "1" "0")]
               (script
                (set! ID @("id" "-u"))
                (if (= "0" $ID)
-                 ("sudo" "/usr/bin/chmod" ~mode ~dest ~options)
-                 ("/usr/bin/chmod" ~mode ~dest ~options)))))]
+                 ("/usr/bin/chmod" ~mode ~dest ~options)
+                 (if (= "0" ~sudo)
+                   ("/usr/bin/chmod" ~mode ~dest ~options)
+                   ("sudo" "/usr/bin/chmod" ~mode ~dest ~options))))))]
     (run- chmod-script)))
 
 (def-serial chown
   "Change file/directory owner using uid & gid resource:
       ; change file/folder ownership using user/group
-      (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\")
+      (chown \"/home/re-ops/.ssh\" \"foo\" \"bar\")
       ; change file/folder ownership recursively
-      (chown \"/home\"/re-ops/.ssh\" \"foo\" \"bar\" {:recursive true})"
+      (chown \"/home/re-ops/.ssh\" \"foo\" \"bar\" {:recursive true})
+      ; change file/folder ownership recursively with sudo
+      (chown \"/home/re-ops/.ssh\" \"foo\" \"bar\" {:recursive true :sudo true})"
   [dest user group opts]
   (letfn [(chown-script []
             (let [u-g (<< "~{user}:~{group}")
-                  options (if (opts :recursive) "-R" "")]
+                  options (if (:recursive opts) "-R" "")
+                  sudo (if (:sudo? opts) "1" "0")]
               (script
                (set! ID @("id" "-u"))
                (if (= "0" $ID)
-                 ("sudo" "/usr/bin/chown" ~u-g ~dest ~options)
-                 ("/usr/bin/chown" ~u-g ~dest ~options)))))]
+                 ("/usr/bin/chown" ~u-g ~dest ~options)
+                 (if (= "0" ~sudo)
+                   ("/usr/bin/chown" ~u-g ~dest ~options)
+                   ("sudo" "/usr/bin/chown" ~u-g ~dest ~options))))))]
     (run- chown-script)))
 
 (def-serial line
